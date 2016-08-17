@@ -87,13 +87,13 @@ namespace ResetCore.Util
             }
         }
 
-        public delegate void OnAudioFilterReadCallback();
+        public delegate void OnAudioFilterReadCallback(float[] data, int channels);
         public OnAudioFilterReadCallback onAudioFilterRead;
-        void OnAudioFilterRead()
+        void OnAudioFilterRead(float[] data, int channels)
         {
             if (onAudioFilterRead != null)
             {
-                onAudioFilterRead();
+                onAudioFilterRead(data, channels);
             }
         }
 
