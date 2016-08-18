@@ -11,6 +11,7 @@ namespace ResetCore.UGUI
 
     public class UIManager : MonoSingleton<UIManager>
     {
+        
 
         void Awake()
         {

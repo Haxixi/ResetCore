@@ -13,7 +13,31 @@ namespace ResetCore.Asset
         /// <param name="fileNameFilter">文件名过滤器</param>
         /// <param name="pathFilter">路径过滤器</param>
         /// <returns></returns>
-        public static T getAsset<T>(string fileNameFilter, params string[] pathFilter) where T : UnityEngine.Object
+        public static T GetAsset<T>(string fileNameFilter, params string[] pathFilter) where T : UnityEngine.Object
+        {
+            string fullPath = GetFullPath(fileNameFilter, pathFilter);
+            if (fullPath == null) return null;
+            return AssetDatabase.LoadAssetAtPath(fullPath, typeof(T)) as T;
+        }
+
+        /// <summary>
+        /// 是否包含该资源
+        /// </summary>
+        /// <param name="fileNameFilter"></param>
+        /// <param name="pathFilter"></param>
+        /// <returns></returns>
+        public static bool Contains(string fileNameFilter, params string[] pathFilter)
+        {
+            return GetFullPath(fileNameFilter, pathFilter) != null;
+        }
+
+        /// <summary>
+        /// 获取完整路径
+        /// </summary>
+        /// <param name="fileNameFilter">文件名过滤器</param>
+        /// <param name="pathFilter">路径过滤器</param>
+        /// <returns></returns>
+        public static string GetFullPath(string fileNameFilter, params string[] pathFilter)
         {
             string[] guids = AssetDatabase.FindAssets(fileNameFilter);
             foreach (string guid in guids)
@@ -23,10 +47,12 @@ namespace ResetCore.Asset
                 for (; i < pathFilter.Length; i++)
                     if (!path.Contains(pathFilter[i])) break;
                 if (i == pathFilter.Length)
-                    return AssetDatabase.LoadAssetAtPath(path, typeof(T)) as T;
+                    return path;
             }
             return null;
         }
+
+       
     }
 
 }

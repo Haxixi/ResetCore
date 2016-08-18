@@ -15,6 +15,16 @@ namespace ResetCore.Util
                 Directory.CreateDirectory(root);
             }
         }
+
+        public static string Combine(params string[] paths)
+        {
+            string result = "";
+            foreach(string path in paths)
+            {
+                result = Path.Combine(result, path);
+            }
+            return result;
+        }
     }
 
 }

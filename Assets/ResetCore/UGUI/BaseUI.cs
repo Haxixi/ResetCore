@@ -15,6 +15,7 @@ namespace ResetCore.UGUI
         public UIConst.UIName uiName
         {
             get { return _uiName; }
+            set { _uiName = value; }
         }
 
         protected virtual void Awake() { }

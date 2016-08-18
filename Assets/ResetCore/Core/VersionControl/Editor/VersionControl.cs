@@ -39,7 +39,7 @@ namespace ResetCore.VersionControl
 
             static ResetCoreLoad()
             {
-
+                if (Application.isPlaying) return;
                 int isShow = PlayerPrefs.GetInt("ShowResetVersionController", 1);
                 if (isShow == 1)
                 {

@@ -38,7 +38,7 @@ namespace ResetCore.AR
         /// </summary>
         private void CheckAllARTrackedObj()
         {
-            ARTrackedObject[] trackedObjGroup = arOrigin.GetComponentsInChildren<ARTrackedObject>();
+            ARTrackedObject[] trackedObjGroup = arOrigin.gameObject.GetComponentsInChildren<ARTrackedObject>();
             foreach (ARTrackedObject trackedObj in trackedObjGroup)
             {
                 ARMarker marker = trackedObj.GetMarker();
@@ -79,7 +79,7 @@ namespace ResetCore.AR
         public ARTrackedData GetTrackObject(string dataName)
         {
             ARTrackedData data = null;
-            if(!arTrackedObjectList.TryGetValue(dataName, out data))
+            if (!arTrackedObjectList.TryGetValue(dataName, out data))
             {
                 Debug.logger.LogError("GetARTrackObject", "Can not find this data in the dictionary");
                 return null;
@@ -126,7 +126,9 @@ namespace ResetCore.AR
 
             trackedObj.secondsToRemainVisible = 1;
             trackedObj.MarkerTag = sceneName;
+            marker.MarkerType = MarkerType.NFT;
             marker.Tag = sceneName;
+            marker.NFTDataName = dataName;
 
             ARTrackedData data = new ARTrackedData(dataName, trackedObj, marker);
             arTrackedObjectList.Add(dataName, data);
