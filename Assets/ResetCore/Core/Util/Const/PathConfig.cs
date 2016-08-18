@@ -91,6 +91,7 @@ public class PathConfig
     #endregion
 
     #region GameData相关
+    //Excelm默认存放地址
     public static readonly string localGameDataExcelPath = Application.dataPath + "/Excel/";
 
     //游戏数据根目录
