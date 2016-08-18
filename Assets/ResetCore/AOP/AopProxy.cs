@@ -9,14 +9,14 @@ using System.Runtime.Remoting.Messaging;
 namespace ResetCore.AOP
 {
 
-    interface IAopProceede
+    public interface IAopProceede
     {
         void PreProceede(IMessage msg);
         void PostProceede(IMessage msg);
     }
 
     //RealProxy
-    public class AopProxy<T> : RealProxy 
+    public class AopProxy<T> : RealProxy
     {
         private T _target;
         public AopProxy(T target)

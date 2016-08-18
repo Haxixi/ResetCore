@@ -90,9 +90,10 @@ namespace ResetCore.Asset
         {
             string filePath = path;
             DirectoryInfo dirInfo = new DirectoryInfo(Application.dataPath);
-            filePath = filePath.Replace(dirInfo.Parent.FullName + "\\", "");
+            filePath = filePath.Replace(dirInfo.Parent.FullName, "");
             filePath = filePath.Replace(Path.GetExtension(path), "");
             filePath = filePath.Replace("\\", "/");
+            filePath = filePath.Substring(1);
             return filePath;
         }
         public class AutoGenResourcesList : UnityEditor.AssetModificationProcessor
