@@ -17,12 +17,19 @@ namespace ResetCore.Util
             EfPool = new List<GameObject>();
         }
 
-        public GameObject PlayEffectInRoot(string efName, Vector3 pos, float time = -1)
+        /// <summary>
+        /// 在世界坐标系下播放特效
+        /// </summary>
+        /// <param name="efName">特效名</param>
+        /// <param name="pos">绝对位置</param>
+        /// <param name="time">显示时间</param>
+        /// <returns></returns>
+        public GameObject PlayEffectInRoot(string efName, Vector3 pos, float time = -1, params object[] args)
         {
             GameObject efGo = FindOrCreateObject(efName);
             efGo.transform.position = pos;
             efGo.SetActive(true);
-            Play(efGo);
+            Play(efGo, args);
             if (time > 0)
             {
                 CoroutineTaskManager.Instance.WaitSecondTodo(() =>
@@ -34,7 +41,15 @@ namespace ResetCore.Util
             return efGo;
         }
 
-        public GameObject PlayEffectUnderTran(string efName, Transform tran, Vector3 localPos, float time = -1)
+        /// <summary>
+        /// 在对象相对位置下播放特效
+        /// </summary>
+        /// <param name="efName">特效名</param>
+        /// <param name="tran">绑定对象</param>
+        /// <param name="localPos">相对位置</param>
+        /// <param name="time">显示时间</param>
+        /// <returns></returns>
+        public GameObject PlayEffectUnderTran(string efName, Transform tran, Vector3 localPos, float time = -1, params object[] args)
         {
             GameObject efGo = FindOrCreateObject(efName);
             efGo.transform.parent = tran;
@@ -47,10 +62,14 @@ namespace ResetCore.Util
                     HideEffect(efGo);
                 }, time);
             }
-            Play(efGo);
+            Play(efGo, args);
             return efGo;
         }
 
+        /// <summary>
+        /// 隐藏特效
+        /// </summary>
+        /// <param name="go"></param>
         public void HideEffect(GameObject go)
         {
             if (go == null) return;
@@ -105,10 +124,13 @@ namespace ResetCore.Util
             return newGameObject;
         }
 
-        private void Play(GameObject ef)
+        private void Play(GameObject ef, params object[] args)
         {
-            //DCTODO
-            //anim.Play();
+            BaseEffect baseEffect = ef.GetComponent<BaseEffect>();
+            if (baseEffect == null) return;
+
+            baseEffect.Init(args);
+            baseEffect.Play(args);
         }
     }
 }
