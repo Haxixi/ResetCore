@@ -263,7 +263,22 @@ namespace ResetCore.VersionControl
         public static void RefreshBackUp()
         {
             VersionControl.CheckAllSymbol();
-            Directory.Delete(PathConfig.ResetCoreBackUpPath, true);
+            Array symbolArr = Enum.GetValues(typeof(VERSION_SYMBOL));
+            foreach(VERSION_SYMBOL symbol in symbolArr)
+            {
+                string inprojectPath = VersionConst.GetSymbolPath(symbol);
+                string backupPath = VersionConst.GetSymbolTempPath(symbol);
+
+                if (!Directory.Exists(inprojectPath)) return;
+
+                if (!Directory.Exists(backupPath))
+                {
+                    Directory.Delete(backupPath);
+                    Directory.CreateDirectory(backupPath);
+                }
+
+                DirectoryEx.DirectoryCopy(inprojectPath, backupPath, true);
+            }
             VersionControl.CheckAllSymbol();
         }
 
