@@ -52,7 +52,7 @@ namespace ResetCore.Util
         public GameObject PlayEffectUnderTran(string efName, Transform tran, Vector3 localPos, float time = -1, params object[] args)
         {
             GameObject efGo = FindOrCreateObject(efName);
-            efGo.transform.parent = tran;
+            efGo.transform.SetParent(tran);
             efGo.transform.localPosition = localPos;
             efGo.SetActive(true);
             if (time > 0)
