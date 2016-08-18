@@ -120,13 +120,13 @@ namespace ResetCore.VersionControl
                         symbolArr.Length, (float)(i + 1) / (float)symbolArr.Length);
                     needRestart = true;
                 }
-                //不存在宏定义 但是存在实际模块 移除模块
+                //不存在宏定义 但是存在实际模块 添加模块
                 if (!symbols.Contains(VersionConst.SymbolName[symbol]) 
                     && Directory.Exists(modulePath)
                     && Directory.GetFiles(modulePath).Length != 0)
                 {
-                    RemoveModule(symbol);
-                    EditorUtility.DisplayProgressBar("Check Modules", "Remove Module " + 
+                    AddModule(symbol);
+                    EditorUtility.DisplayProgressBar("Check Modules", "Add Module " + 
                         symbol.ToString() + "from ResetCore " + (i + 1) + "/" + 
                         symbolArr.Length, (float)(i + 1) / (float)symbolArr.Length);
                     needRestart = true;
