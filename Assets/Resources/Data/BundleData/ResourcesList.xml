@@ -130,4 +130,6 @@
   <p>Assets/Resources/TestBehaviorTree/Enemy</p>
   <n>Player.prefab</n>
   <p>Assets/Resources/TestBehaviorTree/Player</p>
+  <n>TestUI.prefab</n>
+  <p>Assets/Resources/UI/TestUI</p>
 </Root>

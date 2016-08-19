@@ -129,7 +129,6 @@ public static class CompressHelper
                 while ((entry = stream.GetNextEntry()) != null)
                 {
                     string name = entry.Name;
-                    Debug.Log(name);
                     if (entry.IsDirectory && entry.Name.StartsWith(@"\"))
                     {
                         name = entry.Name.ReplaceFirst(@"\", "", 0);

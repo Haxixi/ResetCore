@@ -39,7 +39,7 @@ namespace ResetCore.VersionControl
 
             static ResetCoreLoad()
             {
-
+                if (Application.isPlaying) return;
                 int isShow = PlayerPrefs.GetInt("ShowResetVersionController", 1);
                 if (isShow == 1)
                 {
@@ -120,13 +120,13 @@ namespace ResetCore.VersionControl
                         symbolArr.Length, (float)(i + 1) / (float)symbolArr.Length);
                     needRestart = true;
                 }
-                //不存在宏定义 但是存在实际模块 移除模块
+                //不存在宏定义 但是存在实际模块 添加模块
                 if (!symbols.Contains(VersionConst.SymbolName[symbol]) 
                     && Directory.Exists(modulePath)
                     && Directory.GetFiles(modulePath).Length != 0)
                 {
-                    RemoveModule(symbol);
-                    EditorUtility.DisplayProgressBar("Check Modules", "Remove Module " + 
+                    AddModule(symbol);
+                    EditorUtility.DisplayProgressBar("Check Modules", "Add Module " + 
                         symbol.ToString() + "from ResetCore " + (i + 1) + "/" + 
                         symbolArr.Length, (float)(i + 1) / (float)symbolArr.Length);
                     needRestart = true;
@@ -266,19 +266,18 @@ namespace ResetCore.VersionControl
             Array symbolArr = Enum.GetValues(typeof(VERSION_SYMBOL));
             foreach(VERSION_SYMBOL symbol in symbolArr)
             {
-                string inprojectPath = VersionConst.GetSymbolPath(symbol);
-                string backupPath = VersionConst.GetSymbolTempPath(symbol);
+                string modulePath = VersionConst.GetSymbolPath(symbol);
+                string moduleTempPath = VersionConst.GetSymbolTempPath(symbol);
+                if (!Directory.Exists(modulePath)) return;
 
-                if (!Directory.Exists(inprojectPath)) return;
-
-                if (!Directory.Exists(backupPath))
+                if (Directory.Exists(moduleTempPath))
                 {
-                    Directory.Delete(backupPath);
-                    Directory.CreateDirectory(backupPath);
+                    Directory.Delete(moduleTempPath, true);
+                    Directory.CreateDirectory(moduleTempPath);
                 }
-
-                DirectoryEx.DirectoryCopy(inprojectPath, backupPath, true);
+                DirectoryEx.DirectoryCopy(modulePath, moduleTempPath, true);
             }
+            
             VersionControl.CheckAllSymbol();
         }
 

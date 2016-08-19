@@ -13,6 +13,7 @@ namespace ResetCore.Asset
     {
         static ResourcesListGenWhenLoad()
         {
+            if (Application.isPlaying) return;
             EditorApplication.update += Update;
         }
 
