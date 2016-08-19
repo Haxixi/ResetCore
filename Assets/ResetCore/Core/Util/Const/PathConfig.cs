@@ -2,6 +2,8 @@
 using System.Collections;
 using System.IO;
 using System.Collections.Generic;
+using ResetCore.VersionControl;
+using ResetCore.Util;
 
 public class PathConfig
 {
@@ -125,6 +127,14 @@ public class PathConfig
     public static readonly string localCoreDataPath = localGameDataSourceRoot + "Core/";
     //存放核心数据 GameData类的地址
     public static readonly string localCoreDataClassPath = ResetCorePath + "Core/GameDatas/CoreData/Classes/";
+
+    /// <summary>
+    /// 本地化数据存放地址
+    /// </summary>
+    public static readonly string LanguageDataExcelPath = PathEx.Combine(ResetCorePath, VersionConst.SymbolFoldNames[VERSION_SYMBOL.DATA_GENER], "Localization/Excel");
+
+    //存放本地化数据的地址
+    public static readonly string LanguageDataPath = localGameDataSourceRoot + "Localization/";
 
     #endregion
 

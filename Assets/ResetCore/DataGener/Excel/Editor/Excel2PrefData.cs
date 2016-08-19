@@ -12,7 +12,7 @@ namespace ResetCore.Excel
     public class Excel2PrefData
     {
 
-        public static void GenPref(ExcelReader excelReader)
+        public static void GenPref(ExcelReader excelReader, string outputPath = null)
         {
             ExcelReader exReader = excelReader;
 
@@ -28,7 +28,10 @@ namespace ResetCore.Excel
                 root.Add(item);
             }
 
-            string outputPath = PathConfig.localPrefDataPath + Path.GetFileNameWithoutExtension(excelReader.currentSheetName) + PrefData.m_fileExtention;
+            if(outputPath == null)
+            {
+                outputPath = PathConfig.localPrefDataPath + Path.GetFileNameWithoutExtension(excelReader.currentSheetName) + PrefData.m_fileExtention;
+            }
             if (!Directory.Exists(Path.GetDirectoryName(outputPath)))
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(outputPath));

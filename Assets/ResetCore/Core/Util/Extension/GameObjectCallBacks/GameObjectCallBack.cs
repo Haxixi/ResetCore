@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace ResetCore.Util
 {
-    public class GameObjectCallBack : MonoBehaviour
+    public class GameObjectCallBack : UnityEngine.EventSystems.EventTrigger
     {
         
 

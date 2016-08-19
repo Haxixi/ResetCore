@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEditor;
 using System.Linq;
 using System.IO;
+using ResetCore.Data;
 
 namespace ResetCore.Excel
 {
@@ -106,6 +107,16 @@ namespace ResetCore.Excel
             }
             EditorUtility.ClearProgressBar();
             Debug.logger.Log("Finished");
+        }
+
+        /// <summary>
+        /// 导出所有本地化数据
+        /// </summary>
+        [MenuItem("Assets/DataHelper/Language/Export All Language File")]
+        [MenuItem("Tools/GameData/Language/Export All Language File")]
+        static void ExportAllLanguageFile()
+        {
+            //TODO
         }
     }
 
