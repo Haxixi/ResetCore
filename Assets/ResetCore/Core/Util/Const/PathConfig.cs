@@ -2,15 +2,36 @@
 using System.Collections;
 using System.IO;
 using System.Collections.Generic;
+using ResetCore.VersionControl;
+using ResetCore.Util;
 
 public class PathConfig
 {
 
     #region 全局
+    //插件统一文件夹名
+    public static string PluginsFolderName = "Plugins";
+
     //ResetCore根目录
     public static string ResetCorePath = Application.dataPath + "/ResetCore/";
+    public static string ResetCoreTempPath = Path.Combine(projectPath, "ResetCoreTemp");
     //ResetCore备份根目录
-    public static string ResetCoreBackUpPath = Path.Combine(projectPath, "ResetCoreTemp");
+    public static string ResetCoreBackUpPath = Path.Combine(ResetCoreTempPath, "Backup");
+
+    //Extra工具包内目录
+    public static string ExtraToolPathInPackage = Path.Combine(ResetCorePath, "ExtraTool.zip");
+    //Extra工具根目录
+    public static string ExtraToolPath = Path.Combine(ResetCoreTempPath, "ExtraTool");
+
+    //SDK工具包内目录
+    public static string SDKPathInPackage = Path.Combine(ResetCorePath, "SDK.zip");
+    //SDK工具备份目录
+    public static string SDKBackupPath = Path.Combine(ResetCoreTempPath, "SDK");
+    //SDK工具安装目录
+    public static string SDKPath = Path.Combine(Application.dataPath, "SDK");
+
+    //Plugins目录
+    public static readonly string pluginPath = Path.Combine(Application.dataPath, PluginsFolderName); 
 
     //工程目录
     public static string projectPath
@@ -72,12 +93,13 @@ public class PathConfig
     #endregion
 
     #region GameData相关
+    //Excelm默认存放地址
     public static readonly string localGameDataExcelPath = Application.dataPath + "/Excel/";
 
     //游戏数据根目录
     public static readonly string localGameDataSourceRoot = resourcePath + "Data/GameData/";
     //游戏数据类文件根目录
-    public static readonly string localGameDataClassRoot = ResetCorePath + "Core/DataGener/GameDatas/DataClasses/";
+    public static readonly string localGameDataClassRoot = ResetCorePath + "Core/GameDatas/DataClasses/";
 
     //存放Xml的地址
     public static readonly string localGameDataXmlPath = localGameDataSourceRoot + "Xml/";
@@ -93,6 +115,26 @@ public class PathConfig
     public static readonly string localGameDataProtobufPath = localGameDataSourceRoot + "Protobuf/";
     //存放ProtobufGameData类的地址
     public static readonly string localProtobufGameDataClassPath = localGameDataClassRoot + "Protobuf/";
+
+    //存放PrefData的地址
+    public static readonly string localPrefDataPath = localGameDataSourceRoot + "Pref/";
+    //存放PrefData GameData类的地址
+    public static readonly string localPrefDataClassPath = localGameDataClassRoot + "Pref/";
+
+    //存放核心数据备份的地址
+    public static readonly string localCoreDataBackupPath = ResetCorePath + "Core/GameDatas/CoreData/Datas/";
+    //存放核心数据的地址
+    public static readonly string localCoreDataPath = localGameDataSourceRoot + "Core/";
+    //存放核心数据 GameData类的地址
+    public static readonly string localCoreDataClassPath = ResetCorePath + "Core/GameDatas/CoreData/Classes/";
+
+    /// <summary>
+    /// 本地化数据存放地址
+    /// </summary>
+    public static readonly string LanguageDataExcelPath = PathEx.Combine(ResetCorePath, VersionConst.SymbolFoldNames[VERSION_SYMBOL.DATA_GENER], "Localization/Excel");
+
+    //存放本地化数据的地址
+    public static readonly string LanguageDataPath = localGameDataSourceRoot + "Localization/";
 
     #endregion
 
@@ -113,7 +155,7 @@ public class PathConfig
     //Xml模板资源路径
     public static readonly string xmlScriptAssetPath = ResetCorePath + "Xml/Editor/XmlAsset.xml".Replace(projectPath, "");
 
-    public static readonly string csToolPath = ResetCorePath + "CSTool/Editor/ExcelDataManager.exe";
+    public static readonly string csToolPath = ExtraToolPath + "C#Tools/ExcelDataManager.exe";
     public static readonly string csTool_GameDataViaExcel = "GameDataGen";
     #endregion
 }
