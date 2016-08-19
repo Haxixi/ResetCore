@@ -122,13 +122,18 @@ namespace ResetCore.Util
         /// </summary>
         /// <param name="tran"></param>
         /// <param name="todo"></param>
-        public static void DoToAllChildren(this Transform tran, System.Action<Transform> todo)
+        /// <param name="sub"></param>
+        public static void DoToAllChildren(this Transform tran, System.Action<Transform> todo, bool sub = false)
         {
             List<Transform> children = tran.GetAllChildren();
 
             foreach (Transform child in children)
             {
                 todo(child);
+                if (sub == true && child.childCount > 0)
+                {
+                    child.DoToAllChildren(todo, sub);
+                }
             }
         }
 

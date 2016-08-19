@@ -20,7 +20,10 @@ namespace ResetCore.UGUI
 
         void Start()
         {
-            Camera.main.gameObject.AddComponent<CameraScale>();
+            if(Camera.main != null)
+            {
+                Camera.main.gameObject.AddComponent<CameraScale>();
+            }
             BaseUI[] uiGroup = canvas.GetComponentsInChildren<BaseUI>();
             foreach (BaseUI ui in uiGroup)
             {
