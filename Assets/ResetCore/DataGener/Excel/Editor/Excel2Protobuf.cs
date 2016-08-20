@@ -14,7 +14,7 @@ namespace ResetCore.Excel
 {
     public class Excel2Protobuf
     {
-        public static void GenProtobuf(ExcelReader excelReader)
+        public static void GenProtobuf(ExcelReader excelReader, string outputPath = null)
         {
             string className = excelReader.currentSheetName;
             Type protobufDataType = Type.GetType(ProtobufData.nameSpace + "." + className + ",Assembly-CSharp");
@@ -56,6 +56,10 @@ namespace ResetCore.Excel
             if (ProtoBuf.Serializer.NonGeneric.CanSerialize(protobufDataType))
             {
                 string resPath = PathConfig.localGameDataProtobufPath + className + ProtobufData.ex;
+                if(outputPath != null)
+                {
+                    resPath = outputPath;
+                }
                 string root = Path.GetDirectoryName(resPath);
                 PathEx.MakeDirectoryExist(root);
                 using (var file = System.IO.File.Create(resPath))
