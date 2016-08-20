@@ -9,7 +9,9 @@ namespace ResetCore.Excel
 {
     public class ExcelExportInMenu
     {
-
+        /// <summary>
+        /// 导出选中的Excel为Xml
+        /// </summary>
         [MenuItem("Assets/DataHelper/Xml/Export Selected Excel")]
         public static void ExportAllSelectedExcelToXml()
         {
@@ -20,7 +22,6 @@ namespace ResetCore.Excel
                          select path).ToArray();
 
             int num = 1;
-            Debug.logger.Log("Total " + paths.Length + " Files");
             foreach (string item in paths)
             {
                 ExcelReader excelReader = new ExcelReader(item);
@@ -29,8 +30,6 @@ namespace ResetCore.Excel
                     EditorUtility.DisplayProgressBar
                          ("Exporting Excel", "Current: " + num + "/" + paths.Length + " File: " + Path.GetFileName(item) +
                          " Sheet: " + sheetName, (float)num / (float)paths.Length);
-                    Debug.logger.Log("Current: " + num + "/" + paths.Length + " File: " + Path.GetFileName(item) +
-                        " Sheet: " + sheetName, (float)num / (float)paths.Length);
 
                     excelReader = new ExcelReader(item, sheetName);
                     Excel2Xml.GenXml(excelReader);
@@ -43,6 +42,9 @@ namespace ResetCore.Excel
             Debug.logger.Log("Finished");
         }
 
+        /// <summary>
+        /// 导出选中的Excel为Protobuf
+        /// </summary>
         [MenuItem("Assets/DataHelper/Protobuf/Export Selected Excel")]
         public static void ExportAllSelectedExcelToProtobuf()
         {
@@ -53,7 +55,6 @@ namespace ResetCore.Excel
                          select path).ToArray();
 
             int num = 1;
-            Debug.logger.Log("Total " + paths.Length + " Files");
             foreach (string item in paths)
             {
                 Debug.Log(item);
@@ -62,8 +63,6 @@ namespace ResetCore.Excel
                 {
                     EditorUtility.DisplayProgressBar
                         ("Exporting Excel", "Current: " + num + "/" + paths.Length + " File: " + Path.GetFileName(item) +
-                        " Sheet: " + sheetName, (float)num / (float)paths.Length);
-                    Debug.logger.Log("Current: " + num + "/" + paths.Length + " File: " + Path.GetFileName(item) +
                         " Sheet: " + sheetName, (float)num / (float)paths.Length);
 
                     excelReader = new ExcelReader(item, sheetName);
@@ -76,6 +75,9 @@ namespace ResetCore.Excel
             Debug.logger.Log("Finished");
         }
 
+        /// <summary>
+        /// 导出选中的Excel为首选项
+        /// </summary>
         [MenuItem("Assets/DataHelper/PrefData/Export Selected Excel")]
         public static void ExportAllSelectedExcelToPrefData()
         {
@@ -86,7 +88,6 @@ namespace ResetCore.Excel
                          select path).ToArray();
 
             int num = 1;
-            Debug.logger.Log("Total " + paths.Length + " Files");
             foreach (string item in paths)
             {
                 ExcelReader excelReader = new ExcelReader(item);
@@ -94,8 +95,6 @@ namespace ResetCore.Excel
                 {
                     EditorUtility.DisplayProgressBar
                         ("Exporting Excel", "Current: " + num + "/" + paths.Length + " File: " + Path.GetFileName(item) + 
-                        " Sheet: " + sheetName, (float)num / (float)paths.Length);
-                    Debug.logger.Log("Current: " + num + "/" + paths.Length + " File: " + Path.GetFileName(item) +
                         " Sheet: " + sheetName, (float)num / (float)paths.Length);
 
                     excelReader = new ExcelReader(item, sheetName, ExcelType.Pref);
@@ -114,9 +113,9 @@ namespace ResetCore.Excel
         /// </summary>
         [MenuItem("Assets/DataHelper/Language/Export All Language File")]
         [MenuItem("Tools/GameData/Language/Export All Language File")]
-        static void ExportAllLanguageFile()
+        static void ExportLanguageFile()
         {
-            //TODO
+            Excel2Localization.ExportExcelFile();
         }
     }
 

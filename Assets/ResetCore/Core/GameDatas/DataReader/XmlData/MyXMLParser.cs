@@ -14,7 +14,6 @@ namespace ResetCore.Data
         public static bool LoadIntMap(string fileName, out Dictionary<int, Dictionary<string, string>> dicFromXml)
         {
             TextAsset textAsset = ResourcesLoaderHelper.Instance.LoadTextAsset(fileName);
-            Debug.logger.Log(ResourcesLoaderHelper.resourcesList[fileName]);
             if (textAsset == null)
             {
                 Debug.logger.LogError("XMLParser", fileName + " 文本加载失败");

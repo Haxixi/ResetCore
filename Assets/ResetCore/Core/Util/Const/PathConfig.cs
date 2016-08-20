@@ -131,10 +131,12 @@ public class PathConfig
     /// <summary>
     /// 本地化数据存放地址
     /// </summary>
-    public static readonly string LanguageDataExcelPath = PathEx.Combine(ResetCorePath, VersionConst.SymbolFoldNames[VERSION_SYMBOL.DATA_GENER], "Localization/Excel");
+    public static readonly string LanguageDataExcelPath = PathEx.Combine(ResetCorePath, VersionConst.SymbolFoldNames[VERSION_SYMBOL.DATA_GENER], "Localization/Excel/LocalizationData.xlsx");
 
     //存放本地化数据的地址
-    public static readonly string LanguageDataPath = localGameDataSourceRoot + "Localization/";
+    public static readonly string LanguageDataPath = localGameDataSourceRoot + "Localization/LocalizationData.xml";
+    //存放PrefData GameData类的地址
+    public static readonly string localLanguageDataClassPath = localGameDataClassRoot + "Localization/LocalizationData.cs";
 
     #endregion
 

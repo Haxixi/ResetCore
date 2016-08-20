@@ -2,6 +2,7 @@
 using System.Collections;
 using ResetCore.Util;
 using System.Collections.Generic;
+using System.IO;
 
 namespace ResetCore.Data
 {
@@ -11,39 +12,51 @@ namespace ResetCore.Data
         private Dictionary<int, Dictionary<string, string>> allLanguageDict;
         public LanguageConst.LanguageType currentLanguage { get; private set; }
 
-        public string this[string key]
+        public override void Init()
         {
-            get
+ 	        base.Init();
+            currentLanguage = LanguageConst.LanguageType.Chinese;
+
+        }
+        /// <summary>
+        /// 获取单词
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static string GetWord(string key)
+        {
+            if (instance.allLanguageDict == null)
             {
-                if (allLanguageDict == null)
-                {
-                    allLanguageDict = GetLanguageDict();
-                }
-                return allLanguageDict[(int)currentLanguage][key];
+                instance.allLanguageDict = instance.GetLanguageDict();
             }
-            private set
+            if (!instance.allLanguageDict[(int)instance.currentLanguage].ContainsKey(key))
             {
-                allLanguageDict[(int)currentLanguage][key] = value;
+                Debug.logger.LogError("GetWord", "Not Exists " + key);
+                return key;
             }
+            return instance.allLanguageDict[(int)instance.currentLanguage][key];
         }
 
-        //设置当前语言
-        public void SetLanguageType(LanguageConst.LanguageType type)
+        /// <summary>
+        /// 设置当前语言
+        /// </summary>
+        /// <param name="type"></param>
+        public static void SetLanguageType(LanguageConst.LanguageType type)
         {
-            currentLanguage = type;
-            
+            instance.currentLanguage = type;
         }
 
         private Dictionary<int, Dictionary<string, string>> GetLanguageDict()
         {
             var result = new Dictionary<int, Dictionary<string, string>>();
-            if (!MyXMLParser.LoadIntMap(LanguageConst.languageXmlFileName, out result))
+            if (!MyXMLParser.LoadIntMap(Path.GetFileName(PathConfig.LanguageDataPath), out result))
             {
                 return result;
             }
             return result;
         }
 
+        
        
     }
 

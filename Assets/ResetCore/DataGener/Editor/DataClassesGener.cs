@@ -23,10 +23,16 @@ public class DataClassesGener {
     private static string outputFile;
 
     
-
-    public static void CreateNewClass(string className, Type baseType, Dictionary<string, Type> fieldDict)
+    /// <summary>
+    /// 创建代码
+    /// </summary>
+    /// <param name="className">类名</param>
+    /// <param name="baseType">基础类型</param>
+    /// <param name="fieldDict">属性表</param>
+    /// <param name="path">自定义路径</param>
+    public static void CreateNewClass(string className, Type baseType, Dictionary<string, Type> fieldDict, string path = null)
     {
-        GetPropString(className, baseType);
+        GetPropString(className, baseType, path);
 
         CodeCompileUnit unit;
         CodeTypeDeclaration NewClass;
@@ -38,7 +44,7 @@ public class DataClassesGener {
 
     }
 
-    private static void GetPropString(string className, Type baseType)
+    private static void GetPropString(string className, Type baseType, string path)
     {
         importNameSpaces = new string[]{
                 "System","System.Collections.Generic", "UnityEngine"
@@ -78,7 +84,11 @@ public class DataClassesGener {
         {
             Debug.logger.LogError("GameData", "无效的数据类型");
         }
-        
+        //自定义Path
+        if (path != null)
+        {
+            outputFile = path;
+        }
     }
     private static void CreateNewClass(out CodeCompileUnit unit, out CodeTypeDeclaration NewClass)
     {

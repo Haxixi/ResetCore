@@ -78,6 +78,10 @@
   <p>Assets/Resources/Data/BundleData/SceneData/StaticMain</p>
   <n>StaticTestLoadScene.xml</n>
   <p>Assets/Resources/Data/BundleData/SceneData/StaticTestLoadScene</p>
+  <n>LocalizationData.xml</n>
+  <p>Assets/Resources/Data/GameData/Localization/LocalizationData</p>
+  <n>BuffData.xml</n>
+  <p>Assets/Resources/Data/GameData/Xml/BuffData</p>
   <n>NewLua.txt</n>
   <p>Assets/Resources/Data/Lua/NewLua</p>
   <n>TestData.protodata.bytes</n>

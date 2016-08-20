@@ -145,8 +145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3b21ec090516ab43a2be30862346377, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groupList:
-  - {fileID: 0}
+  groupList: []
   BGMGroup: {fileID: 0}
 --- !u!4 &132187172
 Transform:

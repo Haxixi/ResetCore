@@ -356,22 +356,40 @@ namespace ResetCore.Excel
         }
 
         /// <summary>
-        /// 得到一行
+        /// 得到一行,如果未输入结束列则遇到空结束
         /// </summary>
         /// <param name="rowNum"></param>
         /// <returns></returns>
-        public List<string> GetRow(int rowNum)
+        public List<string> GetRow(int rowNum, int startLine = 0, int endLine = -1)
         {
             List<string> result = new List<string>();
             IRow typeStr = sheet.GetRow(rowNum);
             if (typeStr != null)
             {
-                for (int i = 0; i < typeStr.LastCellNum; i++)
+                int lastLineNum = typeStr.LastCellNum;
+                if (endLine > 0)
+                    lastLineNum = endLine;
+
+                for (int i = startLine; i < lastLineNum; i++)
                 {
                     try
                     {
                         typeStr.Cells[i].SetCellType(CellType.String);
-                        result.Add(typeStr.Cells[i].StringCellValue);
+                        if (!string.IsNullOrEmpty(typeStr.Cells[i].StringCellValue))
+                        {
+                            result.Add(typeStr.Cells[i].StringCellValue);
+                        }
+                        else
+                        {
+                            if (endLine > 0)
+                            {
+                                result.Add(string.Empty);
+                            }
+                            else
+                            {
+                                return result;
+                            }
+                        }
                     }
                     catch (Exception e)
                     {
@@ -389,27 +407,55 @@ namespace ResetCore.Excel
         }
 
         /// <summary>
-        /// 得到一列
+        /// 得到一列,如果未输入结束列则遇到空结束
         /// </summary>
         /// <param name="lineNum"></param>
         /// <returns></returns>
-        public List<string> GetLine(int lineNum)
+        public List<string> GetLine(int lineNum, int startRow = 0, int endRow = -1)
         {
             List<string> result = new List<string>();
             int lastRowNum = sheet.LastRowNum;
-            for (int row = 0; row <= lastRowNum; row++)
+            if (endRow > 0)
+                lastRowNum = endRow;
+            for (int row = startRow; row <= lastRowNum; row++)
             {
                 try
                 {
-                    sheet.GetRow(row).GetCell(lineNum).SetCellType(CellType.String);
+                    if (sheet.GetRow(row) == null)
+                    {
+                        if (endRow < 0)
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            result.Add(string.Empty);
+                            continue;
+                        }
+                    }
+
+                    sheet.GetRow(row).Cells[lineNum].SetCellType(CellType.String);
                     string total = sheet.GetRow(row).GetCell(lineNum).StringCellValue.Trim();
-                    if (string.IsNullOrEmpty(total)) return result;
-                    result.Add(total);
+                    if (string.IsNullOrEmpty(total))
+                    {
+                        if (endRow > 0)
+                        {
+                            result.Add(string.Empty);
+                        }
+                        else
+                        {
+                            return result;
+                        }
+                    }
+                    else
+                    {
+                        result.Add(total);
+                    }
                 }
                 catch (Exception e)
                 {
                     Debug.logger.LogException(e);
-                    Debug.logger.LogError("ReadExcelError", "Title " + row + " is Error");
+                    Debug.logger.LogError("ReadExcelError", "row " + row + " is Error");
                 }
             }
             return result;
