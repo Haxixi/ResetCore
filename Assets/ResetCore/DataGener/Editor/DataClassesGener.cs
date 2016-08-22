@@ -55,30 +55,33 @@ public class DataClassesGener {
         if (baseType == typeof(XmlData))
         {
             nameSpace = XmlData.nameSpace;
-            if (!Directory.Exists(PathConfig.localXmlGameDataClassPath))
+            string classPath = PathConfig.GetLoaclGameDataClassPath(PathConfig.DataType.Xml);
+            if (!Directory.Exists(classPath))
             {
-                Directory.CreateDirectory(PathConfig.localXmlGameDataClassPath);
+                Directory.CreateDirectory(classPath);
             }
-            outputFile = PathConfig.localXmlGameDataClassPath + className + ".cs";
+            outputFile = classPath + className + ".cs";
             
         }
         else if (baseType == typeof(ObjData))
         {
             nameSpace = ObjData.nameSpace;
-            if (!Directory.Exists(PathConfig.localObjGameDataClassPath))
+            string classPath = PathConfig.GetLoaclGameDataClassPath(PathConfig.DataType.Obj);
+            if (!Directory.Exists(classPath))
             {
-                Directory.CreateDirectory(PathConfig.localObjGameDataClassPath);
+                Directory.CreateDirectory(classPath);
             }
-            outputFile = PathConfig.localObjGameDataClassPath + className + ".cs";
+            outputFile = classPath + className + ".cs";
         }
         else if (baseType == typeof(PrefData))
         {
             nameSpace = PrefData.nameSpace;
-            if (!Directory.Exists(PathConfig.localPrefDataClassPath))
+            string prefDataClassPath = PathConfig.GetLoaclGameDataClassPath(PathConfig.DataType.Pref);
+            if (!Directory.Exists(prefDataClassPath))
             {
-                Directory.CreateDirectory(PathConfig.localPrefDataClassPath);
+                Directory.CreateDirectory(prefDataClassPath);
             }
-            outputFile = PathConfig.localPrefDataClassPath + className + ".cs";
+            outputFile = prefDataClassPath + className + ".cs";
         }
         else
         {

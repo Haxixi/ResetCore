@@ -49,7 +49,8 @@ namespace ResetCore.Data
         private Dictionary<int, Dictionary<string, string>> GetLanguageDict()
         {
             var result = new Dictionary<int, Dictionary<string, string>>();
-            if (!MyXMLParser.LoadIntMap(Path.GetFileName(PathConfig.LanguageDataPath), out result))
+            if (!MyXMLParser.LoadIntMap(Path.GetFileNameWithoutExtension(PathConfig.LanguageDataPath), 
+                out result, PathConfig.GetLocalGameDataResourcesPath(PathConfig.DataType.Localization)))
             {
                 return result;
             }

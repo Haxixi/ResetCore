@@ -326,16 +326,17 @@ namespace ResetCore.VersionControl
         //将核心数据拷贝至Resources下
         private static void CheckCoreData()
         {
+            string localCoreDataPath = PathConfig.GetLocalGameDataPath(PathConfig.DataType.Core);
             PathEx.MakeDirectoryExist(PathConfig.localCoreDataBackupPath);
-            PathEx.MakeDirectoryExist(PathConfig.localCoreDataPath);
-            if (!Directory.Exists(PathConfig.localCoreDataPath) && 
+            PathEx.MakeDirectoryExist(localCoreDataPath);
+            if (!Directory.Exists(localCoreDataPath) && 
                 Directory.GetFiles(PathConfig.localCoreDataBackupPath).Length > 0)
             {
                 if (Directory.Exists(PathConfig.localCoreDataBackupPath))
                 {
-                    PathEx.MakeDirectoryExist(PathConfig.localCoreDataPath);
-                    DirectoryEx.DirectoryCopy(PathConfig.localCoreDataBackupPath, 
-                        PathConfig.localCoreDataPath, true);
+                    PathEx.MakeDirectoryExist(localCoreDataPath);
+                    DirectoryEx.DirectoryCopy(PathConfig.localCoreDataBackupPath,
+                        localCoreDataPath, true);
                 }
                 else
                 {

@@ -34,7 +34,8 @@ namespace ResetCore.Excel
 
             if (outputPath == null)
             {
-                outputPath = PathConfig.localGameDataXmlPath + Path.GetFileNameWithoutExtension(excelReader.currentSheetName) + XmlData.m_fileExtention;
+                outputPath = PathConfig.GetLocalGameDataPath(PathConfig.DataType.Xml) 
+                    + Path.GetFileNameWithoutExtension(excelReader.currentSheetName) + XmlData.m_fileExtention;
             }
             if (!Directory.Exists(Path.GetDirectoryName(outputPath)))
             {

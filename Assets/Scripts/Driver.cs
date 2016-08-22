@@ -20,7 +20,7 @@ public class Driver : MonoSingleton<Driver> {
     // Use this for initialization
     void Start()
     {
-        Debug.logger.Log(LanguageManager.GetWord("PEOPLE"));
+        //Debug.logger.Log(typeof(List<BuffData>).FullName);
     }
 
     public override void Init()

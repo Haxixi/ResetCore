@@ -22,7 +22,7 @@ namespace ResetCore.Data.GameDatas.Xml
             if (field != null)
             {
                 string fileName = field.GetValue(null) as string;
-                dictionary = (XmlDataController.instance.FormatData(fileName, typeof(Dictionary<int, T>), type) as Dictionary<int, T>);
+                dictionary = (XmlDataController.instance.FormatXMLData(fileName, typeof(Dictionary<int, T>), type) as Dictionary<int, T>);
             }
             else
             {
@@ -70,18 +70,9 @@ namespace ResetCore.Data.GameDatas.Xml
     public class XmlDataController : Singleton<XmlDataController>
     {
 
-        protected readonly string m_resourcePath = PathConfig.localGameDataXmlPath;
-
-        
-
         private static XmlDataController m_instance;
 
-        public object FormatData(string fileName, Type dicType, Type type)
-        {
-            return this.FormatXMLData(fileName + XmlData.m_fileExtention, dicType, type);
-        }
-
-        private object FormatXMLData(string fileName, Type dicType, Type type)
+        public object FormatXMLData(string fileName, Type dicType, Type type)
         {
             object dataDic = null;
             object result;

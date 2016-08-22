@@ -24,13 +24,12 @@ namespace ResetCore.Excel
             {
                 GenCS(excelReader);
                 protobufDataType = Type.GetType(ProtobufData.nameSpace + "." + className + ",Assembly-CSharp");
+                Debug.logger.Log("Gen the CS File Please");
             }
 
             List<Dictionary<string, object>> rowObjs = excelReader.GetRowObjs();
 
-
             List<object> result = new List<object>();
-
             for (int i = 0; i < rowObjs.Count; i++)
             {
                 object item = Activator.CreateInstance(protobufDataType);
@@ -38,24 +37,22 @@ namespace ResetCore.Excel
                 foreach (KeyValuePair<string, object> pair in rowObjs[i])
                 {
                     PropertyInfo prop = propertys.First((pro) => { return pro.Name == pair.Key; });
-                    //Debug.Log(prop.Name + " " + pair.Value.ConverToString());
-                    prop.SetValue(item, pair.Value, null); 
+                    prop.SetValue(item, pair.Value, null);
+                    Debug.logger.Log(pair.ConverToString());
                 }
-                
+
                 result.Add(item);
             }
-            //Debug.Log(result.ConverToString());
-
-            if (!Directory.Exists(PathConfig.localGameDataProtobufPath))
+            Debug.Log(result.ConverToString());
+            string protoPath = PathConfig.GetLocalGameDataPath(PathConfig.DataType.Protobuf);
+            if (!Directory.Exists(protoPath))
             {
-                Directory.CreateDirectory(PathConfig.localGameDataProtobufPath);
+                Directory.CreateDirectory(protoPath);
             }
-
-           
 
             if (ProtoBuf.Serializer.NonGeneric.CanSerialize(protobufDataType))
             {
-                string resPath = PathConfig.localGameDataProtobufPath + className + ProtobufData.ex;
+                string resPath = PathConfig.GetLocalGameDataPath(PathConfig.DataType.Protobuf) + className + ProtobufData.ex;
                 if(outputPath != null)
                 {
                     resPath = outputPath;
@@ -67,6 +64,7 @@ namespace ResetCore.Excel
                     ProtoBuf.Serializer.NonGeneric.Serialize(file, result);
                     Debug.logger.Log(resPath + "导出成功");
                 }
+
             }
             else
             {
@@ -107,8 +105,8 @@ namespace ResetCore.Excel
                     member.AddMemberCostomAttribute("ProtoBuf.ProtoMember", (i+1).ToString());
                 });
             });
-            PathEx.MakeDirectoryExist(PathConfig.localProtobufGameDataClassPath);
-            protobufBaseGener.GenCSharp(PathConfig.localProtobufGameDataClassPath);
+            PathEx.MakeDirectoryExist(PathConfig.GetLoaclGameDataClassPath(PathConfig.DataType.Protobuf));
+            protobufBaseGener.GenCSharp(PathConfig.GetLoaclGameDataClassPath(PathConfig.DataType.Protobuf));
 
             
         }

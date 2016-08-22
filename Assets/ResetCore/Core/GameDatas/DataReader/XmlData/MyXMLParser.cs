@@ -5,15 +5,28 @@ using System.Xml.Linq;
 
 using ResetCore.Asset;
 using ResetCore.Util;
+using System.IO;
 
 namespace ResetCore.Data
 {
     public class MyXMLParser
     {
         //创建表
-        public static bool LoadIntMap(string fileName, out Dictionary<int, Dictionary<string, string>> dicFromXml)
+        public static bool LoadIntMap(string fileName, out Dictionary<int, Dictionary<string, string>> dicFromXml, string rootPath = null)
         {
-            TextAsset textAsset = ResourcesLoaderHelper.Instance.LoadTextAsset(fileName);
+            TextAsset textAsset = null;
+
+            if(rootPath == null)
+            {
+                textAsset =
+                    Resources.Load<TextAsset>(PathConfig.GetLocalGameDataResourcesPath(PathConfig.DataType.Xml) + fileName);
+            }
+            else
+            {
+                textAsset =
+                    Resources.Load<TextAsset>(Path.Combine(rootPath,fileName).Replace("\\", "/"));
+            }
+
             if (textAsset == null)
             {
                 Debug.logger.LogError("XMLParser", fileName + " 文本加载失败");
@@ -47,10 +60,20 @@ namespace ResetCore.Data
         }
         
         //创建Instance
-        public static bool LoadInstance(string fileName, out Dictionary<string, string> dicFromXml)
+        public static bool LoadInstance(string fileName, out Dictionary<string, string> dicFromXml, string rootPath = null)
         {
-            TextAsset textAsset = ResourcesLoaderHelper.Instance.LoadTextAsset(fileName);
-            Debug.logger.Log(ResourcesLoaderHelper.resourcesList[fileName]);
+            TextAsset textAsset = null;
+            Debug.Log(PathConfig.GetLocalGameDataResourcesPath(PathConfig.DataType.Pref) + fileName);
+            if (rootPath == null)
+            {
+                textAsset =
+                    Resources.Load<TextAsset>(PathConfig.GetLocalGameDataResourcesPath(PathConfig.DataType.Pref) + fileName);
+            }
+            else
+            {
+                textAsset =
+                    Resources.Load<TextAsset>(Path.Combine(rootPath, fileName).Replace("\\", "/"));
+            }
             if (textAsset == null)
             {
                 Debug.logger.LogError("XMLParser", fileName + " 文本加载失败");
@@ -59,7 +82,7 @@ namespace ResetCore.Data
             XElement root = xDoc.Root;
             dicFromXml = new Dictionary<string, string>();
 
-            if (Alert.AlertIfNull(xDoc, "Cant Prase your xml!")) return false;
+            if (!Alert.AlertIfNull(xDoc, "Cant Prase your xml!")) return false;
 
             foreach (XElement item in root.Elements())
             {

@@ -7,6 +7,7 @@ using System.Linq;
 using ResetCore.Util;
 using ResetCore.Asset;
 using System.IO;
+using System.Text;
 
 namespace ResetCore.Data.GameDatas.Protobuf
 {
@@ -22,7 +23,7 @@ namespace ResetCore.Data.GameDatas.Protobuf
             if (field != null)
             {
                 string fileName = field.GetValue(null) as string;
-                dictionary = (ProtobufDataController.instance.FormatData(fileName, typeof(Dictionary<int, T>), type) as Dictionary<int, T>);
+                dictionary = (ProtobufDataController<T>.instance.FormatData(fileName));
             }
             else
             {
@@ -61,29 +62,32 @@ namespace ResetCore.Data.GameDatas.Protobuf
         }
     }
 
-    public class ProtobufDataController : Singleton<ProtobufDataController>
+    public class ProtobufDataController<T> : Singleton<ProtobufDataController<T>>
     {
-        public object FormatData(string fileName, Type dicType, Type type)
+        public Dictionary<int, T> FormatData(string fileName)
         {
-            TextAsset asset = ResourcesLoaderHelper.Instance.LoadResource<TextAsset>(fileName + ProtobufData.ex);
-            MemoryStream ms = new MemoryStream(asset.bytes);
-            BinaryReader br = new BinaryReader(ms);
+            TextAsset asset = 
+                Resources.Load<TextAsset>(PathConfig.GetLocalGameDataResourcesPath(PathConfig.DataType.Protobuf) + fileName);
 
-            object resDict = Activator.CreateInstance(dicType);
-            Type listType = Type.GetType("System.Collections.Generic.List`1[[" + type.FullName + ", Assembly-CSharp]]");
+            if(asset == null)
+            {
+                Debug.logger.LogError("Load Assets", "Cant find the file:" + fileName);
+                return null;
+            }
 
-            int len = br.ReadInt32();
-            byte[] itembuf = br.ReadBytes(len);
+            MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(asset.text));
 
-            object resList = ProtoBuf.Serializer.NonGeneric.Deserialize(listType, new MemoryStream(itembuf));
+            Dictionary<int, T> resDict = new Dictionary<int, T>();
+            Type listType = typeof(List<T>);
 
-            int listCount = (int)listType.GetProperty("Count").GetValue(resList, null);
-            MethodInfo addMethod = dicType.GetMethod("Add");
-            MethodInfo listGetMethod = listType.GetMethod("get_Item", BindingFlags.Instance | BindingFlags.Public);
+            List<T> resList = ProtoBuf.Serializer.Deserialize<List<T>>(ms);
+            int listCount = resList.Count;
+
             for (int i = 0; i < listCount; i++)
             {
-                addMethod.Invoke(resDict, new object[] { i + 1, listGetMethod.Invoke(resList, new object[] { i }) });
+                resDict.Add(i+1, resList[i]);
             }
+
             return resDict;
         }
     }

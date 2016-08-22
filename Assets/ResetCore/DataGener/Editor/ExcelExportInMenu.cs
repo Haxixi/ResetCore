@@ -43,37 +43,37 @@ namespace ResetCore.Excel
         }
 
         /// <summary>
-        /// 导出选中的Excel为Protobuf
+        /// 导出选中的Excel为Protobuf（暂时不可用）
         /// </summary>
-        [MenuItem("Assets/DataHelper/Protobuf/Export Selected Excel")]
-        public static void ExportAllSelectedExcelToProtobuf()
-        {
-            var selection = Selection.GetFiltered(typeof(UnityEngine.Object), SelectionMode.DeepAssets);
-            var paths = (from s in selection
-                         let path = AssetDatabase.GetAssetPath(s)
-                         where (path.EndsWith(".xlsx") || path.EndsWith(".xls"))
-                         select path).ToArray();
+        //[MenuItem("Assets/DataHelper/Protobuf/Export Selected Excel")]
+        //public static void ExportAllSelectedExcelToProtobuf()
+        //{
+        //    var selection = Selection.GetFiltered(typeof(UnityEngine.Object), SelectionMode.DeepAssets);
+        //    var paths = (from s in selection
+        //                 let path = AssetDatabase.GetAssetPath(s)
+        //                 where (path.EndsWith(".xlsx") || path.EndsWith(".xls"))
+        //                 select path).ToArray();
 
-            int num = 1;
-            foreach (string item in paths)
-            {
-                Debug.Log(item);
-                ExcelReader excelReader = new ExcelReader(item);
-                foreach (string sheetName in excelReader.GetSheetNames())
-                {
-                    EditorUtility.DisplayProgressBar
-                        ("Exporting Excel", "Current: " + num + "/" + paths.Length + " File: " + Path.GetFileName(item) +
-                        " Sheet: " + sheetName, (float)num / (float)paths.Length);
+        //    int num = 1;
+        //    foreach (string item in paths)
+        //    {
+        //        Debug.Log(item);
+        //        ExcelReader excelReader = new ExcelReader(item);
+        //        foreach (string sheetName in excelReader.GetSheetNames())
+        //        {
+        //            EditorUtility.DisplayProgressBar
+        //                ("Exporting Excel", "Current: " + num + "/" + paths.Length + " File: " + Path.GetFileName(item) +
+        //                " Sheet: " + sheetName, (float)num / (float)paths.Length);
 
-                    excelReader = new ExcelReader(item, sheetName);
-                    Excel2Protobuf.GenCS(excelReader);
-                    Excel2Protobuf.GenProtobuf(excelReader);
-                }
-                num++;
-            }
-            EditorUtility.ClearProgressBar();
-            Debug.logger.Log("Finished");
-        }
+        //            excelReader = new ExcelReader(item, sheetName);
+        //            Excel2Protobuf.GenCS(excelReader);
+        //            Excel2Protobuf.GenProtobuf(excelReader);
+        //        }
+        //        num++;
+        //    }
+        //    EditorUtility.ClearProgressBar();
+        //    Debug.logger.Log("Finished");
+        //}
 
         /// <summary>
         /// 导出选中的Excel为首选项
