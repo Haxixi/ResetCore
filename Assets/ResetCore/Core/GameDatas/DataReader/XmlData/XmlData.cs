@@ -1,12 +1,10 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System;
 using System.Reflection;
-using System.Xml.Linq;
 using ResetCore.Util;
 using System.Linq;
-
+using ResetCore.Xml;
 
 namespace ResetCore.Data.GameDatas.Xml
 {
@@ -72,6 +70,7 @@ namespace ResetCore.Data.GameDatas.Xml
 
         private static XmlDataController m_instance;
 
+        //TODO 重构 取消后面两个Type参数 而用泛型传类型
         public object FormatXMLData(string fileName, Type dicType, Type type)
         {
             object dataDic = null;
@@ -80,14 +79,14 @@ namespace ResetCore.Data.GameDatas.Xml
             {
                 Dictionary<int, Dictionary<string, string>> dictionary = new Dictionary<int, Dictionary<string, string>>();
                 dataDic = dicType.GetConstructor(Type.EmptyTypes).Invoke(null);
-                if (!MyXMLParser.LoadIntMap(fileName, out dictionary))
+                if (!XMLParser.LoadIntMap(fileName, out dictionary))
                 {
                     //加载失败
                     Debug.logger.LogError("GameData", "数据加载失败！");
                     result = dataDic;
                     return result;
                 }
-                //Debug.logger.Log("dictionary.count" + dictionary.Count);
+
                 PropertyInfo[] properties = type.GetProperties();
                 foreach (KeyValuePair<int, Dictionary<string, string>> pair in dictionary)
                 {

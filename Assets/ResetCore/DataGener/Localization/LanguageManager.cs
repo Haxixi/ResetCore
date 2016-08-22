@@ -3,6 +3,7 @@ using System.Collections;
 using ResetCore.Util;
 using System.Collections.Generic;
 using System.IO;
+using ResetCore.Xml;
 
 namespace ResetCore.Data
 {
@@ -49,7 +50,7 @@ namespace ResetCore.Data
         private Dictionary<int, Dictionary<string, string>> GetLanguageDict()
         {
             var result = new Dictionary<int, Dictionary<string, string>>();
-            if (!MyXMLParser.LoadIntMap(Path.GetFileNameWithoutExtension(PathConfig.LanguageDataPath), 
+            if (!XMLParser.LoadIntMap(Path.GetFileNameWithoutExtension(PathConfig.LanguageDataPath), 
                 out result, PathConfig.GetLocalGameDataResourcesPath(PathConfig.DataType.Localization)))
             {
                 return result;

@@ -7,9 +7,9 @@ using ResetCore.Asset;
 using ResetCore.Util;
 using System.IO;
 
-namespace ResetCore.Data
+namespace ResetCore.Xml
 {
-    public class MyXMLParser
+    public class XMLParser
     {
         //创建表
         public static bool LoadIntMap(string fileName, out Dictionary<int, Dictionary<string, string>> dicFromXml, string rootPath = null)

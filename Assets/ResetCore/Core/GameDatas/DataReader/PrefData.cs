@@ -4,6 +4,7 @@ using System;
 using ResetCore.Util;
 using System.Collections.Generic;
 using System.Reflection;
+using ResetCore.Xml;
 
 namespace ResetCore.Data.GameDatas.Xml
 {
@@ -61,7 +62,7 @@ namespace ResetCore.Data.GameDatas.Xml
             try
             {
                 Dictionary<string, string> dictionary = new Dictionary<string, string>();
-                if (!MyXMLParser.LoadInstance(fileName, out dictionary))
+                if (!XMLParser.LoadInstance(fileName, out dictionary))
                 {
                     //加载失败
                     Debug.logger.LogError("GameData", "Load Failed！");
