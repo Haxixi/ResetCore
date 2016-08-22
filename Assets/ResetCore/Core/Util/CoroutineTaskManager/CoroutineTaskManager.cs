@@ -124,6 +124,7 @@ namespace ResetCore.Util
                         else
                         {
                             running = false;
+                            callBack(true);
                         }
                     }
 
@@ -134,7 +135,6 @@ namespace ResetCore.Util
                     }
 
                 }
-                callBack(true);
             }
 
 
