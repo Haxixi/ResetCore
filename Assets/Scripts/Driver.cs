@@ -21,13 +21,10 @@ public class Driver : MonoSingleton<Driver> {
     // Use this for initialization
     void Start()
     {
-        Destroy(gameObject, 3);
-        int i = 0;
-        CoroutineTaskManager.Instance.LoopTodoByTime(() =>
+        CoroutineTaskManager.Instance.WaitSecondTodo(() =>
         {
-            i++;
-            Debug.Log(i);
-        }, 1, -1, gameObject);
+            LanguageManager.SetLanguageType(LanguageConst.LanguageType.English);
+        }, 3);
     }
 
     public override void Init()
