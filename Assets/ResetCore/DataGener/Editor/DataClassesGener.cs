@@ -12,6 +12,7 @@ using ResetCore.Data;
 using UnityEditor;
 using ResetCore.Data.GameDatas.Xml;
 using ResetCore.Data.GameDatas.Obj;
+using ResetCore.Data.GameDatas.Json;
 
 public class DataClassesGener {
 
@@ -82,6 +83,16 @@ public class DataClassesGener {
                 Directory.CreateDirectory(prefDataClassPath);
             }
             outputFile = prefDataClassPath + className + ".cs";
+        }
+        else if (baseType == typeof(JsonData))
+        {
+            nameSpace = JsonData.nameSpace;
+            string jsonDataClassPath = PathConfig.GetLoaclGameDataClassPath(PathConfig.DataType.Json);
+            if (!Directory.Exists(jsonDataClassPath))
+            {
+                Directory.CreateDirectory(jsonDataClassPath);
+            }
+            outputFile = jsonDataClassPath + className + ".cs";
         }
         else
         {

@@ -99,6 +99,7 @@ public class PathConfig
         Xml,
         Obj,
         Protobuf,
+        Json,
         Pref,
         Localization,
         Core
@@ -165,9 +166,9 @@ public class PathConfig
     //Lua模板资源路径
     public static readonly string luaScriptAssetPath = ResetCorePath + "Lua/Editor/LuaAsset.lua".Replace(projectPath, "");
     //Xml模板资源路径
-    public static readonly string xmlScriptAssetPath = ResetCorePath + "Xml/Editor/XmlAsset.xml".Replace(projectPath, "");
+    public static readonly string xmlScriptAssetPath = ResetCorePath + "DataSupport/Xml/Editor/XmlAsset.xml".Replace(projectPath, "");
     //Json模板资源路径
-    public static readonly string jsonScriptAssetPath = ResetCorePath + "Json/Editor/JsonAsset.json".Replace(projectPath, "");
+    public static readonly string jsonScriptAssetPath = ResetCorePath + "DataSupport/Json/Editor/JsonAsset.json".Replace(projectPath, "");
 
     public static readonly string csToolPath = ExtraToolPath + "C#Tools/ExcelDataManager.exe";
     public static readonly string csTool_GameDataViaExcel = "GameDataGen";

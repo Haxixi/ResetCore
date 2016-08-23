@@ -57,7 +57,7 @@ namespace ResetCore.Excel
                             //EditorGUILayout.Space();
                             //ShowExportObj();
                             //EditorGUILayout.Space();
-                            //ShowExportJson();
+                            ShowExportJson();
                         }
                         break;
                     case ExcelType.Pref:
@@ -285,17 +285,18 @@ namespace ResetCore.Excel
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("导出Json", GUILayout.Width(100)))
             {
-
+                Excel2Json.GenJson(excelReader);
             }
             if (GUILayout.Button("导出JsonData.cs", GUILayout.Width(100)))
             {
-
+                Excel2Json.GenCS(excelReader);
             }
             GUILayout.EndHorizontal();
 
             if (GUILayout.Button("全部导出", GUILayout.Width(100)))
             {
-
+                Excel2Json.GenJson(excelReader);
+                Excel2Json.GenCS(excelReader);
             }
         }
 

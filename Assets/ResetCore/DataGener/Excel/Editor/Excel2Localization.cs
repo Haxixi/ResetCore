@@ -61,24 +61,6 @@ namespace ResetCore.Excel
 
             xDoc.Save(outputPath);
 
-            //生成代码文件用于读取
-            //string className = excelReader.currentSheetName;
-
-            //Dictionary<string, Type> fieldDict = new Dictionary<string,Type>();
-            //int row = 1;
-            //foreach (string key in keyLine)
-            //{
-            //    if (fieldDict.ContainsKey(key))
-            //    {
-            //        Debug.logger.LogError("Gen Localization Data", "Same Key: " + key + " Row Number: " + row + " has been in the data");
-            //        continue;
-            //    }
-            //    fieldDict.Add(key, typeof(string));
-            //    row++;
-            //}
-
-            //DataClassesGener.CreateNewClass(className, typeof(XmlData), fieldDict, PathConfig.localLanguageDataClassPath);
-
             AssetDatabase.Refresh();
         }
 

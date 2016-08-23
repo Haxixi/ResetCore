@@ -5,13 +5,14 @@ using System;
 using System.Reflection;
 using System.Linq;
 using ResetCore.Util;
+using ResetCore.Json;
 
 namespace ResetCore.Data.GameDatas.Json
 {
     public class JsonData : BaseData
     {
-        public static readonly string nameSpace = "ResetCore.Data.GameDatas.Xml";
-        public static readonly string m_fileExtention = ".xml";
+        public static readonly string nameSpace = "ResetCore.Data.GameDatas.Json";
+        public static readonly string m_fileExtention = ".json";
         protected static Dictionary<int, T> GetDataMap<T>()
         {
             Type type = typeof(T);
@@ -20,7 +21,7 @@ namespace ResetCore.Data.GameDatas.Json
             if (field != null)
             {
                 string fileName = field.GetValue(null) as string;
-                dictionary = (JsonDataController.instance.FormatXMLData<T>(fileName));
+                dictionary = (new JsonDataController().FormatXMLData<T>(fileName));
             }
             else
             {
@@ -64,17 +65,22 @@ namespace ResetCore.Data.GameDatas.Json
         }
     }
 
-    public class JsonDataController : Singleton<JsonDataController>
+    class JsonDataController
     {
 
         private static JsonDataController m_instance;
 
         public Dictionary<int, T> FormatXMLData<T>(string fileName)
         {
-            object dataDic = null;
             Dictionary<int, T> result = new Dictionary<int, T>();
-            
-            return result;
+
+            Dictionary<int, Dictionary<string, string>> strDictionary = new Dictionary<int, Dictionary<string, string>>();
+            if(!JsonParser.LoadIntMap(fileName, out strDictionary)){
+                Debug.logger.LogError("GameData", "Load Failed");
+                return new Dictionary<int, T>();
+            }
+
+            return DataUtil.ParserStringDict2ClassDict<T>(strDictionary);
         }
 
     }
