@@ -21,7 +21,13 @@ public class Driver : MonoSingleton<Driver> {
     // Use this for initialization
     void Start()
     {
-        Debug.Log(BuffData.dataMap[1].BuffName);
+        Destroy(gameObject, 3);
+        int i = 0;
+        CoroutineTaskManager.Instance.LoopTodoByTime(() =>
+        {
+            i++;
+            Debug.Log(i);
+        }, 1, -1, gameObject);
     }
 
     public override void Init()

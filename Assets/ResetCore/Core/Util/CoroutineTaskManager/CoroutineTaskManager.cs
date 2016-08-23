@@ -111,6 +111,13 @@ namespace ResetCore.Util
                 IEnumerator e = iEnumer;
                 while (running)
                 {
+                    if (bindObject.Equals(null))
+                    {
+                        Debug.logger.LogWarning("协程中断", "因为绑定物体被删除所以停止协程");
+                        Stop();
+                        yield break;
+                    }
+
                     if (paused)
                     {
                         yield return null;
@@ -128,11 +135,7 @@ namespace ResetCore.Util
                         }
                     }
 
-                    if (bindObject == null)
-                    {
-                        Debug.logger.LogWarning("协程中断", "因为绑定物体被删除所以停止协程");
-                        Stop();
-                    }
+                   
 
                 }
             }
