@@ -5,6 +5,7 @@ using ResetCore.Event;
 
 namespace ResetCore.UGUI
 {
+    [AddComponentMenu("UI/Extra/UIEventListener")]
     public class UIEventListener : UnityEngine.EventSystems.EventTrigger
     {
         public delegate void VoidDelegate(GameObject go);
@@ -25,6 +26,7 @@ namespace ResetCore.UGUI
 
 #region 重载触发事件的按钮函数
 #if EVENT
+        [SerializeField]
         public string pointerClickEventName;
         public override void OnPointerClick(PointerEventData eventData)
         {
@@ -37,6 +39,7 @@ namespace ResetCore.UGUI
                 }
             }
         }
+        [SerializeField]
         public string pointDownEventName;
         public override void OnPointerDown(PointerEventData eventData)
         {

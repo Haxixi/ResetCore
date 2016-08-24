@@ -4,11 +4,19 @@ using UnityEngine.Audio;
 using ResetCore.Util;
 using ResetCore.Asset;
 using System.Collections.Generic;
+#if DATA_GENER
+using ResetCore.Data;
+#endif
 
-namespace ResetCore.Util
+namespace ResetCore.ResObject
 {
     public class AudioManager : MonoSingleton<AudioManager>
     {
+        [SerializeField]
+        private bool isLocalization = false;
+
+        public bool localization { get { return isLocalization; } }
+
         [SerializeField]
         private List<AudioMixerGroup> groupList;
 
@@ -127,6 +135,15 @@ namespace ResetCore.Util
         private AudioSource PlayObject(GameObject go, string clipName, float volume, float time, AudioMixerGroup mixerGroup = null, bool isLoop = false, bool fadeIn = false)
         {
             AudioSource audioSource = go.GetOrCreateComponent<AudioSource>();
+#if DATA_GENER
+            if (isLocalization)
+            {
+                if (LanguageManager.ContainWord(clipName))
+                {
+                    clipName = LanguageManager.GetWord(clipName);
+                }
+            }
+#endif
             audioSource.clip = ResourcesLoaderHelper.Instance.LoadResource<AudioClip>(clipName);
             audioSource.outputAudioMixerGroup = mixerGroup;
             audioSource.loop = isLoop;

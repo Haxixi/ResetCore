@@ -21,10 +21,7 @@ public class Driver : MonoSingleton<Driver> {
     // Use this for initialization
     void Start()
     {
-        CoroutineTaskManager.Instance.WaitSecondTodo(() =>
-        {
-            LanguageManager.SetLanguageType(LanguageConst.LanguageType.English);
-        }, 3);
+
     }
 
     public override void Init()
