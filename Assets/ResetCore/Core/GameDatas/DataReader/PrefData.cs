@@ -4,6 +4,7 @@ using System;
 using ResetCore.Util;
 using System.Collections.Generic;
 using System.Reflection;
+using ResetCore.Xml;
 
 namespace ResetCore.Data.GameDatas.Xml
 {
@@ -21,7 +22,7 @@ namespace ResetCore.Data.GameDatas.Xml
             if (field != null)
             {
                 string fileName = field.GetValue(null) as string;
-                instance = (T)(PrefDataController.instance.FormatData(fileName, type));
+                instance = (T)(PrefDataController.instance.FormatXMLData(fileName, type));
             }
             else
             {
@@ -54,23 +55,14 @@ namespace ResetCore.Data.GameDatas.Xml
     public class PrefDataController : Singleton<PrefDataController>
     {
 
-        protected readonly string m_resourcePath = PathConfig.localGameDataXmlPath;
-
-        
-
-        public object FormatData(string fileName, Type type)
-        {
-            return this.FormatXMLData(fileName + PrefData.m_fileExtention, type);
-        }
-
-        private object FormatXMLData(string fileName, Type type)
+        public object FormatXMLData(string fileName, Type type)
         {
             object result;
             result = Activator.CreateInstance(type);
             try
             {
                 Dictionary<string, string> dictionary = new Dictionary<string, string>();
-                if (!MyXMLParser.LoadInstance(fileName, out dictionary))
+                if (!XMLParser.LoadInstance(fileName, out dictionary))
                 {
                     //加载失败
                     Debug.logger.LogError("GameData", "Load Failed！");
@@ -81,15 +73,15 @@ namespace ResetCore.Data.GameDatas.Xml
                 //为Instance赋值
                 foreach(PropertyInfo prop in properties)
                 {
-                    prop.SetValue(result, dictionary[prop.Name].GetValue(prop.DeclaringType), null);
+                    prop.SetValue(result, dictionary[prop.Name].GetValue(prop.PropertyType), null);
                 }
 
             }
             catch (Exception exception)
             {
-                Debug.logger.LogError("GameData", "FormatData Error: " + fileName + "  " + exception.Message + " " + exception.StackTrace);
+                Debug.logger.LogException(exception);
             }
-
+            
             return result;
         }
 

@@ -12,6 +12,7 @@ using ResetCore.Data;
 using UnityEditor;
 using ResetCore.Data.GameDatas.Xml;
 using ResetCore.Data.GameDatas.Obj;
+using ResetCore.Data.GameDatas.Json;
 
 public class DataClassesGener {
 
@@ -23,10 +24,16 @@ public class DataClassesGener {
     private static string outputFile;
 
     
-
-    public static void CreateNewClass(string className, Type baseType, Dictionary<string, Type> fieldDict)
+    /// <summary>
+    /// 创建代码
+    /// </summary>
+    /// <param name="className">类名</param>
+    /// <param name="baseType">基础类型</param>
+    /// <param name="fieldDict">属性表</param>
+    /// <param name="path">自定义路径</param>
+    public static void CreateNewClass(string className, Type baseType, Dictionary<string, Type> fieldDict, string path = null)
     {
-        GetPropString(className, baseType);
+        GetPropString(className, baseType, path);
 
         CodeCompileUnit unit;
         CodeTypeDeclaration NewClass;
@@ -38,7 +45,7 @@ public class DataClassesGener {
 
     }
 
-    private static void GetPropString(string className, Type baseType)
+    private static void GetPropString(string className, Type baseType, string path)
     {
         importNameSpaces = new string[]{
                 "System","System.Collections.Generic", "UnityEngine"
@@ -49,36 +56,53 @@ public class DataClassesGener {
         if (baseType == typeof(XmlData))
         {
             nameSpace = XmlData.nameSpace;
-            if (!Directory.Exists(PathConfig.localXmlGameDataClassPath))
+            string classPath = PathConfig.GetLoaclGameDataClassPath(PathConfig.DataType.Xml);
+            if (!Directory.Exists(classPath))
             {
-                Directory.CreateDirectory(PathConfig.localXmlGameDataClassPath);
+                Directory.CreateDirectory(classPath);
             }
-            outputFile = PathConfig.localXmlGameDataClassPath + className + ".cs";
+            outputFile = classPath + className + ".cs";
             
         }
         else if (baseType == typeof(ObjData))
         {
             nameSpace = ObjData.nameSpace;
-            if (!Directory.Exists(PathConfig.localObjGameDataClassPath))
+            string classPath = PathConfig.GetLoaclGameDataClassPath(PathConfig.DataType.Obj);
+            if (!Directory.Exists(classPath))
             {
-                Directory.CreateDirectory(PathConfig.localObjGameDataClassPath);
+                Directory.CreateDirectory(classPath);
             }
-            outputFile = PathConfig.localObjGameDataClassPath + className + ".cs";
+            outputFile = classPath + className + ".cs";
         }
         else if (baseType == typeof(PrefData))
         {
             nameSpace = PrefData.nameSpace;
-            if (!Directory.Exists(PathConfig.localPrefDataClassPath))
+            string prefDataClassPath = PathConfig.GetLoaclGameDataClassPath(PathConfig.DataType.Pref);
+            if (!Directory.Exists(prefDataClassPath))
             {
-                Directory.CreateDirectory(PathConfig.localPrefDataClassPath);
+                Directory.CreateDirectory(prefDataClassPath);
             }
-            outputFile = PathConfig.localPrefDataClassPath + className + ".cs";
+            outputFile = prefDataClassPath + className + ".cs";
+        }
+        else if (baseType == typeof(JsonData))
+        {
+            nameSpace = JsonData.nameSpace;
+            string jsonDataClassPath = PathConfig.GetLoaclGameDataClassPath(PathConfig.DataType.Json);
+            if (!Directory.Exists(jsonDataClassPath))
+            {
+                Directory.CreateDirectory(jsonDataClassPath);
+            }
+            outputFile = jsonDataClassPath + className + ".cs";
         }
         else
         {
             Debug.logger.LogError("GameData", "无效的数据类型");
         }
-        
+        //自定义Path
+        if (path != null)
+        {
+            outputFile = path;
+        }
     }
     private static void CreateNewClass(out CodeCompileUnit unit, out CodeTypeDeclaration NewClass)
     {

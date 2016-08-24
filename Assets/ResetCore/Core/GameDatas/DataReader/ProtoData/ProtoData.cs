@@ -5,11 +5,10 @@ using System.IO;
 public class ProtoData<T> where T : class, ProtoBuf.IExtensible {
 
     T[] m_dataItems;
-    private readonly string path = "Data/Protobuf/";
-
     public ProtoData()
     {
-        byte[] buf = Resources.Load<TextAsset>(path + typeof(T).ToString().Split('.')[1] + "protodata").bytes;
+        byte[] buf = Resources.Load<TextAsset>(PathConfig.GetLocalGameDataResourcesPath(PathConfig.DataType.Protobuf)
+            + typeof(T).ToString().Split('.')[1] + "protodata").bytes;
 
         MemoryStream ms = new MemoryStream(buf);
         BinaryReader br = new BinaryReader(ms);

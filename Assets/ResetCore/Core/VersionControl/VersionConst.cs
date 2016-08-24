@@ -31,7 +31,7 @@ namespace ResetCore.VersionControl
         SHADER,
         TEST,
         UGUI,
-        XML,
+        DATA_SUPPORT,
 
         AR,
         VR_VIVE
@@ -81,7 +81,7 @@ namespace ResetCore.VersionControl
             {VERSION_SYMBOL.SHADER,"SHADER"},
             {VERSION_SYMBOL.TEST,"TEST"},
             {VERSION_SYMBOL.UGUI,"UGUI"},
-            {VERSION_SYMBOL.XML,"XML"},
+            {VERSION_SYMBOL.DATA_SUPPORT,"DATA_SUPPORT"},
 
             {VERSION_SYMBOL.AR,"AR"},
             {VERSION_SYMBOL.VR_VIVE,"VR_VIVE"},
@@ -112,7 +112,7 @@ namespace ResetCore.VersionControl
             {VERSION_SYMBOL.SHADER, "Shader"},
             {VERSION_SYMBOL.TEST, "Test"},
             {VERSION_SYMBOL.UGUI, "UGUI"},
-            {VERSION_SYMBOL.XML, "Xml"},
+            {VERSION_SYMBOL.DATA_SUPPORT, "DataSupport"},
 
             {VERSION_SYMBOL.AR, "ARToolKit"},
             {VERSION_SYMBOL.VR_VIVE, "VR_Vive"},
@@ -163,7 +163,7 @@ namespace ResetCore.VersionControl
             {VERSION_SYMBOL.SHADER, "对Shader的扩展（开发中）"},
             {VERSION_SYMBOL.TEST, "测试模块"},
             {VERSION_SYMBOL.UGUI, "UGUI基本UI框架"},
-            {VERSION_SYMBOL.XML, "对Xml的扩展支持"},
+            {VERSION_SYMBOL.DATA_SUPPORT, "对各种储存传输数据的扩展"},
 
             {VERSION_SYMBOL.AR, "对ARToolKit的扩展支持（需要安装）"},
             {VERSION_SYMBOL.VR_VIVE, "对SteamVR的扩展支持（需要安装）"},

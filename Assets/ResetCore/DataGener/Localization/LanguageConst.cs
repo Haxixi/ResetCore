@@ -12,9 +12,6 @@ namespace ResetCore.Data
             Chinese = 1,
             English = 2
         }
-
-        public static string languageXmlFileName = "LanguageData.xml";
-        public static string languageExcelFileName = "LanguageData.xlsx";
     }
 
 }

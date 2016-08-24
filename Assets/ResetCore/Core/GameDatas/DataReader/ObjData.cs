@@ -62,8 +62,6 @@ namespace ResetCore.Data.GameDatas.Obj
     public class ObjDataController : Singleton<ObjDataController>
     {
 
-        protected readonly string m_resourcePath = PathConfig.localGameDataObjPath;
-
         protected readonly string m_fileExtention = ".objdat";
 
         public object FormatObjData(string fileName)

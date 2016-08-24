@@ -93,48 +93,61 @@ public class PathConfig
     #endregion
 
     #region GameData相关
+
+    public enum DataType
+    {
+        Xml,
+        Obj,
+        Protobuf,
+        Json,
+        Pref,
+        Localization,
+        Core
+    }
+
     //Excelm默认存放地址
     public static readonly string localGameDataExcelPath = Application.dataPath + "/Excel/";
 
+    //Data专用的Resources
+    public static readonly string localDataResourcesPath = ResetCorePath + "Core/GameDatas/Resources/";
+    public static readonly string loacalDataPathInResources = "GameData/";
+
     //游戏数据根目录
-    public static readonly string localGameDataSourceRoot = resourcePath + "Data/GameData/";
+    public static readonly string localGameDataSourceRoot = localDataResourcesPath + loacalDataPathInResources;
     //游戏数据类文件根目录
     public static readonly string localGameDataClassRoot = ResetCorePath + "Core/GameDatas/DataClasses/";
 
-    //存放Xml的地址
-    public static readonly string localGameDataXmlPath = localGameDataSourceRoot + "Xml/";
-    //存放XmlGameData类的地址
-    public static readonly string localXmlGameDataClassPath = localGameDataClassRoot + "Xml/";
-
-    //存放Obj的地址
-    public static readonly string localGameDataObjPath = localGameDataSourceRoot + "Obj/";
-    //存放ObjGameData类的地址
-    public static readonly string localObjGameDataClassPath = localGameDataClassRoot + "Obj/";
-
-    //存放Protobuf的地址
-    public static readonly string localGameDataProtobufPath = localGameDataSourceRoot + "Protobuf/";
-    //存放ProtobufGameData类的地址
-    public static readonly string localProtobufGameDataClassPath = localGameDataClassRoot + "Protobuf/";
-
-    //存放PrefData的地址
-    public static readonly string localPrefDataPath = localGameDataSourceRoot + "Pref/";
-    //存放PrefData GameData类的地址
-    public static readonly string localPrefDataClassPath = localGameDataClassRoot + "Pref/";
+    //存放游戏数据源文件的目录
+    public static string GetLocalGameDataPath(DataType type)
+    {
+        return localGameDataSourceRoot + type.ToString() + "/";
+    }
+    //存放GameDataClass的路径
+    public static string GetLoaclGameDataClassPath(DataType type)
+    {
+        return localGameDataClassRoot + type.ToString() + "/";
+    }
+    //获取相对于Resources的路径
+    public static string GetLocalGameDataResourcesPath(DataType type)
+    {
+        return loacalDataPathInResources + type.ToString() + "/";
+    }
 
     //存放核心数据备份的地址
     public static readonly string localCoreDataBackupPath = ResetCorePath + "Core/GameDatas/CoreData/Datas/";
-    //存放核心数据的地址
-    public static readonly string localCoreDataPath = localGameDataSourceRoot + "Core/";
-    //存放核心数据 GameData类的地址
-    public static readonly string localCoreDataClassPath = ResetCorePath + "Core/GameDatas/CoreData/Classes/";
 
     /// <summary>
     /// 本地化数据存放地址
     /// </summary>
-    public static readonly string LanguageDataExcelPath = PathEx.Combine(ResetCorePath, VersionConst.SymbolFoldNames[VERSION_SYMBOL.DATA_GENER], "Localization/Excel");
+    public static readonly string LanguageDataExcelPath = 
+        PathEx.Combine(ResetCorePath, VersionConst.SymbolFoldNames[VERSION_SYMBOL.DATA_GENER], "Localization/Excel/LocalizationData.xlsx");
 
     //存放本地化数据的地址
-    public static readonly string LanguageDataPath = localGameDataSourceRoot + "Localization/";
+    public static readonly string LanguageDataPath = 
+        PathConfig.GetLocalGameDataPath(DataType.Localization) + "LocalizationData.xml";
+    //存放PrefData GameData类的地址
+    public static readonly string localLanguageDataClassPath = 
+        PathConfig.GetLoaclGameDataClassPath(DataType.Localization) + "LocalizationData.cs";
 
     #endregion
 
@@ -153,7 +166,9 @@ public class PathConfig
     //Lua模板资源路径
     public static readonly string luaScriptAssetPath = ResetCorePath + "Lua/Editor/LuaAsset.lua".Replace(projectPath, "");
     //Xml模板资源路径
-    public static readonly string xmlScriptAssetPath = ResetCorePath + "Xml/Editor/XmlAsset.xml".Replace(projectPath, "");
+    public static readonly string xmlScriptAssetPath = ResetCorePath + "DataSupport/Xml/Editor/XmlAsset.xml".Replace(projectPath, "");
+    //Json模板资源路径
+    public static readonly string jsonScriptAssetPath = ResetCorePath + "DataSupport/Json/Editor/JsonAsset.json".Replace(projectPath, "");
 
     public static readonly string csToolPath = ExtraToolPath + "C#Tools/ExcelDataManager.exe";
     public static readonly string csTool_GameDataViaExcel = "GameDataGen";

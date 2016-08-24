@@ -1,12 +1,10 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System;
 using System.Reflection;
-using System.Xml.Linq;
 using ResetCore.Util;
 using System.Linq;
-
+using ResetCore.Xml;
 
 namespace ResetCore.Data.GameDatas.Xml
 {
@@ -22,7 +20,7 @@ namespace ResetCore.Data.GameDatas.Xml
             if (field != null)
             {
                 string fileName = field.GetValue(null) as string;
-                dictionary = (XmlDataController.instance.FormatData(fileName, typeof(Dictionary<int, T>), type) as Dictionary<int, T>);
+                dictionary = new XmlDataController().FormatXMLData<T>(fileName);
             }
             else
             {
@@ -67,72 +65,22 @@ namespace ResetCore.Data.GameDatas.Xml
         }
     }
 
-    public class XmlDataController : Singleton<XmlDataController>
+    class XmlDataController
     {
-
-        protected readonly string m_resourcePath = PathConfig.localGameDataXmlPath;
-
-        
 
         private static XmlDataController m_instance;
 
-        public object FormatData(string fileName, Type dicType, Type type)
+        //
+        public Dictionary<int, T> FormatXMLData<T>(string fileName)
         {
-            return this.FormatXMLData(fileName + XmlData.m_fileExtention, dicType, type);
-        }
-
-        private object FormatXMLData(string fileName, Type dicType, Type type)
-        {
-            object dataDic = null;
-            object result;
-            try
+            Dictionary<int, Dictionary<string, string>> dictionary = new Dictionary<int, Dictionary<string, string>>();
+            if (!XMLParser.LoadIntMap(fileName, out dictionary))
             {
-                Dictionary<int, Dictionary<string, string>> dictionary = new Dictionary<int, Dictionary<string, string>>();
-                dataDic = dicType.GetConstructor(Type.EmptyTypes).Invoke(null);
-                if (!MyXMLParser.LoadIntMap(fileName, out dictionary))
-                {
-                    //加载失败
-                    Debug.logger.LogError("GameData", "数据加载失败！");
-                    result = dataDic;
-                    return result;
-                }
-                //Debug.logger.Log("dictionary.count" + dictionary.Count);
-                PropertyInfo[] properties = type.GetProperties();
-                foreach (KeyValuePair<int, Dictionary<string, string>> pair in dictionary)
-                {
-                    object propInstance = type.GetConstructor(Type.EmptyTypes).Invoke(null);
-                    PropertyInfo[] array = properties;
-                    for (int i = 0; i < array.Length; i++)
-                    {
-                        PropertyInfo propInfo = array[i];
-                        if (propInfo.Name == "id")
-                        {
-                            //Key值为序号
-                            propInfo.SetValue(propInstance, pair.Key, null);
-                        }
-                        else if (pair.Value.ContainsKey(propInfo.Name))
-                        {
-                            object propValue = StringEx.GetValue(pair.Value[propInfo.Name], propInfo.PropertyType);
-                            propInfo.SetValue(propInstance, propValue, null);
-                        }
-                        else
-                        {
-                            Debug.logger.LogError("Add New Value", propInfo.Name + "Not in the Xml");
-                        }
-                    }
-                    dicType.GetMethod("Add").Invoke(dataDic, new object[]
-					{
-						pair.Key,
-						propInstance
-					});
-                }
+                //加载失败
+                Debug.logger.LogError("GameData", "数据加载失败！");
+                return new Dictionary<int, T>();
             }
-            catch (Exception exception)
-            {
-                Debug.logger.LogError("GameData", "FormatData Error: " + fileName + "  " + exception.Message + " " + exception.StackTrace);
-            }
-            result = dataDic;
-            return result;
+            return DataUtil.ParserStringDict2ClassDict<T>(dictionary);
         }
 
     }

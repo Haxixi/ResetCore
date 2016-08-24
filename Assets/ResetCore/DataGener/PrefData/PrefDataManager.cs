@@ -15,8 +15,9 @@ namespace ResetCore.Data.GameDatas.Xml
         /// <returns></returns>
         public static List<string> GetPrefDataFileNames()
         {
-            PathEx.MakeDirectoryExist(PathConfig.localPrefDataPath);
-            string[] fileNames = Directory.GetFiles(PathConfig.localPrefDataPath);
+            string prefRoot = PathConfig.GetLocalGameDataPath(PathConfig.DataType.Pref);
+            PathEx.MakeDirectoryExist(prefRoot);
+            string[] fileNames = Directory.GetFiles(prefRoot);
             List<string> results = new List<string>();
 
             foreach (string fileName in fileNames)
