@@ -4,21 +4,16 @@ using ResetCore.Util;
 using System.Collections.Generic;
 using System.IO;
 using ResetCore.Xml;
+using ResetCore.Event;
 
 namespace ResetCore.Data
 {
     public class LanguageManager : Singleton<LanguageManager>
     {
 
-        private Dictionary<int, Dictionary<string, string>> allLanguageDict;
-        public LanguageConst.LanguageType currentLanguage { get; private set; }
+        private static Dictionary<int, Dictionary<string, string>> allLanguageDict;
+        public static LanguageConst.LanguageType currentLanguage = LanguageConst.LanguageType.Chinese;
 
-        public override void Init()
-        {
- 	        base.Init();
-            currentLanguage = LanguageConst.LanguageType.Chinese;
-
-        }
         /// <summary>
         /// 获取单词
         /// </summary>
@@ -26,16 +21,27 @@ namespace ResetCore.Data
         /// <returns></returns>
         public static string GetWord(string key)
         {
-            if (instance.allLanguageDict == null)
+            return GetWord(key, currentLanguage);
+        }
+
+        public static string GetWord(string key, LanguageConst.LanguageType type)
+        {
+            if (allLanguageDict == null)
             {
-                instance.allLanguageDict = instance.GetLanguageDict();
+                allLanguageDict = instance.GetLanguageDict();
             }
-            if (!instance.allLanguageDict[(int)instance.currentLanguage].ContainsKey(key))
+
+            if (!allLanguageDict.ContainsKey((int)type))
+                return string.Empty;
+
+            if (!allLanguageDict[(int)type].ContainsKey(key))
             {
+#if !UNITY_EDITOR
                 Debug.logger.LogError("GetWord", "Not Exists " + key);
+#endif
                 return key;
             }
-            return instance.allLanguageDict[(int)instance.currentLanguage][key];
+            return allLanguageDict[(int)type][key];
         }
 
         /// <summary>
@@ -44,7 +50,8 @@ namespace ResetCore.Data
         /// <param name="type"></param>
         public static void SetLanguageType(LanguageConst.LanguageType type)
         {
-            instance.currentLanguage = type;
+            currentLanguage = type;
+            EventDispatcher.TriggerEvent(InnerEvents.UGUIEvents.OnLocalize);
         }
 
         private Dictionary<int, Dictionary<string, string>> GetLanguageDict()
@@ -58,8 +65,7 @@ namespace ResetCore.Data
             return result;
         }
 
-        
-       
+
     }
 
 }

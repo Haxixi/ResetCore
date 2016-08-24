@@ -9,7 +9,7 @@ namespace ResetCore.Util
     public class BlockWordChecker
     {
 
-        private static string textFileName = "BlockWords.xml";
+        private static string textFileName = "BlockWord/BlockWord";
 
         private static BlockWordChecker _instance;
         public static BlockWordChecker Instance
@@ -33,18 +33,17 @@ namespace ResetCore.Util
         private List<string> blockWordList;
         Dictionary<string, object> DFATable;
 
-        // 最小匹配规则
-        public static int MIN_MATCH_TYPE = 1;
-
-        // 最大匹配规则
-        public static int MAX_MATCH_TYPE = 2;
+        public enum MatchType
+        {
+            MIN_MATCH_TYPE,
+            MAX_MATCH_TYPE
+        }
 
         #region 初始化函数
         //读取文件
         private void ReadFromFile()
         {
-            string content = ResourcesLoaderHelper.Instance.LoadTextAsset(textFileName).text;
-
+            string content = Resources.Load<TextAsset>(textFileName).text;
             string[] blockWords = content.Split('#');
             blockWordList = new List<string>(blockWords);
 
@@ -91,7 +90,7 @@ namespace ResetCore.Util
 
         #region 检查函数
         //是否包含敏感词
-        public bool IsContaintBlockWord(string txt, int matchType)
+        public bool IsContaintBlockWord(string txt, MatchType matchType)
         {
             bool flag = false;
             for (int i = 0; i < txt.Length; i++)
@@ -107,7 +106,7 @@ namespace ResetCore.Util
             return flag;
         }
         //获取敏感词
-        public HashSet<string> GetBlockWord(string txt, int matchType)
+        public HashSet<string> GetBlockWord(string txt, MatchType matchType)
         {
             HashSet<string> sensitiveWordSet = new HashSet<string>();
             for (int i = 0; i < txt.Length; i++)
@@ -124,7 +123,7 @@ namespace ResetCore.Util
             return sensitiveWordSet;
         }
         //替换敏感字符
-        public string ReplaceBlockWord(string txt, int matchType, string replaceChar)
+        public string ReplaceBlockWord(string txt, MatchType matchType, string replaceChar)
         {
             string resultTxt = txt;
             HashSet<string> set = GetBlockWord(txt, matchType);
@@ -147,7 +146,7 @@ namespace ResetCore.Util
             return resultReplace;
         }
         //查找是否包含铭感字符，如果存在返回铭感字符长度否则返回0
-        public int CheckBlockWord(string txt, int beginIndex, int matchType)
+        public int CheckBlockWord(string txt, int beginIndex, MatchType matchType)
         {
             bool flag = false;
             int matchFlag = 0;
@@ -170,7 +169,7 @@ namespace ResetCore.Util
                         flag = true;
 
                         //最小规则，直接返回
-                        if (MIN_MATCH_TYPE == matchType)
+                        if (MatchType.MIN_MATCH_TYPE == matchType)
                         {
                             break;
                         }
