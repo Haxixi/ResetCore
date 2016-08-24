@@ -19,3 +19,7 @@ VR扩展
 
 ARToolKit:
 动态加载marker
+
+Asset:
+VersionData的编辑器。
+版本验证以及下载流程。

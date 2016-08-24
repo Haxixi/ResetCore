@@ -1,9 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Root>
+  <n>asd.asset</n>
+  <p>Assets/Resources/asd</p>
   <n>Jellyfish.jpg</n>
   <p>Assets/Resources/Jellyfish</p>
   <n>NewMaterial.mat</n>
   <p>Assets/Resources/NewMaterial</p>
+  <n>version.asset</n>
+  <p>Assets/Resources/version</p>
   <n>AutoLight.cginc</n>
   <p>Assets/Resources/builtin_shaders-5.3.4f1/CGIncludes/AutoLight</p>
   <n>HLSLSupport.cginc</n>

@@ -7,6 +7,8 @@ using System.IO;
 using ResetCore.Data.GameDatas.Json;
 using ResetCore.Data;
 using ResetCore.Json;
+using ResetCore.ScriptObj;
+using ResetCore.Data.GameDatas.Obj;
 
 
 //using ResetCore.Data.GameDatas;
@@ -21,7 +23,10 @@ public class Driver : MonoSingleton<Driver> {
     // Use this for initialization
     void Start()
     {
+        VersionData version = ScriptableObject.CreateInstance<VersionData>();
 
+        //VersionData version = Resources.Load("version") as VersionData;
+        //Debug.Log(version.MD5List.ConverToString());
     }
 
     public override void Init()

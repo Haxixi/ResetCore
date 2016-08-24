@@ -43,16 +43,13 @@ namespace ResetCore.Excel
 
                 result.Add(item);
             }
-            Debug.Log(result.ConverToString());
+
             string protoPath = PathConfig.GetLocalGameDataPath(PathConfig.DataType.Protobuf);
-            if (!Directory.Exists(protoPath))
-            {
-                Directory.CreateDirectory(protoPath);
-            }
+            PathEx.MakeDirectoryExist(protoPath);
 
             if (ProtoBuf.Serializer.NonGeneric.CanSerialize(protobufDataType))
             {
-                string resPath = PathConfig.GetLocalGameDataPath(PathConfig.DataType.Protobuf) + className + ProtobufData.ex;
+                string resPath = protoPath + className + ProtobufData.ex;
                 if(outputPath != null)
                 {
                     resPath = outputPath;

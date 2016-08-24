@@ -9,8 +9,14 @@ using ResetCore.Json;
 
 namespace ResetCore.Data.GameDatas.Json
 {
-    public class JsonData : BaseData
+    public class JsonData
     {
+
+        public int id
+        {
+            get;
+            protected set;
+        }
         public static readonly string nameSpace = "ResetCore.Data.GameDatas.Json";
         public static readonly string m_fileExtention = ".json";
         protected static Dictionary<int, T> GetDataMap<T>()

@@ -271,15 +271,15 @@ namespace ResetCore.Excel
 
             if (GUILayout.Button("全部导出", GUILayout.Width(100)))
             {
-                Excel2ScrObj.GenObj(excelReader);
                 Excel2ScrObj.GenCS(excelReader);
+                Excel2ScrObj.GenObj(excelReader);
             }
         }
 
         private void ShowExportJson()
         {
             GUIStyle headStyle = GUIHelper.MakeHeader();
-            GUILayout.Label("导出Json(开发中)", headStyle);
+            GUILayout.Label("导出Json（支持大多数类型）", headStyle);
             EditorGUILayout.Space();
 
             GUILayout.BeginHorizontal();

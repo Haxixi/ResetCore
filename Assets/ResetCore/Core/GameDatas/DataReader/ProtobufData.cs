@@ -11,8 +11,14 @@ using System.Text;
 
 namespace ResetCore.Data.GameDatas.Protobuf
 {
-    public class ProtobufData : BaseData
+    public class ProtobufData
     {
+        public int id
+        {
+            get;
+            protected set;
+        }
+
         public static readonly string ex = ".bytes";
         public static readonly string nameSpace = "ResetCore.Data.GameDatas.Protobuf";
         protected static Dictionary<int, T> GetDataMap<T>()
