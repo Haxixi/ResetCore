@@ -26,12 +26,12 @@ namespace ResetCore.Excel
             XElement root = new XElement("Root");
             xDoc.Add(root);
 
-            List<string> commentLine = excelReader.GetLine(0, 1);
+            //List<string> commentLine = excelReader.GetLine(0, 1);
             List<string> keyLine = excelReader.GetLine(1, 1);
 
             int num = 2;
             Array languageType = Enum.GetValues(typeof(LanguageConst.LanguageType));
-            foreach (LanguageConst.LanguageType type in languageType)
+            for (int n = 0; n < languageType.Length; n++)
             {
                 XElement languageEle = new XElement("item");
                 root.Add(languageEle);

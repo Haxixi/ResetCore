@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections;
 using System.IO;
+using ResetCore.Asset;
 
 public static class DevelopHelper {
 
@@ -29,6 +30,12 @@ public static class DevelopHelper {
         }
         CompressHelper.CompressDirectory(PathConfig.SDKBackupPath, PathConfig.SDKPathInPackage);
         Debug.logger.Log("Compress To " + PathConfig.SDKBackupPath);
+    }
+
+    [MenuItem("Tools/DeveloperTools/Open Todo List")]
+    public static void OpenTodoList()
+    {
+        EditorUtility.OpenWithDefaultApp(PathConfig.ResetCorePath + "TodoList.txt");
     }
 }
 

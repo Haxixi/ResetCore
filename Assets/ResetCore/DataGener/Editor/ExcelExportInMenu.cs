@@ -87,13 +87,21 @@ namespace ResetCore.Excel
         /// <summary>
         /// 导出所有本地化数据
         /// </summary>
-        [MenuItem("Assets/DataHelper/Language/Export All Language File")]
-        [MenuItem("Tools/GameData/Language/Export All Language File")]
+        [MenuItem("Assets/DataHelper/Language/Export All Localization File")]
+        [MenuItem("Tools/GameData/Language/Export All Localization File")]
         static void ExportLanguageFile()
         {
             Excel2Localization.ExportExcelFile();
         }
 
+        /// <summary>
+        /// 打开本地化Excel
+        /// </summary>
+        [MenuItem("Tools/GameData/Language/Open Localization Excel")]
+        static void OpenLanguageExcel()
+        {
+            EditorUtility.OpenWithDefaultApp(PathConfig.LanguageDataExcelPath);
+        }
 
         private static void ExportData(Action<string, string> genAction)
         {

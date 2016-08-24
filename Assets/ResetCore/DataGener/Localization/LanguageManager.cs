@@ -11,8 +11,19 @@ namespace ResetCore.Data
     public class LanguageManager : Singleton<LanguageManager>
     {
 
-        private static Dictionary<int, Dictionary<string, string>> allLanguageDict;
-        public static LanguageConst.LanguageType currentLanguage = LanguageConst.LanguageType.Chinese;
+        public static LanguageConst.LanguageType currentLanguage = LanguageConst.defaultLanguage;
+        private static Dictionary<int, Dictionary<string, string>> _allLanguageDict;
+        private static Dictionary<int, Dictionary<string, string>> allLanguageDict
+        {
+            get
+            {
+                if(_allLanguageDict == null)
+                {
+                    _allLanguageDict = instance.GetLanguageDict();
+                }
+                return _allLanguageDict;
+            }
+        }
 
         /// <summary>
         /// 获取单词
@@ -26,22 +37,35 @@ namespace ResetCore.Data
 
         public static string GetWord(string key, LanguageConst.LanguageType type)
         {
-            if (allLanguageDict == null)
+            
+            if (!ContainWord(key, type))
             {
-                allLanguageDict = instance.GetLanguageDict();
+                return string.Empty;
             }
 
+            return allLanguageDict[(int)type][key];
+        }
+
+        /// <summary>
+        /// 是否存在该键值
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static bool ContainWord(string key)
+        {
+            return ContainWord(key, currentLanguage);
+        }
+        public static bool ContainWord(string key, LanguageConst.LanguageType type)
+        {
             if (!allLanguageDict.ContainsKey((int)type))
-                return string.Empty;
+                return false;
 
             if (!allLanguageDict[(int)type].ContainsKey(key))
             {
-#if !UNITY_EDITOR
-                Debug.logger.LogError("GetWord", "Not Exists " + key);
-#endif
-                return key;
+                return false;
             }
-            return allLanguageDict[(int)type][key];
+
+            return true;
         }
 
         /// <summary>
