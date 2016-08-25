@@ -25,6 +25,16 @@ namespace ResetCore.Util
             }
             return result;
         }
+
+        public static string GetPathParentFolder(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                return string.Empty;
+            }
+
+            return Path.GetDirectoryName(path);
+        }
     }
 
 }
