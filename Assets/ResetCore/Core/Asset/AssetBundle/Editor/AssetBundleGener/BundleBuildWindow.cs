@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using ResetCore.Util;
+using System.Xml.Linq;
+using ResetCore.Xml;
 
 namespace ResetCore.Asset
 {
@@ -33,26 +35,33 @@ namespace ResetCore.Asset
         //是否已经打包
         private static bool hasPackaged
         {
-            get { return EditorPrefs.HasKey(EditorPrefNames.AssetBundle.HasPackaged) ? EditorPrefs.GetBool(EditorPrefNames.AssetBundle.HasExported) : false; }
-            set { EditorPrefs.SetBool(EditorPrefNames.AssetBundle.HasPackaged, value); }
+            get { return Directory.Exists(PathConfig.GetExportPathByVersion(resVersion)); }
         }
         //导出文件是否完整
         private static bool isAllFile = true;
         //版本号
-        private static Version version
+        private static Version resVersion
         {
             get
             {
-                return EditorPrefs.HasKey(EditorPrefNames.AssetBundle.VersionNum) ?
-                    Version.Parse(EditorPrefs.GetString(EditorPrefNames.AssetBundle.VersionNum)) :
-                    new Version(0, 0, 0, 1);
+                return VersionManager.instance.versionData.resVersion;
             }
-            set { EditorPrefs.SetString(EditorPrefNames.AssetBundle.VersionNum, value.ToString()); }
+            set
+            {
+                VersionManager.instance.versionData.resVersion = value;
+            }
         }
 
-        void Awake()
+        private static Version appVersion
         {
-
+            get
+            {
+                return VersionManager.instance.versionData.appVersion;
+            }
+            set
+            {
+                VersionManager.instance.versionData.appVersion = value;
+            }
         }
 
         private void Init()
@@ -75,13 +84,15 @@ namespace ResetCore.Asset
             ShowBundleTools();
             EditorGUILayout.Space();
             ShowPackageTools();
+            EditorGUILayout.Space();
+            ShowExportTools();
         }
 
         #region 显示基本工具
         //
         private void ShowPublicTools()
         {
-            GUILayout.Label("文件添加工具");
+            GUILayout.Label("文件添加工具", GUIHelper.MakeHeader(30));
             GUILayout.Label("当前文件数量为" + pathList.Count);
             if (GUILayout.Button("更新本地资源列表", GUILayout.Width(200)))
             {
@@ -160,7 +171,7 @@ namespace ResetCore.Asset
         #region 打包工具
         private void ShowBundleTools()
         {
-            GUILayout.Label("打包工具");
+            GUILayout.Label("打包工具", GUIHelper.MakeHeader(30));
             GUILayout.Label("当前导出状态：" + (hasExported ? "已经导出" : "仍未导出"));
             CheckExportBundle();
             if (GUILayout.Button("导出Bundle", GUILayout.Width(200)))
@@ -213,16 +224,24 @@ namespace ResetCore.Asset
         #region 压缩工具
         private void ShowPackageTools()
         {
-            GUILayout.Label("Bundle打包工具");
-            GUILayout.Label("当前打包状态：" + (hasExported ? "已经打包" : "仍未打包"));
+            GUILayout.Label("Bundle打包工具", GUIHelper.MakeHeader(30));
+            GUILayout.Label("当前打包状态：" + (hasPackaged ? "已经打包" : "仍未打包"));
             GUILayout.BeginHorizontal();
-            GUILayout.Label("版本号");
-            version = Version.Parse(GUILayout.TextField(version.ToString()));
+
+            GUILayout.Label("资源版本号");
+            resVersion = Version.GetValue(GUILayout.TextField(resVersion.ToString()));
             if (GUILayout.Button("升级版本", GUILayout.Width(200)))
             {
-                version = new Version(version.x, version.y, version.z, version.w + 1);
+                resVersion = new Version(resVersion.x, resVersion.y, resVersion.z, resVersion.w + 1);
             }
-            //version = new Version(x, y, z, w);
+
+            GUILayout.Label("应用版本号");
+            appVersion = Version.GetValue(GUILayout.TextField(resVersion.ToString()));
+            if (GUILayout.Button("升级版本", GUILayout.Width(200)))
+            {
+                appVersion = new Version(resVersion.x, resVersion.y, resVersion.z, resVersion.w + 1);
+            }
+
             GUILayout.EndHorizontal();
             if (GUILayout.Button("打包", GUILayout.Width(200)))
             {
@@ -240,9 +259,9 @@ namespace ResetCore.Asset
         private static void CompressPackage()
         {
             bundlePathList = new List<string>();
-            string mainBundlePath = PathConfig.AssetRootBundlePath;
+            string mainBundlePath = PathConfig.AssetRootBundleFilePath;
             bundlePathList.Add(mainBundlePath);
-            bundlePathList.Add(mainBundlePath + ".manifest");
+            bundlePathList.Add(mainBundlePath + AssetBundleConst.ManifestEx);
             foreach (string path in pathList)
             {
                 string fileName = StringEx.GetFileName(path);
@@ -255,8 +274,49 @@ namespace ResetCore.Asset
             {
                 Debug.logger.Log("压缩", path + "压缩");
             }
-            CompressHelper.CompressFiles(PathConfig.bundleRootPath, bundlePathList.ToArray(), PathConfig.bundlePkgExportPath + "/" + version.ToString());
+            CompressHelper.CompressFiles(PathConfig.bundleRootPath, bundlePathList.ToArray(), PathConfig.GetPkgExportPath(resVersion));
+            string MD5 = MD5Utils.BuildFileMd5(PathConfig.GetPkgExportPath(resVersion));
+            GenVersionInfo(MD5);
+        }
 
+        private static void GenVersionInfo(string MD5)
+        {
+            //TODO　设置应用版本
+            VersionManager.instance.versionData.appVersion = appVersion;
+            VersionManager.instance.versionData.resVersion = resVersion;
+            VersionManager.instance.versionData.MD5 = MD5;
+            AssetDatabase.SaveAssets();
+            string versionDataFilePath = PathConfig.GetExportPathByVersion(resVersion) + PathConfig.VersionDataName;
+            VersionManager.instance.versionData.GenXml(versionDataFilePath);
+        }
+
+        #endregion
+
+        #region 导出工具
+        private void ShowExportTools()
+        {
+            GUILayout.Label("文件导出工具");
+            if (GUILayout.Button("将文件导出到本地服务器", GUILayout.Width(200)))
+            {
+                string localBundleResourcesFolder = PathConfig.GetLocalBundleResourcesFolderByVersion(resVersion);
+                if (Directory.Exists(localBundleResourcesFolder))
+                {
+                    Directory.Delete(localBundleResourcesFolder, true);
+                }
+                DirectoryEx.DirectoryCopy(PathConfig.GetExportPathByVersion(resVersion), localBundleResourcesFolder, true);
+
+
+                string[] versionResFolderList = Directory.GetDirectories(PathConfig.localUpdateBundleUrl);
+                XDocument xDoc = new XDocument();
+                XElement root = new XElement("Root");
+                xDoc.Add(root);
+                foreach (string path in versionResFolderList)
+                {
+                    string versionFolder = Path.GetFileName(path.Replace("\\", "/"));
+                    root.Add(new XElement("version", versionFolder));
+                }
+                xDoc.Save(PathConfig.localVersionInfoUrl);
+            }
         }
         #endregion
     }

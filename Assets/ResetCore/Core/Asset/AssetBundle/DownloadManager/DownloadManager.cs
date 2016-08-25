@@ -400,6 +400,7 @@ public class DownloadManager : Singleton<DownloadManager> {
         }
         catch (Exception ex)
         {
+            Debug.LogException(ex);
             Debug.logger.Log("DownLoadText  " + ex);
             return String.Empty;
         }

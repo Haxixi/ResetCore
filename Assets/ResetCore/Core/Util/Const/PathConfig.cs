@@ -4,6 +4,7 @@ using System.IO;
 using System.Collections.Generic;
 using ResetCore.ModuleControl;
 using ResetCore.Util;
+using ResetCore.Asset;
 
 public class PathConfig
 {
@@ -39,9 +40,11 @@ public class PathConfig
         get
         {
             DirectoryInfo directory = new DirectoryInfo(Application.dataPath);
-            return directory.Parent.FullName;
+            return directory.Parent.FullName.Replace("\\", "/");
         }
     }
+
+    public static readonly string persistentDataPath = Path.Combine(Application.persistentDataPath, Application.productName);
     public static readonly string assetResourcePath = "Assets/Resources/";
 
     #endregion
@@ -56,50 +59,78 @@ public class PathConfig
     //Bundle根目录
     public static readonly string resourceBundlePath = "Data/BundleData/";
     //资源列表目录
-    public static readonly string resourceListDocPath = "Data/BundleData/ResourcesList";
+    public static readonly string resourceListDocPath = resourceBundlePath + "ResourcesList";
     //场景记录文件储存目录
-    public static readonly string sceneXmlRootPath = "Data/BundleData/SceneData/";
+    public static readonly string sceneXmlRootPath = resourceBundlePath + "SceneData/";
     //预置组件信息文件储存目录
-    public static readonly string compInfoObjRootPath = "Data/BundleData/PrefabCompData/";
+    public static readonly string compInfoObjRootPath = resourceBundlePath + "PrefabCompData/";
     //相对于Assets到Resources文件夹的相对路径
     public static readonly string assetsToResources = "Asset/Resources";
 
-    //资源下载根目录
-    public static readonly string wwwPath = "http://127.0.0.1/Test";
-
     //AssetBundle导出文件夹
     public static readonly string bundleFolderName = "AssetBundle";
-    public static readonly string AssetRootBundlePath = PathConfig.bundleRootPath + "/" + bundleFolderName;
     public static string bundleRootPath
     {
         get
         {
-            DirectoryInfo root = new DirectoryInfo(Application.dataPath);
-            string rootPath = Path.Combine(root.Parent.FullName, bundleFolderName);
+            string rootPath = Path.Combine(projectPath, bundleFolderName);
             return rootPath.Replace("\\", "/");
         }
+    }
+    public static readonly string AssetRootBundleFilePath = PathConfig.bundleRootPath + "/" + bundleFolderName;
+
+
+    //Bundle包导出文件夹名称
+    public static readonly string bundleExportFolderName = "AssetBundleExport";
+    //BundlePkg包导出路径
+    public static readonly string bundlePkgExportPath = Path.Combine(projectPath, bundleExportFolderName).Replace("\\", "/");
+    //导出目录
+    public static string GetExportPathByVersion(Version version)
+    {
+        return PathConfig.bundlePkgExportPath + "/" + version.ToString() + "/";
+    }
+    //获取包导出路径
+    public static string GetPkgExportPath(Version version)
+    {
+        return GetExportPathByVersion(version) + version.ToString() + AssetBundleConst.packageEx;
     }
 
-    public static readonly string bundleExportFolderName = "AssetBundleExport";
-    public static string bundlePkgExportPath
-    {
-        get
-        {
-            DirectoryInfo root = new DirectoryInfo(Application.dataPath);
-            string rootPath = Path.Combine(root.Parent.FullName, bundleExportFolderName);
-            return rootPath.Replace("\\", "/");
-        }
-    }
 
     //版本信息储存地址
-    public static readonly string VersionDataPathInResources = "VersionData/VersionData.asset";
+    public static readonly string VersionDataName = "VersionData";
+    public static readonly string VersionDataPathInResources = "VersionData/" + VersionDataName;
+    public static readonly string VersionDataResourcesPath = PathEx.Combine(ModuleConst.GetSymbolPath(MODULE_SYMBOL.ASSET), "Resources").Replace("\\", "/");
+
+    //沙盒目录下版本信息
+    public static readonly string LocalVersionDataInPersistentDataPath = Path.Combine(persistentDataPath, VersionDataName);
+
+    //资源文件夹名
+    public static readonly string bundleResourcesFolderPath = "Resources";
 
     //资源服务器根目录
-    public static readonly string resourcesServerRoot = "127.0.0.1/" + Application.productName + "/";
+    public static readonly string resourcesServerRoot = "http://127.0.0.1/" + Application.productName + "/";
     //资源下载地址
-    public static readonly string updateBundleUrl = resourcesServerRoot + "Resources";
-    //资源数据下载地址
-    public static readonly string versionDownloadUrl = resourcesServerRoot + "VersionData.asset";
+    public static readonly string updateBundleUrl = resourcesServerRoot + bundleResourcesFolderPath;
+    //版本汇总信息文件的地址
+    public static readonly string versionInfoUrl = Path.Combine(updateBundleUrl, "Version.xml");
+    //本地单个版本的资源
+    public static string GetBundleResourcesFolderByVersion(Version version)
+    {
+        return Path.Combine(updateBundleUrl, version.ToString());
+    }
+
+    //本地服务器根目录
+    public static readonly string localResourcesServerRoot = "F:/wamp/www/" + Application.productName + "/";
+    //本地Bundle资源地址
+    public static readonly string localUpdateBundleUrl = localResourcesServerRoot + bundleResourcesFolderPath;
+    //版本汇总信息文件的地址
+    public static readonly string localVersionInfoUrl = Path.Combine(localUpdateBundleUrl, "Version.xml");
+    //本地单个版本的资源
+    public static string GetLocalBundleResourcesFolderByVersion(Version version)
+    {
+        return Path.Combine(localUpdateBundleUrl, version.ToString());
+    }
+    
     #endregion
 
     #region GameData相关

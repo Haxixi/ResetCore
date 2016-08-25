@@ -1,57 +1,71 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.IO;
+using System.Collections.Generic;
+using ResetCore.Util;
+using System.Xml.Linq;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
-[Serializable]
-public class Version
+namespace ResetCore.Asset
 {
-    public int x;
-    public int y;
-    public int z;
-    public int w;
+    
 
-    public Version(int x, int y, int z, int w)
+    public class VersionManager : Singleton<VersionManager>
     {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.w = w;
-    }
+        public static readonly string versionFilePath = Path.Combine(PathConfig.VersionDataResourcesPath, PathConfig.VersionDataPathInResources) + VersionData.Ex;
 
-    public override string ToString()
-    {
-        return x + "." + y + "." + z + "." + w;
-    }
-
-    public static Version Parse(string value)
-    {
-        string[] values = value.Split('.');
-        if (value.Length >= 4)
-            return new Version(int.Parse(values[0]), int.Parse(values[1]), int.Parse(values[2]), int.Parse(values[3]));
-        else
-            return new Version(0, 0, 0, 1);
-    }
-
-    public int Compare(Version ver1, Version ver2)
-    {
-        int[] num1 = new int[] { ver1.x, ver1.y, ver1.z, ver1.w };
-        int[] num2 = new int[] { ver2.x, ver2.y, ver2.z, ver2.w };
-        for (int i = 0; i < 4; i++)
+        private VersionData _versionData;
+        public VersionData versionData
         {
-            if (num1[i] > num2[i])
+            get
             {
-                return 1;
+                if (_versionData == null)
+                {
+#if UNITY_EDITOR
+                    if (!File.Exists(versionFilePath))
+                    {
+                        _versionData = ScriptableObject.CreateInstance<VersionData>();
+                        _versionData.appVersion = new Version(0, 0, 0, 1);
+                        _versionData.resVersion = new Version(0, 0, 0, 1);
+                        _versionData.MD5 = "";
+                        Debug.Log(versionFilePath);
+                        PathEx.MakeDirectoryExist(versionFilePath);
+                        AssetDatabase.CreateAsset(_versionData, versionFilePath.Replace("\\", "/").Replace(PathConfig.projectPath + "/", ""));
+                        AssetDatabase.Refresh();
+                    }
+                    else
+                    {
+                        _versionData = Resources.Load(PathConfig.VersionDataPathInResources) as VersionData;
+                    }
+                    if (File.Exists(PathConfig.LocalVersionDataInPersistentDataPath))
+                    {
+                        AssetBundle.LoadFromFile(PathConfig.LocalVersionDataInPersistentDataPath);
+                    }else
+                    {
+                        _versionData = Resources.Load(PathConfig.VersionDataPathInResources) as VersionData;
+                    }
+#else
+                    _versionData = Resources.Load(PathConfig.VersionDataPathInResources) as VersionData;
+                    if (File.Exists(PathConfig.LocalVersionDataInPersistentDataPath))
+                    {
+                        _versionData.ParseXml(XDocument.Load(PathConfig.LocalVersionDataInPersistentDataPath));
+                    }
+#endif
+                }
+                return _versionData;
             }
-            else if (num1[i] < num2[i])
+            set
             {
-                return -1;
+                _versionData = value;
+                EditorUtility.SetDirty(_versionData);
             }
         }
-        return 0;
+
+       
+
     }
-}
 
-public class VersionManager {
-
-	
 }

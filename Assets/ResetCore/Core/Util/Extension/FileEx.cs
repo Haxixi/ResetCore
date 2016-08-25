@@ -19,6 +19,14 @@ namespace ResetCore.Util
             sr.Close();
             fs.Close();
         }
+
+#if UNITY_EDITOR
+        public static void OpenFolder(string path)
+        {
+            System.Diagnostics.Process.Start("explorer.exe", path);
+        }
+#endif
+
     }
 
 }

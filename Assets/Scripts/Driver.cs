@@ -23,10 +23,7 @@ public class Driver : MonoSingleton<Driver> {
     // Use this for initialization
     void Start()
     {
-        VersionData version = ScriptableObject.CreateInstance<VersionData>();
-
-        //VersionData version = Resources.Load("version") as VersionData;
-        //Debug.Log(version.MD5List.ConverToString());
+        new ResDownloadManager().CheckVersion();
     }
 
     public override void Init()

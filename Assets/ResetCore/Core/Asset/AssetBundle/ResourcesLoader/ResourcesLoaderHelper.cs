@@ -37,7 +37,7 @@ namespace ResetCore.Asset
             {
                 if (MainBundle == null)
                 {
-                    string path = PathConfig.AssetRootBundlePath;
+                    string path = PathConfig.AssetRootBundleFilePath;
                     if (File.Exists(path))
                     {
                         MainBundle = AssetBundle.LoadFromFile(path);

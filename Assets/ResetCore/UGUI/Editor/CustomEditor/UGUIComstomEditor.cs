@@ -90,8 +90,20 @@ namespace ResetCore.UGUI
             }
             else
             {
-                Object prefabObj = PrefabUtility.GetPrefabParent(ui.gameObject);
-                string prefabAssetName = Path.GetFileNameWithoutExtension(AssetDatabase.GetAssetPath(prefabObj.GetInstanceID()));
+                Object prefabObj;
+                string prefabAssetName;
+                if (PrefabUtility.GetPrefabType(ui) == PrefabType.Prefab)
+                {
+                    prefabObj = ui;
+                    prefabAssetName = ui.gameObject.name;
+                    Debug.Log(ui.gameObject.name);
+                }
+                else
+                {
+                    prefabObj = PrefabUtility.GetPrefabParent(ui.gameObject);
+                    prefabAssetName = Path.GetFileNameWithoutExtension(AssetDatabase.GetAssetPath(prefabObj.GetInstanceID()));
+                }
+
                 //检查Prefab名与UIName类型是否匹配
                 if (prefabName != prefabAssetName)
                 {
