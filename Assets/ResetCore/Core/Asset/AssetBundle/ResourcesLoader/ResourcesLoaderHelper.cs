@@ -233,6 +233,11 @@ namespace ResetCore.Asset
         /// <returns></returns>
         public static string GetResourcesBundlePathByObjectName(string objName)
         {
+            if (!ResourcesLoaderHelper.resourcesList.ContainsKey(objName))
+            {
+                Debug.logger.LogError("Get Bundle Path", "Cant find the object name " + objName + " in resources list");
+                return string.Empty;
+            }
             return PathConfig.bundleRootPath + "/" + ResourcesLoaderHelper.resourcesList[objName] + Path.GetExtension(objName) + ExName;
         }
         /// <summary>

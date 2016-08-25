@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using ResetCore.Util;
+using ResetCore.Xml;
 
 namespace ResetCore.Asset
 {
@@ -26,14 +27,16 @@ namespace ResetCore.Asset
             root.Add(new XElement("AppVersion", appVersion.ToString()));
             root.Add(new XElement("MD5", MD5));
             PathEx.MakeDirectoryExist(outputPath);
-            xDoc.Save(outputPath);
+            xDoc.SafeSaveWithoutDeclaration(outputPath);
         }
 
-        public void ParseXml(XDocument xDoc)
+        public static VersionData ParseXml(XDocument xDoc)
         {
-            resVersion = Version.GetValue(xDoc.Root.Element("ResVersion").Value);
-            resVersion = Version.GetValue(xDoc.Root.Element("AppVersion").Value);
-            MD5 = xDoc.Root.Element("MD5").Value;
+            VersionData data = ScriptableObject.CreateInstance<VersionData>();
+            data.resVersion = Version.GetValue(xDoc.Root.Element("ResVersion").Value);
+            data.appVersion = Version.GetValue(xDoc.Root.Element("AppVersion").Value);
+            data.MD5 = xDoc.Root.Element("MD5").Value;
+            return data;
         }
     }
 }

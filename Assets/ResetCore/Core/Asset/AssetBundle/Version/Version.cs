@@ -5,7 +5,7 @@ using System;
 namespace ResetCore.Asset
 {
     [Serializable]
-    public class Version
+    public class Version:IComparable<Version>
     {
         public int x;
         public int y;
@@ -35,7 +35,7 @@ namespace ResetCore.Asset
                 return new Version(0, 0, 0, 1);
         }
 
-        public int Compare(Version ver1, Version ver2)
+        public static int Compare(Version ver1, Version ver2)
         {
             int[] num1 = new int[] { ver1.x, ver1.y, ver1.z, ver1.w };
             int[] num2 = new int[] { ver2.x, ver2.y, ver2.z, ver2.w };
@@ -51,6 +51,11 @@ namespace ResetCore.Asset
                 }
             }
             return 0;
+        }
+
+        public int CompareTo(Version other)
+        {
+            return Compare(this, other);
         }
     }
 }

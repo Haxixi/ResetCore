@@ -43,8 +43,10 @@ public class PathConfig
             return directory.Parent.FullName.Replace("\\", "/");
         }
     }
+    //沙盒目录
+    public static readonly string persistentDataPath = 
+        Path.Combine(Application.persistentDataPath, Application.productName);
 
-    public static readonly string persistentDataPath = Path.Combine(Application.persistentDataPath, Application.productName);
     public static readonly string assetResourcePath = "Assets/Resources/";
 
     #endregion
@@ -69,14 +71,12 @@ public class PathConfig
 
     //AssetBundle导出文件夹
     public static readonly string bundleFolderName = "AssetBundle";
-    public static string bundleRootPath
-    {
-        get
-        {
-            string rootPath = Path.Combine(projectPath, bundleFolderName);
-            return rootPath.Replace("\\", "/");
-        }
-    }
+#if UNITY_EDITOR    
+    public static string bundleRootPath = Path.Combine(projectPath, bundleFolderName).Replace("\\", "/");
+#else
+    public static string bundleRootPath = Path.Combine(persistentDataPath, bundleFolderName).Replace("\\", "/");
+#endif
+
     public static readonly string AssetRootBundleFilePath = PathConfig.bundleRootPath + "/" + bundleFolderName;
 
 
@@ -102,7 +102,7 @@ public class PathConfig
     public static readonly string VersionDataResourcesPath = PathEx.Combine(ModuleConst.GetSymbolPath(MODULE_SYMBOL.ASSET), "Resources").Replace("\\", "/");
 
     //沙盒目录下版本信息
-    public static readonly string LocalVersionDataInPersistentDataPath = Path.Combine(persistentDataPath, VersionDataName);
+    public static readonly string LocalVersionDataInPersistentDataPath = Path.Combine(persistentDataPath, VersionDataName + ".xml");
 
     //资源文件夹名
     public static readonly string bundleResourcesFolderPath = "Resources";
@@ -131,9 +131,9 @@ public class PathConfig
         return Path.Combine(localUpdateBundleUrl, version.ToString());
     }
     
-    #endregion
+#endregion
 
-    #region GameData相关
+#region GameData相关
 
     public enum DataType
     {
@@ -190,20 +190,20 @@ public class PathConfig
     public static readonly string localLanguageDataClassPath = 
         PathConfig.GetLoaclGameDataClassPath(DataType.Localization) + "LocalizationData.cs";
 
-    #endregion
+#endregion
 
-    #region NetPost
+#region NetPost
     //服务器响应url
     public static readonly string NetPostURL = "127.0.0.1:8000";
-    #endregion
+#endregion
 
-    #region Lua
+#region Lua
     //Lua储存路径
     public static readonly string localLuaDataXmlPath = resourcePath + "Data/Lua/";
     public static readonly string localModLuaFilePath = Application.persistentDataPath + "/Mod/Lua/";
-    #endregion
+#endregion
 
-    #region 工具
+#region 工具
     //Lua模板资源路径
     public static readonly string luaScriptAssetPath = ResetCorePath + "Lua/Editor/LuaAsset.lua".Replace(projectPath, "");
     //Xml模板资源路径
@@ -213,5 +213,5 @@ public class PathConfig
 
     public static readonly string csToolPath = ExtraToolPath + "C#Tools/ExcelDataManager.exe";
     public static readonly string csTool_GameDataViaExcel = "GameDataGen";
-    #endregion
+#endregion
 }

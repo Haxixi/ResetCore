@@ -14,9 +14,9 @@ public class DownloadTask
     public string Url { get; set; }
     //储存路径
     public string FileName { get; set; }
-    public Action<int> Progress { get; set; }
+    public Action<float> Progress { get; set; }
     public String MD5 { get; set; }
-    public Action Finished { get; set; }
+    public Action<bool> Finished { get; set; }
     public Action<Exception> Error { get; set; }
 
     public bool hasMD5 = true;
@@ -25,16 +25,16 @@ public class DownloadTask
 
     public int tryTimes = 0;//重试次数
 
-    public void OnProgress(int p)
+    public void OnProgress(float p)
     {
         if (Progress != null)
             Progress(p);
     }
 
-    public void OnFinished()
+    public void OnFinished(bool comp)
     {
         if (Finished != null)
-            Finished();
+            Finished(comp);
     }
 
     public void OnError(Exception ex)
@@ -59,6 +59,9 @@ public class DownloadManager : Singleton<DownloadManager> {
         base.Init();
         taskList = new List<DownloadTask>();
     }
+
+    private Action finishedAct;
+    private Action<int, int, string> progressAct;
     /// <summary>
     /// 添加新的下载任务
     /// </summary>
@@ -67,7 +70,8 @@ public class DownloadManager : Singleton<DownloadManager> {
     /// <param name="md5">MD5（为空时则没有MD5检查）</param>
     /// <param name="progress">下载进度回调</param>
     /// <param name="finished">结束回调</param>
-    public DownloadManager AddNewDownloadTask(string url, string filePath, string md5 = null, Action<int> progress = null, Action finished = null)
+    public DownloadManager AddNewDownloadTask(string url, string filePath, string md5 = null
+        , Action<float> progress = null, Action<bool> finished = null)
     {
         DownloadTask task = new DownloadTask();
         task.Url = url;
@@ -84,6 +88,8 @@ public class DownloadManager : Singleton<DownloadManager> {
     /// </summary>
     public void CheckDownLoadList(Action finishedAct = null, Action<int, int, string> progressAct = null)
     {
+        this.finishedAct = finishedAct;
+        this.progressAct = progressAct;
 
         if (taskList.Count == 0)
             return;
@@ -121,7 +127,6 @@ public class DownloadManager : Singleton<DownloadManager> {
             }
 
         }
-
         if (finishedCount > taskList.Count - 1)
         {
             taskList.Clear();
@@ -244,7 +249,7 @@ public class DownloadManager : Singleton<DownloadManager> {
                             ((float)totalSize);
 
                         //触发数据到达事件
-                        task.OnProgress((int)(progress * 100));
+                        task.OnProgress(progress);
 
 
 
@@ -275,6 +280,7 @@ public class DownloadManager : Singleton<DownloadManager> {
             Debug.Log("下载出错" + e.Message);
             Debug.LogException(e);
             task.OnError(e);
+            task.Finished(false);
         }
         else
         {
@@ -341,6 +347,7 @@ public class DownloadManager : Singleton<DownloadManager> {
                 task.bDownloadAgain = false;
                 task.bFineshed = true;
                 task.OnError(new Exception("md5验证失败，下载失败"));
+                task.OnFinished(false);
             }
             else
             {
@@ -357,13 +364,26 @@ public class DownloadManager : Singleton<DownloadManager> {
         {
             task.bDownloadAgain = false;
             task.bFineshed = true;
-            task.OnFinished();
+            task.OnFinished(true);
         }
 
-        CheckDownLoadList();
+        CheckDownLoadList(finishedAct, progressAct);
     }
     #endregion
+    /// <summary>
+    /// 清空下载列表
+    /// </summary>
+    public void ClearTaskList()
+    {
+        taskList = new List<DownloadTask>();
+    }
 
+    /// <summary>
+    /// 异步方式下载文本
+    /// </summary>
+    /// <param name="url"></param>
+    /// <param name="asynResult"></param>
+    /// <param name="OnError"></param>
     public void AsynDownLoadText(string url, Action<string> asynResult, Action OnError)
     {
         Action action = () =>
@@ -390,7 +410,13 @@ public class DownloadManager : Singleton<DownloadManager> {
 
     }
 
-    public string DownLoadText(String url)
+    /// <summary>
+    /// 同步方式下载文本
+    /// </summary>
+    /// <param name="url"></param>
+    /// <param name="OnError"></param>
+    /// <returns></returns>
+    public string DownLoadText(String url, Action<Exception> OnError = null)
     {
         try
         {
@@ -400,8 +426,8 @@ public class DownloadManager : Singleton<DownloadManager> {
         }
         catch (Exception ex)
         {
+            OnError(ex);
             Debug.LogException(ex);
-            Debug.logger.Log("DownLoadText  " + ex);
             return String.Empty;
         }
     }

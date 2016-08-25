@@ -6,6 +6,7 @@ using System.Linq;
 using System.IO;
 using ResetCore.Util;
 using System.Xml.Linq;
+using System.Xml;
 using ResetCore.Xml;
 
 namespace ResetCore.Asset
@@ -191,16 +192,21 @@ namespace ResetCore.Asset
                 {
                     string fileName = StringEx.GetFileName(path);
                     string resPath = ResourcesLoaderHelper.GetResourcesBundlePathByObjectName(fileName);
+                    if(resPath == null)
+                    {
+                        isAllFile = false;
+                        Debug.logger.LogError("打包工具", "Resources文件缺失！" + path);
+                    }
                     if (!File.Exists(resPath))
                     {
                         isAllFile = false;
-                        Debug.logger.LogError("打包工具", "文件缺失！" + resPath);
+                        Debug.logger.LogError("打包工具", "Bundle文件缺失！" + resPath);
                     }
                     resPath = ResourcesLoaderHelper.GetResourcesBundleManifestPathByObjectName(fileName);
                     if (!File.Exists(resPath))
                     {
                         isAllFile = false;
-                        Debug.logger.LogError("打包工具", "文件缺失！" + resPath);
+                        Debug.logger.LogError("打包工具", "Bundle文件缺失！" + resPath);
                     }
                 }
             }
@@ -236,10 +242,10 @@ namespace ResetCore.Asset
             }
 
             GUILayout.Label("应用版本号");
-            appVersion = Version.GetValue(GUILayout.TextField(resVersion.ToString()));
+            appVersion = Version.GetValue(GUILayout.TextField(appVersion.ToString()));
             if (GUILayout.Button("升级版本", GUILayout.Width(200)))
             {
-                appVersion = new Version(resVersion.x, resVersion.y, resVersion.z, resVersion.w + 1);
+                appVersion = new Version(appVersion.x, appVersion.y, appVersion.z, appVersion.w + 1);
             }
 
             GUILayout.EndHorizontal();
@@ -286,7 +292,7 @@ namespace ResetCore.Asset
             VersionManager.instance.versionData.resVersion = resVersion;
             VersionManager.instance.versionData.MD5 = MD5;
             AssetDatabase.SaveAssets();
-            string versionDataFilePath = PathConfig.GetExportPathByVersion(resVersion) + PathConfig.VersionDataName;
+            string versionDataFilePath = PathConfig.GetExportPathByVersion(resVersion) + PathConfig.VersionDataName + ".xml";
             VersionManager.instance.versionData.GenXml(versionDataFilePath);
         }
 
@@ -315,7 +321,8 @@ namespace ResetCore.Asset
                     string versionFolder = Path.GetFileName(path.Replace("\\", "/"));
                     root.Add(new XElement("version", versionFolder));
                 }
-                xDoc.Save(PathConfig.localVersionInfoUrl);
+                xDoc.SafeSaveWithoutDeclaration(PathConfig.localVersionInfoUrl);
+               
             }
         }
         #endregion

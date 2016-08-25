@@ -153,6 +153,16 @@ namespace ResetCore.Xml
             _XDoc.Save(uri);
         }
 
+        /// <summary>
+        /// 不会出现乱码的保存方式
+        /// </summary>
+        /// <param name="xDoc"></param>
+        /// <param name="path"></param>
+        public static void SafeSaveWithoutDeclaration(this XDocument xDoc, string path)
+        {
+            File.WriteAllText(path, xDoc.ToString());
+        }
+
     }
 
 }

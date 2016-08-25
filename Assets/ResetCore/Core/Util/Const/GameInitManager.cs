@@ -14,10 +14,6 @@ namespace ResetCore.Util
         [RuntimeInitializeOnLoadMethod]
         static void Initialize()
         {
-            GameObject initObject = new GameObject("Driver2", initCompTypes);
-            GameObject.DontDestroyOnLoad(initObject);
-            //initObject.hideFlags = HideFlags.HideInHierarchy;
-            Debug.Log("RuntimeInitializeOnLoadMethod");
         }
     }
 

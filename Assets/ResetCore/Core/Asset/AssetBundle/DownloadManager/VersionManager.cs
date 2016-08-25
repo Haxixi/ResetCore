@@ -40,13 +40,6 @@ namespace ResetCore.Asset
                     {
                         _versionData = Resources.Load(PathConfig.VersionDataPathInResources) as VersionData;
                     }
-                    if (File.Exists(PathConfig.LocalVersionDataInPersistentDataPath))
-                    {
-                        AssetBundle.LoadFromFile(PathConfig.LocalVersionDataInPersistentDataPath);
-                    }else
-                    {
-                        _versionData = Resources.Load(PathConfig.VersionDataPathInResources) as VersionData;
-                    }
 #else
                     _versionData = Resources.Load(PathConfig.VersionDataPathInResources) as VersionData;
                     if (File.Exists(PathConfig.LocalVersionDataInPersistentDataPath))
