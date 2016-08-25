@@ -2,7 +2,7 @@
 using System.Collections;
 using System.IO;
 using System.Collections.Generic;
-using ResetCore.VersionControl;
+using ResetCore.ModuleControl;
 using ResetCore.Util;
 
 public class PathConfig
@@ -90,6 +90,16 @@ public class PathConfig
             return rootPath.Replace("\\", "/");
         }
     }
+
+    //版本信息储存地址
+    public static readonly string VersionDataPathInResources = "VersionData/VersionData.asset";
+
+    //资源服务器根目录
+    public static readonly string resourcesServerRoot = "127.0.0.1/" + Application.productName + "/";
+    //资源下载地址
+    public static readonly string updateBundleUrl = resourcesServerRoot + "Resources";
+    //资源数据下载地址
+    public static readonly string versionDownloadUrl = resourcesServerRoot + "VersionData.asset";
     #endregion
 
     #region GameData相关
@@ -140,7 +150,7 @@ public class PathConfig
     /// 本地化数据存放地址
     /// </summary>
     public static readonly string LanguageDataExcelPath = 
-        PathEx.Combine(ResetCorePath, VersionConst.SymbolFoldNames[VERSION_SYMBOL.DATA_GENER], "Localization/Excel/LocalizationData.xlsx");
+        PathEx.Combine(ResetCorePath, ModuleConst.SymbolFoldNames[MODULE_SYMBOL.DATA_GENER], "Localization/Excel/LocalizationData.xlsx");
 
     //存放本地化数据的地址
     public static readonly string LanguageDataPath = 

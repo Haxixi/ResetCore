@@ -12,6 +12,7 @@ public class UILocalization : MonoBehaviour {
     private bool started = false;
 
     public string key;
+    
     private string textToShow;
     public string val
     {

@@ -8,8 +8,14 @@ using ResetCore.Xml;
 
 namespace ResetCore.Data.GameDatas.Xml
 {
-    public abstract class XmlData : BaseData
+    public abstract class XmlData
     {
+        public int id
+        {
+            get;
+            protected set;
+        }
+
         public static readonly string nameSpace = "ResetCore.Data.GameDatas.Xml";
         public static readonly string m_fileExtention = ".xml";
         protected static Dictionary<int, T> GetDataMap<T>()

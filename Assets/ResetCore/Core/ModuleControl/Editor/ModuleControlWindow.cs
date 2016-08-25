@@ -8,11 +8,11 @@ using System.Collections.Generic;
 using System.IO;
 using ResetCore.Data.GameDatas.Xml;
 
-namespace ResetCore.VersionControl
+namespace ResetCore.ModuleControl
 {
-    public class VersionControlWindow : EditorWindow
+    public class ModuleControlWindow : EditorWindow
     {
-        private static Dictionary<VERSION_SYMBOL, bool> isImportDict;
+        private static Dictionary<MODULE_SYMBOL, bool> isImportDict;
         private SDKManager sdkManager = new SDKManager();
 
         private static bool inited = false;
@@ -20,22 +20,22 @@ namespace ResetCore.VersionControl
         [MenuItem("Tools/ResetCore Module Controller")]
         static void ShowMainWindow()
         {
-            VersionControlWindow window =
-                EditorWindow.GetWindow(typeof(VersionControlWindow), false, "Module Controller") as VersionControlWindow;
+            ModuleControlWindow window =
+                EditorWindow.GetWindow(typeof(ModuleControlWindow), false, "Module Controller") as ModuleControlWindow;
             window.Show();
         }
 
         private static void Init()
         {
             if (inited) return;
-            isImportDict = new Dictionary<VERSION_SYMBOL, bool>();
-            Array versionSymbols = Enum.GetValues(typeof(VERSION_SYMBOL));
+            isImportDict = new Dictionary<MODULE_SYMBOL, bool>();
+            Array versionSymbols = Enum.GetValues(typeof(MODULE_SYMBOL));
             
-            foreach (VERSION_SYMBOL symbol in versionSymbols)
+            foreach (MODULE_SYMBOL symbol in versionSymbols)
             {
-                if (!VersionControl.isDevelopMode)
+                if (!ModuleControl.isDevelopMode)
                 {
-                    isImportDict.Add(symbol, VersionControl.ContainSymbol(symbol));
+                    isImportDict.Add(symbol, ModuleControl.ContainSymbol(symbol));
                 }
                 else
                 {
@@ -59,21 +59,21 @@ namespace ResetCore.VersionControl
         {
             GUILayout.Label("Do you want to open develop mode", GUIHelper.MakeHeader(30));
             EditorGUILayout.Space();
-            VersionControl.isDevelopMode = EditorGUILayout.Toggle("Open Develop Mode", VersionControl.isDevelopMode, GUILayout.Width(200));
+            ModuleControl.isDevelopMode = EditorGUILayout.Toggle("Open Develop Mode", ModuleControl.isDevelopMode, GUILayout.Width(200));
         }
 
         bool ifShowWhenStart;
         private void ShowWhenStart()
         {
-            ifShowWhenStart = PlayerPrefs.GetInt("ShowResetVersionController", 1) == 1;
+            ifShowWhenStart = PlayerPrefs.GetInt("ShowResetModuleController", 1) == 1;
             ifShowWhenStart = GUILayout.Toggle(ifShowWhenStart, "Show when start");
             if (ifShowWhenStart)
             {
-                PlayerPrefs.SetInt("ShowResetVersionController", 1);
+                PlayerPrefs.SetInt("ShowResetModuleController", 1);
             }
             else
             {
-                PlayerPrefs.SetInt("ShowResetVersionController", 0);
+                PlayerPrefs.SetInt("ShowResetModuleController", 0);
             }
         }
 
@@ -82,19 +82,19 @@ namespace ResetCore.VersionControl
             GUILayout.Label("Select the module you want to use", GUIHelper.MakeHeader(30));
             EditorGUILayout.Space();
 
-            Array versionSymbols = Enum.GetValues(typeof(VERSION_SYMBOL));
-            foreach (VERSION_SYMBOL symbol in versionSymbols)
+            Array versionSymbols = Enum.GetValues(typeof(MODULE_SYMBOL));
+            foreach (MODULE_SYMBOL symbol in versionSymbols)
             {
                 EditorGUILayout.BeginHorizontal();
-                string symbolName = VersionConst.SymbolName[symbol];
+                string symbolName = ModuleConst.SymbolName[symbol];
 
-                if (VersionConst.defaultSymbol.Contains(symbol))
+                if (ModuleConst.defaultSymbol.Contains(symbol))
                 {
                     GUILayout.Label("Core：" + symbolName, GUIHelper.MakeHeader(30), GUILayout.Width(200));
                 }
                 else
                 {
-                    if (!VersionControl.isDevelopMode)
+                    if (!ModuleControl.isDevelopMode)
                     {
                         isImportDict[symbol] = EditorGUILayout.Toggle(symbolName, isImportDict[symbol], GUILayout.Width(200));
                     }
@@ -105,17 +105,17 @@ namespace ResetCore.VersionControl
                 }
                 ShowSDKSetup(symbol);
 
-                GUILayout.Label(VersionConst.SymbolComments[symbol]);
+                GUILayout.Label(ModuleConst.SymbolComments[symbol]);
                 EditorGUILayout.EndHorizontal();
             }
         }
 
-        private void ShowSDKSetup(VERSION_SYMBOL symbol)
+        private void ShowSDKSetup(MODULE_SYMBOL symbol)
         {
-            if (!VersionConst.NeedSDKDict.ContainsKey(symbol) || isImportDict[symbol] == false)
+            if (!ModuleConst.NeedSDKDict.ContainsKey(symbol) || isImportDict[symbol] == false)
                 return;
 
-            SDKType sdkType = VersionConst.NeedSDKDict[symbol];
+            SDKType sdkType = ModuleConst.NeedSDKDict[symbol];
             bool hasSetup = sdkManager.HasSetuped(sdkType);
             if (hasSetup)
             {
@@ -124,7 +124,7 @@ namespace ResetCore.VersionControl
             }
             else
             {
-                if (!VersionControl.isDevelopMode)
+                if (!ModuleControl.isDevelopMode)
                 {
                     if (GUILayout.Button("Need Setup", GUILayout.Width(100)))
                     {
@@ -148,21 +148,21 @@ namespace ResetCore.VersionControl
 
         private void ShowFunctionButton()
         {
-            if (!VersionControl.isDevelopMode)
+            if (!ModuleControl.isDevelopMode)
             {
                 if (GUILayout.Button("Apply", GUILayout.Width(200)))
                 {
-                    VersionControl.ApplySymbol(isImportDict);
+                    ModuleControl.ApplySymbol(isImportDict);
                     inited = false;
                 }
                 if (GUILayout.Button("Refresh Backup", GUILayout.Width(200)))
                 {
-                    VersionControl.RefreshBackUp();
+                    ModuleControl.RefreshBackUp();
                     inited = false;
                 }
                 if (GUILayout.Button("Remove ResetCore", GUILayout.Width(200)))
                 {
-                    VersionControl.RemoveResetCore();
+                    ModuleControl.RemoveResetCore();
                     inited = false;
                 }
             }

@@ -9,10 +9,23 @@ using System.Linq;
 
 namespace ResetCore.Data.GameDatas.Obj
 {
-    public class ObjData : BaseData
+    public class ObjDataBundle:ScriptableObject
     {
+        public ArrayList dataArray = new ArrayList();
+    }
+    
+    public class ObjData
+    {
+        public int id
+        {
+            get;
+            protected set;
+        }
+
         public static readonly string nameSpace = "ResetCore.Data.GameDatas.Obj";
-        protected static Dictionary<int, T> GetDataMap<T>()
+        public static readonly string ex = ".asset";
+
+        protected static Dictionary<int, T> GetDataMap<T>() where T : ObjData<T>
         {
             Type type = typeof(T);
             FieldInfo field = type.GetField("fileName");
@@ -20,11 +33,11 @@ namespace ResetCore.Data.GameDatas.Obj
             if (field != null)
             {
                 string fileName = field.GetValue(null) as string;
-                dictionary = (ObjDataController.instance.FormatObjData(fileName) as Dictionary<int, T>);
+                dictionary = new ObjDataController().FormatObjData<T>(fileName);
             }
             else
             {
-                dictionary = new Dictionary<int, T>();
+                return new Dictionary<int, T>();
             }
             return dictionary;
         }
@@ -50,6 +63,7 @@ namespace ResetCore.Data.GameDatas.Obj
             }
         }
 
+
         public static T Select(Func<T, bool> condition)
         {
             return ObjData<T>.dataMap.Values.FirstOrDefault((data) =>
@@ -59,33 +73,22 @@ namespace ResetCore.Data.GameDatas.Obj
         }
     }
 
-    public class ObjDataController : Singleton<ObjDataController>
+    public class ObjDataController
     {
 
-        protected readonly string m_fileExtention = ".objdat";
+        protected readonly string m_fileExtention = ".asset";
 
-        public object FormatObjData(string fileName)
+        public Dictionary<int, T> FormatObjData<T>(string fileName) where T : ObjData<T>
         {
-            object obj = Resources.Load(fileName);
-            Type objType = obj.GetType();
-            FieldInfo fieldInfo = objType.GetField("DataArray");
+            T obj = Resources.Load(fileName) as T;
 
-            object array = fieldInfo.GetValue(obj);
-            Type arrayType = array.GetType();
-
-            Dictionary<int, object> dict = new Dictionary<int, object>();
-
-            int Count = (int)arrayType.GetProperty("Count").GetValue(array, null);
-            if (Count == 0) return String.Empty;
-            MethodInfo mget = arrayType.GetMethod("get_Item", BindingFlags.Instance | BindingFlags.Public);
-
-            object item;
-
-            for (int i = 0; i < Count; i++)
+            Dictionary<int, T> dict = new Dictionary<int, T>();
+            List<ObjData> dataArray = typeof(T).GetField("dataArray").GetValue(obj) as List<ObjData>;
+            dataArray.ForEach((i, data) =>
             {
-                item = mget.Invoke(array, new object[] { i });
-                dict.Add(i + 1, item);
-            }
+                dict.Add(i + 1, data as T);
+            });
+
             return dict;
         }
 

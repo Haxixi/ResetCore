@@ -7,26 +7,26 @@ using System.IO;
 using System;
 using System.Reflection;
 
-namespace ResetCore.VersionControl
+namespace ResetCore.ModuleControl
 {
-    public class VersionControl
+    public class ModuleControl
     {
         
         public static bool isDevelopMode
         {
             get
             {
-                return ContainSymbol(VersionConst.DeveloperSymbolName);
+                return ContainSymbol(ModuleConst.DeveloperSymbolName);
             }
             set
             {
                 if (value == true)
                 {
-                    AddSymbol(VersionConst.DeveloperSymbolName);
+                    AddSymbol(ModuleConst.DeveloperSymbolName);
                 }
                 else
                 {
-                    RemoveSymbol(VersionConst.DeveloperSymbolName);
+                    RemoveSymbol(ModuleConst.DeveloperSymbolName);
                 }
             }
         }
@@ -40,7 +40,7 @@ namespace ResetCore.VersionControl
             static ResetCoreLoad()
             {
                 if (Application.isPlaying) return;
-                int isShow = PlayerPrefs.GetInt("ShowResetVersionController", 1);
+                int isShow = PlayerPrefs.GetInt("ShowResetModuleController", 1);
                 if (isShow == 1)
                 {
                     EditorApplication.update += Update;
@@ -54,8 +54,8 @@ namespace ResetCore.VersionControl
                 if (inited == false)
                 {
                     //初始化模块
-                    Array symbolArr = Enum.GetValues(typeof(VERSION_SYMBOL));
-                    foreach (VERSION_SYMBOL symbol in VersionConst.defaultSymbol)
+                    Array symbolArr = Enum.GetValues(typeof(MODULE_SYMBOL));
+                    foreach (MODULE_SYMBOL symbol in ModuleConst.defaultSymbol)
                     {
                         AddModule(symbol);
                     }
@@ -82,15 +82,15 @@ namespace ResetCore.VersionControl
 
         public static void CheckAllSymbol()
         {
-            Array symbolArr = Enum.GetValues(typeof(VERSION_SYMBOL));
+            Array symbolArr = Enum.GetValues(typeof(MODULE_SYMBOL));
             List<string> symbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup).ParseList(';');
             bool needRestart = false;
 
             for (int i = 0; i < symbolArr.Length; i++)
             {
-                VERSION_SYMBOL symbol = (VERSION_SYMBOL)symbolArr.GetValue(i);
-                string tempPath = VersionConst.GetSymbolTempPath(symbol);
-                string modulePath = VersionConst.GetSymbolPath(symbol);
+                MODULE_SYMBOL symbol = (MODULE_SYMBOL)symbolArr.GetValue(i);
+                string tempPath = ModuleConst.GetSymbolTempPath(symbol);
+                string modulePath = ModuleConst.GetSymbolPath(symbol);
 
                 EditorUtility.DisplayProgressBar("Check Modules", "Checking Modules " + symbol.ToString() + " " + (i+1) + "/" + symbolArr.Length, (float)i+1 / (float)symbolArr.Length);
                 //检查模块备份
@@ -110,7 +110,7 @@ namespace ResetCore.VersionControl
                     }
                 }
                 //存在宏定义 但是不存在实际模块
-                if (symbols.Contains(VersionConst.SymbolName[symbol]) 
+                if (symbols.Contains(ModuleConst.SymbolName[symbol]) 
                     && (!Directory.Exists(modulePath)
                     || Directory.GetFiles(modulePath).Length == 0))
                 {
@@ -121,7 +121,7 @@ namespace ResetCore.VersionControl
                     needRestart = true;
                 }
                 //不存在宏定义 但是存在实际模块 添加模块
-                if (!symbols.Contains(VersionConst.SymbolName[symbol]) 
+                if (!symbols.Contains(ModuleConst.SymbolName[symbol]) 
                     && Directory.Exists(modulePath)
                     && Directory.GetFiles(modulePath).Length != 0)
                 {
@@ -145,9 +145,9 @@ namespace ResetCore.VersionControl
         }
 
         //检查是否存在该模块
-        public static bool ContainSymbol(VERSION_SYMBOL symbol)
+        public static bool ContainSymbol(MODULE_SYMBOL symbol)
         {
-            return ContainSymbol(VersionConst.SymbolName[symbol]);
+            return ContainSymbol(ModuleConst.SymbolName[symbol]);
         }
         public static bool ContainSymbol(string symbol)
         {
@@ -157,9 +157,9 @@ namespace ResetCore.VersionControl
         }
 
         //添加预编译宏
-        public static void AddSymbol(VERSION_SYMBOL symbol)
+        public static void AddSymbol(MODULE_SYMBOL symbol)
         {
-            string symbolName = VersionConst.SymbolName[symbol];
+            string symbolName = ModuleConst.SymbolName[symbol];
             AddSymbol(symbolName);
         }
         public static void AddSymbol(string symbolName)
@@ -175,9 +175,9 @@ namespace ResetCore.VersionControl
 
 
         //移除预编译宏
-        public static void RemoveSymbol(VERSION_SYMBOL symbol)
+        public static void RemoveSymbol(MODULE_SYMBOL symbol)
         {
-            string symbolName = VersionConst.SymbolName[symbol];
+            string symbolName = ModuleConst.SymbolName[symbol];
             RemoveSymbol(symbolName);
         }
 
@@ -192,10 +192,10 @@ namespace ResetCore.VersionControl
         }
 
         //添加模块
-        public static bool AddModule(VERSION_SYMBOL symbol)
+        public static bool AddModule(MODULE_SYMBOL symbol)
         {
-            string tempPath = VersionConst.GetSymbolTempPath(symbol);
-            string modulePath = VersionConst.GetSymbolPath(symbol);
+            string tempPath = ModuleConst.GetSymbolTempPath(symbol);
+            string modulePath = ModuleConst.GetSymbolPath(symbol);
 
             //检查目录如果不存在则拷贝
             if (!Directory.Exists(modulePath))
@@ -217,10 +217,10 @@ namespace ResetCore.VersionControl
         }
 
         //移除模块
-        public static bool RemoveModule(VERSION_SYMBOL symbol)
+        public static bool RemoveModule(MODULE_SYMBOL symbol)
         {
-            string tempPath = VersionConst.GetSymbolTempPath(symbol);
-            string modulePath = VersionConst.GetSymbolPath(symbol);
+            string tempPath = ModuleConst.GetSymbolTempPath(symbol);
+            string modulePath = ModuleConst.GetSymbolPath(symbol);
 
             //如果找不到备份文件夹则复制到备份文件夹，如果备份文件夹中有了，则直接删除
             if (!Directory.Exists(tempPath))
@@ -242,9 +242,9 @@ namespace ResetCore.VersionControl
             return true;
         }
 
-        public static void ApplySymbol(Dictionary<VERSION_SYMBOL, bool> isImportDict)
+        public static void ApplySymbol(Dictionary<MODULE_SYMBOL, bool> isImportDict)
         {
-            foreach (KeyValuePair<VERSION_SYMBOL, bool> isImport in isImportDict)
+            foreach (KeyValuePair<MODULE_SYMBOL, bool> isImport in isImportDict)
             {
                 if (isImport.Value == false)
                 {
@@ -262,12 +262,12 @@ namespace ResetCore.VersionControl
         //刷新备份文件夹
         public static void RefreshBackUp()
         {
-            VersionControl.CheckAllSymbol();
-            Array symbolArr = Enum.GetValues(typeof(VERSION_SYMBOL));
-            foreach(VERSION_SYMBOL symbol in symbolArr)
+            ModuleControl.CheckAllSymbol();
+            Array symbolArr = Enum.GetValues(typeof(MODULE_SYMBOL));
+            foreach(MODULE_SYMBOL symbol in symbolArr)
             {
-                string modulePath = VersionConst.GetSymbolPath(symbol);
-                string moduleTempPath = VersionConst.GetSymbolTempPath(symbol);
+                string modulePath = ModuleConst.GetSymbolPath(symbol);
+                string moduleTempPath = ModuleConst.GetSymbolTempPath(symbol);
                 if (!Directory.Exists(modulePath)) return;
 
                 if (Directory.Exists(moduleTempPath))
@@ -278,7 +278,7 @@ namespace ResetCore.VersionControl
                 DirectoryEx.DirectoryCopy(modulePath, moduleTempPath, true);
             }
             
-            VersionControl.CheckAllSymbol();
+            ModuleControl.CheckAllSymbol();
         }
 
         
@@ -307,8 +307,8 @@ namespace ResetCore.VersionControl
                 EditorUtility.DisplayProgressBar("Removing ResetCore", "Remove Symbols", 0.9f);
 
                 //移除所有预编译
-                Array symbolArr = Enum.GetValues(typeof(VERSION_SYMBOL));
-                foreach(VERSION_SYMBOL symbol in symbolArr)
+                Array symbolArr = Enum.GetValues(typeof(MODULE_SYMBOL));
+                foreach(MODULE_SYMBOL symbol in symbolArr)
                 {
                     RemoveSymbol(symbol);
                 }
