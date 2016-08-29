@@ -37,6 +37,7 @@ namespace ResetCore.UGUI
             if (image != null)
             {
                 //命名要求为： 包名-sprite名
+                if (string.IsNullOrEmpty(textToShow)) return;
                 image.sprite = SpriteHelper.GetSpriteByFullName(textToShow);
             }
         }

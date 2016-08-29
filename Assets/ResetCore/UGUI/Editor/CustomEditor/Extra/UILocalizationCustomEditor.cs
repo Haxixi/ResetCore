@@ -54,11 +54,16 @@ namespace ResetCore.UGUI
             }
             if (local.gameObject.GetComponent<Image>() != null)
             {
-                local.gameObject.GetComponent<Image>().sprite = SpriteHelper.GetSpriteByFullName(LanguageManager.GetWord(local.key, LanguageConst.defaultLanguage));
+                string defSp = LanguageManager.GetWord(local.key, LanguageConst.defaultLanguage);
+                if (!string.IsNullOrEmpty(defSp))
+                {
+                    local.gameObject.GetComponent<Image>().sprite = SpriteHelper.GetSpriteByFullName(defSp);
+                }
                 foreach (LanguageConst.LanguageType type in types)
                 {
                     GUILayout.Label(type.ToString());
                     string helpTxt = LanguageManager.GetWord(local.key, type);
+                    if (string.IsNullOrEmpty(helpTxt)) continue;
                     GUILayout.Label(helpTxt);
                     GUILayout.Label(SpriteHelper.GetSpriteByFullName(helpTxt).texture, GUILayout.Width(50), GUILayout.Height(50));
                 }
