@@ -5,9 +5,9 @@ using ResetCore.Asset;
 
 namespace ResetCore.Util
 {
-    public class UGUITools : MonoBehaviour
+    public class UGUITools
     {
-        [MenuItem("Tools/UGUI/Create UIManager"), MenuItem("Assets/Create/UGUI/UIManager")]
+        [MenuItem("Tools/UGUI/Create/UIManager"), MenuItem("GameObject/UGUI/UIManager", false, -1)]
         public static void CreateUIManager()
         {
             Object obj = EditorResources.GetAsset<Object>("UIManager", "ResetCore", "Resources", "UGUI");
@@ -15,8 +15,8 @@ namespace ResetCore.Util
             go.name = "UIManager";
         }
 
-       
-        [MenuItem("Tools/UGUI/Create ObjectCanvas"), MenuItem("Assets/Create/UGUI/ObjectCanvas")]
+
+        [MenuItem("Tools/UGUI/Create/ObjectCanvas"), MenuItem("GameObject/UGUI/ObjectCanvas", false, -1)]
         public static void CreateObjectCanvas()
         {
             Object obj = EditorResources.GetAsset<Object>("ObjectCanvas", "ResetCore", "Resources", "UGUI");

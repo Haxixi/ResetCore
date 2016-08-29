@@ -23,22 +23,29 @@ public class Driver : MonoSingleton<Driver> {
     // Use this for initialization
     void Start()
     {
-        new ResDownloadManager().CheckVersion((str) =>
+        //new ResDownloadManager().CheckVersion((str) =>
+        //{
+        //    Debug.Log("info:" + str);
+        //}, (progress) =>
+        //{
+        //    Debug.Log("progress:" + progress);
+        //}, (comp) =>
+        //{
+        //    Debug.Log(comp ? "Finish" : "Fail");
+        //}, (ver) =>
+        //{
+        //    Debug.Log("Need Update newset is " + ver.ToString());
+        //}, (ex) =>
+        //{
+        //    Debug.LogException(ex);
+        //});
+
+        //gameObject.GetComponent<>
+
+        CoroutineTaskManager.Instance.WaitSecondTodo(() =>
         {
-            Debug.Log("info:" + str);
-        }, (progress) =>
-        {
-            Debug.Log("progress:" + progress);
-        }, (comp) =>
-        {
-            Debug.Log(comp ? "Finish" : "Fail");
-        }, (ver) =>
-        {
-            Debug.Log("Need Update newset is " + ver.ToString());
-        }, (ex) =>
-        {
-            Debug.LogException(ex);
-        });
+            LanguageManager.SetLanguageType(LanguageConst.LanguageType.English);
+        }, 3);
     }
 
     public override void Init()

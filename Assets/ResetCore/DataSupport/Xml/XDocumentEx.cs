@@ -61,30 +61,6 @@ namespace ResetCore.Xml
         }
 
         /// <summary>
-        /// 从Xml中读取列表
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="_XDoc"></param>
-        /// <param name="nodeNames"></param>
-        /// <returns></returns>
-        public static List<T> ReadListByStrFromXML<T>(this XDocument _XDoc, string[] nodeNames, char splitChar = ',')
-        {
-            string _str = _XDoc.ReadValueFromXML<string>(nodeNames);
-            if (_str == null)
-            {
-                //Debug.Log(nodeNames[nodeNames.Length - 1] + "结点不存在,返回空ArrayList");
-                return new List<T>();
-            }
-            string[] _List = _str.Split(splitChar);
-            List<T> _Array = new List<T>();
-            foreach (string _value in _List)
-            {
-                _Array.Add((T)StringEx.GetValue(_value, typeof(T)));
-            }
-            return _Array;
-        }
-
-        /// <summary>
         /// 从XML中读取Dictionary
         /// </summary>
         /// <typeparam name="T">泛型</typeparam>
@@ -160,7 +136,28 @@ namespace ResetCore.Xml
         /// <param name="path"></param>
         public static void SafeSaveWithoutDeclaration(this XDocument xDoc, string path)
         {
+            PathEx.MakeDirectoryExist(path);
             File.WriteAllText(path, xDoc.ToString());
+        }
+
+        /// <summary>
+        /// 加载Xml如果不存在则创建
+        /// </summary>
+        /// <param name="path"></param>
+        public static XDocument LoadOrCreate(string path)
+        {
+            XDocument xDoc;
+             if (!File.Exists(path))
+            {
+                xDoc = new XDocument();
+                xDoc.Add(new XElement("Root"));
+                xDoc.SafeSaveWithoutDeclaration(path);
+            }
+            else
+            {
+                xDoc = XDocument.Load(path);
+            }
+            return xDoc;
         }
 
     }

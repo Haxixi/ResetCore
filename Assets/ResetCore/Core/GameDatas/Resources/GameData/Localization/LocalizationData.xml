@@ -2,8 +2,10 @@
 <Root>
   <item>
     <PEOPLE>人</PEOPLE>
+    <IMG>Test-env_TowerFull</IMG>
   </item>
   <item>
     <PEOPLE>People</PEOPLE>
+    <IMG>Test-env_PlatformUfo</IMG>
   </item>
 </Root>

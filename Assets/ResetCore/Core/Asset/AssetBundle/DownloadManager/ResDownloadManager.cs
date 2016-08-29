@@ -85,7 +85,6 @@ namespace ResetCore.Asset
             List<Version> verionToDownloadList = new List<Version>();
 
             XDocument xDoc = XDocument.Parse(info);
-            List<string> versionStrList = xDoc.ReadListByStrFromXML<string>(new string[0]);
 
             foreach (XElement el in xDoc.Root.Elements())
             {

@@ -1,10 +1,8 @@
 UGUI：
-图片加载优化（类似NGUI）
 任务栈
 
 DataGener:
 ExcelWriter写入工具
-图片本地化
 字体本地化
 全局变量替换
 
@@ -19,7 +17,3 @@ VR扩展
 
 ARToolKit:
 动态加载marker
-
-Asset:
-VersionData的编辑器。
-版本验证以及下载流程。

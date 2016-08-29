@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 
 namespace ResetCore.UGUI
@@ -21,6 +22,17 @@ namespace ResetCore.UGUI
             {UIName.TestUI, "TestUI.prefab" },
             {UIName.HAHAUI, "HAHAUI.prefab" }
         };
+
+        #region inner
+        //默认sprite包名
+        public const string defaultPackage = "default";
+        //
+        public static readonly string spritePrefabPath = "SpritePacker";
+        //UGUI资源文件夹目录
+        public static readonly string ResourcesPath = PathConfig.resourcePath;
+        //SpritePrefab所在的地址
+        public static readonly string spritePrefabPathAbstractPath = ResourcesPath + spritePrefabPath;
+        #endregion
 
     }
 }

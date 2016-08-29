@@ -1,0 +1,6 @@
+<Root>
+  <PackageListName>Test</PackageListName>
+  <SpriteList>
+    <Test>Assets/ArtResources/env_bg.png,Assets/ArtResources/env_Fog.png,Assets/ArtResources/env_Gherkin.png,Assets/ArtResources/env_PlatformTop.png,Assets/ArtResources/env_Bank.png,Assets/ArtResources/env_BigBen.png,Assets/ArtResources/env_cloudTop.png,Assets/ArtResources/env_RiverBase.png,Assets/ArtResources/env_PlatformUfo.png,Assets/ArtResources/env_PlatformBridge.png,Assets/ArtResources/env_TowerFull.png,Assets/ArtResources/env_RiverTop.png,Assets/ArtResources/env_Clouds.png,Assets/ArtResources/env_UfoLegs.png,Assets/ArtResources/env_RiverMid.png</Test>
+  </SpriteList>
+</Root>

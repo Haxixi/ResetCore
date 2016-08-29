@@ -6,6 +6,7 @@ using System;
 using ResetCore.Asset;
 using ResetCore.Excel;
 using System.IO;
+using UnityEngine.UI;
 
 namespace ResetCore.UGUI
 {
@@ -41,13 +42,28 @@ namespace ResetCore.UGUI
                 Excel2Localization.ExportExcelFile();
             }
 
-                Array types = Enum.GetValues(typeof(LanguageConst.LanguageType));
-            foreach(LanguageConst.LanguageType type in types)
+            Array types = Enum.GetValues(typeof(LanguageConst.LanguageType));
+            if (local.gameObject.GetComponent<Text>() != null)
             {
-                GUILayout.Label(type.ToString());
-                string helpTxt = LanguageManager.GetWord(local.key, type);
-                EditorGUILayout.HelpBox(helpTxt, MessageType.None);
+                foreach (LanguageConst.LanguageType type in types)
+                {
+                    GUILayout.Label(type.ToString());
+                    string helpTxt = LanguageManager.GetWord(local.key, type);
+                    EditorGUILayout.HelpBox(helpTxt, MessageType.None);
+                }
             }
+            if (local.gameObject.GetComponent<Image>() != null)
+            {
+                local.gameObject.GetComponent<Image>().sprite = SpriteHelper.GetSpriteByFullName(LanguageManager.GetWord(local.key, LanguageConst.defaultLanguage));
+                foreach (LanguageConst.LanguageType type in types)
+                {
+                    GUILayout.Label(type.ToString());
+                    string helpTxt = LanguageManager.GetWord(local.key, type);
+                    GUILayout.Label(helpTxt);
+                    GUILayout.Label(SpriteHelper.GetSpriteByFullName(helpTxt).texture, GUILayout.Width(50), GUILayout.Height(50));
+                }
+            }
+
         }
 
     }
