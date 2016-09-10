@@ -11,6 +11,7 @@ namespace ResetCore.ModuleControl
         ASSET,
         EVENT,
         UTIL,
+        DATA_SUPPORT,
 
         AOP,
         BEHAVIOR_TREE,
@@ -31,7 +32,6 @@ namespace ResetCore.ModuleControl
         SHADER,
         TEST,
         UGUI,
-        DATA_SUPPORT,
 
         AR,
         VR_VIVE
@@ -52,6 +52,7 @@ namespace ResetCore.ModuleControl
             MODULE_SYMBOL.EVENT,
             MODULE_SYMBOL.ASSET,
             MODULE_SYMBOL.UTIL,
+            MODULE_SYMBOL.DATA_SUPPORT
         };
 
         public static readonly string DeveloperSymbolName = "RESET_DEVELOPER";
@@ -61,6 +62,7 @@ namespace ResetCore.ModuleControl
             {MODULE_SYMBOL.ASSET,"ASSET"},
             {MODULE_SYMBOL.UTIL,"UTIL"},
             {MODULE_SYMBOL.EVENT,"EVENT"},
+            {MODULE_SYMBOL.DATA_SUPPORT,"DATA_SUPPORT"},
 
             {MODULE_SYMBOL.AOP,"AOP"},
             {MODULE_SYMBOL.BEHAVIOR_TREE,"BEHAVIOR_TREE"},
@@ -81,7 +83,6 @@ namespace ResetCore.ModuleControl
             {MODULE_SYMBOL.SHADER,"SHADER"},
             {MODULE_SYMBOL.TEST,"TEST"},
             {MODULE_SYMBOL.UGUI,"UGUI"},
-            {MODULE_SYMBOL.DATA_SUPPORT,"DATA_SUPPORT"},
 
             {MODULE_SYMBOL.AR,"AR"},
             {MODULE_SYMBOL.VR_VIVE,"VR_VIVE"},
@@ -92,6 +93,7 @@ namespace ResetCore.ModuleControl
             {MODULE_SYMBOL.ASSET, "Core/Asset"},
             {MODULE_SYMBOL.UTIL, "Core/Util"},
             {MODULE_SYMBOL.EVENT,"Core/Events"},
+            {MODULE_SYMBOL.DATA_SUPPORT, "Core/DataSupport"},
 
             {MODULE_SYMBOL.AOP,"Aop"},
             {MODULE_SYMBOL.BEHAVIOR_TREE,"BehaviorTree"},
@@ -112,7 +114,6 @@ namespace ResetCore.ModuleControl
             {MODULE_SYMBOL.SHADER, "Shader"},
             {MODULE_SYMBOL.TEST, "Test"},
             {MODULE_SYMBOL.UGUI, "UGUI"},
-            {MODULE_SYMBOL.DATA_SUPPORT, "DataSupport"},
 
             {MODULE_SYMBOL.AR, "ARToolKit"},
             {MODULE_SYMBOL.VR_VIVE, "VR_Vive"},
@@ -143,6 +144,7 @@ namespace ResetCore.ModuleControl
             {MODULE_SYMBOL.ASSET, "热更新基本框架以及资源管理"},
             {MODULE_SYMBOL.UTIL, "常用功能，包含大量常用扩展"},
             {MODULE_SYMBOL.EVENT,"事件分发器"},
+            {MODULE_SYMBOL.DATA_SUPPORT, "对各种储存传输数据的扩展"},
 
             {MODULE_SYMBOL.AOP,"Aop扩展"},
             {MODULE_SYMBOL.BEHAVIOR_TREE,"行为树框架（开发中）"},
@@ -163,7 +165,6 @@ namespace ResetCore.ModuleControl
             {MODULE_SYMBOL.SHADER, "对Shader的扩展（开发中）"},
             {MODULE_SYMBOL.TEST, "测试模块"},
             {MODULE_SYMBOL.UGUI, "UGUI基本UI框架"},
-            {MODULE_SYMBOL.DATA_SUPPORT, "对各种储存传输数据的扩展"},
 
             {MODULE_SYMBOL.AR, "对ARToolKit的扩展支持（需要安装）"},
             {MODULE_SYMBOL.VR_VIVE, "对SteamVR的扩展支持（需要安装）"},

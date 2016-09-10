@@ -2,39 +2,44 @@
 using System.Collections;
 using ResetCore.Util;
 
-public class BaseSkill<T> {
-
-    public class SkillArg
-    {
-        public Vector3 skillPoint;
-        public GameObject targetObj;
-    }
-
-    private bool isColdingDown = false;
-    private float coldDownTime;
-    public SkillSystem<T> system { get; protected set; }
-
-    public BaseSkill() { }
-    public BaseSkill(SkillSystem<T> system)
-    {
-        this.system = system;
-    }
-
-    public virtual void Learn()
+namespace ResetCore.GameSystem
+{
+    public class BaseSkill<T>
     {
 
-    }
-
-    public virtual void Use()
-    {
-        if (isColdingDown)
+        public class SkillArg
         {
-            return;
+            public Vector3 skillPoint;
+            public GameObject targetObj;
         }
-        isColdingDown = true;
-        CoroutineTaskManager.Instance.WaitSecondTodo(() =>
+
+        private bool isColdingDown = false;
+        private float coldDownTime;
+        public SkillSystem<T> system { get; protected set; }
+
+        public BaseSkill() { }
+        public BaseSkill(SkillSystem<T> system)
         {
-            isColdingDown = false;
-        }, coldDownTime);
+            this.system = system;
+        }
+
+        public virtual void Learn()
+        {
+
+        }
+
+        public virtual void Use()
+        {
+            if (isColdingDown)
+            {
+                return;
+            }
+            isColdingDown = true;
+            CoroutineTaskManager.Instance.WaitSecondTodo(() =>
+            {
+                isColdingDown = false;
+            }, coldDownTime);
+        }
     }
+
 }

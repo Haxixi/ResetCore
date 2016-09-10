@@ -22,8 +22,6 @@ namespace ResetCore.Asset
         //应用需要升级行为
         private Action<Version> appUpdateAct;
 
-        
-
 
         public void CheckVersion(Action<string> infoAct, Action<float> progressAct
             , Action<bool> finishAct, Action<Version> appUpdateAct, Action<Exception> errorAct)

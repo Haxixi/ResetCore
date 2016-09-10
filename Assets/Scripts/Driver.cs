@@ -42,10 +42,10 @@ public class Driver : MonoSingleton<Driver> {
 
         //gameObject.GetComponent<>
 
-        CoroutineTaskManager.Instance.WaitSecondTodo(() =>
-        {
-            LanguageManager.SetLanguageType(LanguageConst.LanguageType.English);
-        }, 3);
+        //CoroutineTaskManager.Instance.WaitSecondTodo(() =>
+        //{
+        //    LanguageManager.SetLanguageType(LanguageConst.LanguageType.English);
+        //}, 3);
     }
 
     public override void Init()

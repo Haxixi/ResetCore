@@ -49,21 +49,25 @@ namespace ResetCore.ModuleControl
                 //如果为开发者模式则关闭自动检查模块功能
                 if (isDevelopMode) return;
 
-                bool inited = EditorPrefs.GetBool("ResetCoreInited", false);
-
-                if (inited == false)
+                if (!Directory.Exists(PathConfig.ResetCoreTempPath))
                 {
                     //初始化模块
                     Array symbolArr = Enum.GetValues(typeof(MODULE_SYMBOL));
-                    foreach (MODULE_SYMBOL symbol in ModuleConst.defaultSymbol)
+                    foreach (MODULE_SYMBOL symbol in symbolArr)
                     {
-                        AddModule(symbol);
+                        if (ModuleConst.defaultSymbol.Contains(symbol))
+                        {
+                            AddModule(symbol);
+                        }
+                        else
+                        {
+                            RemoveModule(symbol);
+                        }
                     }
                     //将额外工具移至工程目录
                     MoveToolsToProject();
                     //将SDK移至工程目录备份
                     MoveSDKToTemp();
-
                 }
 
                 CheckAllSymbol();
@@ -121,13 +125,13 @@ namespace ResetCore.ModuleControl
                     needRestart = true;
                 }
                 //不存在宏定义 但是存在实际模块 添加模块
-                if (!symbols.Contains(ModuleConst.SymbolName[symbol]) 
+                if (!symbols.Contains(ModuleConst.SymbolName[symbol])
                     && Directory.Exists(modulePath)
                     && Directory.GetFiles(modulePath).Length != 0)
                 {
-                    AddModule(symbol);
-                    EditorUtility.DisplayProgressBar("Check Modules", "Add Module " + 
-                        symbol.ToString() + "from ResetCore " + (i + 1) + "/" + 
+                    RemoveModule(symbol);
+                    EditorUtility.DisplayProgressBar("Check Modules", "Remove Module " +
+                        symbol.ToString() + "from ResetCore " + (i + 1) + "/" +
                         symbolArr.Length, (float)(i + 1) / (float)symbolArr.Length);
                     needRestart = true;
                 }
@@ -235,7 +239,10 @@ namespace ResetCore.ModuleControl
             }
             else
             {
-                Directory.Delete(modulePath, true);
+                if (Directory.Exists(modulePath))
+                {
+                    Directory.Delete(modulePath, true);
+                }
             }
             RemoveSymbol(symbol);
 
