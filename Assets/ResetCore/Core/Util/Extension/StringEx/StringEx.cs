@@ -58,6 +58,10 @@ namespace ResetCore.Util
 
         public static object GetValue(this string value, System.Type type)
         {
+            if (string.IsNullOrEmpty(value))
+            {
+                return Activator.CreateInstance(type);
+            }
             //Debug.logger.Log("GetValue " + Spriter1 + "  " + Spriter2);
             if (type != null)
             {

@@ -44,7 +44,7 @@ namespace ResetCore.Asset
                     _versionData = Resources.Load(PathConfig.VersionDataPathInResources) as VersionData;
                     if (File.Exists(PathConfig.LocalVersionDataInPersistentDataPath))
                     {
-                        _versionData.ParseXml(XDocument.Load(PathConfig.LocalVersionDataInPersistentDataPath));
+                        VersionData.ParseXml(XDocument.Load(PathConfig.LocalVersionDataInPersistentDataPath));
                     }
 #endif
                 }
@@ -53,7 +53,9 @@ namespace ResetCore.Asset
             set
             {
                 _versionData = value;
+#if UNITY_EDITOR
                 EditorUtility.SetDirty(_versionData);
+#endif
             }
         }
 
