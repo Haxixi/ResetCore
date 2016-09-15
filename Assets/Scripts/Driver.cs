@@ -23,6 +23,7 @@ public class Driver : MonoSingleton<Driver> {
     // Use this for initialization
     void Start()
     {
+        Debug.logger.Log(GPSUtil.GPSDistance(109.99309, 39.81625, 109.99456, 39.81595));
         //new ResDownloadManager().CheckVersion((str) =>
         //{
         //    Debug.Log("info:" + str);
