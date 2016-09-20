@@ -4,7 +4,9 @@ using UnityEditor;
 using ResetCore.Data;
 using System;
 using ResetCore.Asset;
+#if DATA_GENER
 using ResetCore.Excel;
+#endif
 using System.IO;
 using UnityEngine.UI;
 
@@ -15,6 +17,7 @@ namespace ResetCore.UGUI
     {
         public override void OnInspectorGUI()
         {
+#if DATA_GENER
             UILocalization local = target as UILocalization;
             //base.OnInspectorGUI();
             local.key = EditorGUILayout.TextField("Key", local.key);
@@ -68,7 +71,9 @@ namespace ResetCore.UGUI
                     GUILayout.Label(SpriteHelper.GetSpriteByFullName(helpTxt).texture, GUILayout.Width(50), GUILayout.Height(50));
                 }
             }
-
+#else
+            EditorGUILayout.HelpBox("You need import \"DATA_GENER\" module to use this function", MessageType.Error);
+#endif
         }
 
     }
