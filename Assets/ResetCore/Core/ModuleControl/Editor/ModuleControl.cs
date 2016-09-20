@@ -3,9 +3,12 @@ using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 using ResetCore.Util;
+using ResetCore.Asset;
 using System.IO;
 using System;
 using System.Reflection;
+using System.Xml.Linq;
+using ResetCore.Xml;
 
 namespace ResetCore.ModuleControl
 {
@@ -87,7 +90,7 @@ namespace ResetCore.ModuleControl
         public static void CheckAllSymbol()
         {
             Array symbolArr = Enum.GetValues(typeof(MODULE_SYMBOL));
-            List<string> symbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup).ParseList(';');
+            List<MODULE_SYMBOL> symbols = GetSymbolInfo();
             bool needRestart = false;
 
             for (int i = 0; i < symbolArr.Length; i++)
@@ -114,7 +117,7 @@ namespace ResetCore.ModuleControl
                     }
                 }
                 //存在宏定义 但是不存在实际模块
-                if (symbols.Contains(ModuleConst.SymbolName[symbol]) 
+                if (symbols.Contains(symbol) 
                     && (!Directory.Exists(modulePath)
                     || Directory.GetFiles(modulePath).Length == 0))
                 {
@@ -125,7 +128,7 @@ namespace ResetCore.ModuleControl
                     needRestart = true;
                 }
                 //不存在宏定义 但是存在实际模块 添加模块
-                if (!symbols.Contains(ModuleConst.SymbolName[symbol])
+                if (!symbols.Contains(symbol)
                     && Directory.Exists(modulePath)
                     && Directory.GetFiles(modulePath).Length != 0)
                 {
@@ -176,7 +179,6 @@ namespace ResetCore.ModuleControl
             string defines = symbols.ListConvertToString(';');
             PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, defines);
         }
-
 
         //移除预编译宏
         public static void RemoveSymbol(MODULE_SYMBOL symbol)
@@ -251,6 +253,7 @@ namespace ResetCore.ModuleControl
 
         public static void ApplySymbol(Dictionary<MODULE_SYMBOL, bool> isImportDict)
         {
+            List<MODULE_SYMBOL> moduleList = new List<MODULE_SYMBOL>();
             foreach (KeyValuePair<MODULE_SYMBOL, bool> isImport in isImportDict)
             {
                 if (isImport.Value == false)
@@ -260,10 +263,35 @@ namespace ResetCore.ModuleControl
                 else if (isImport.Value == true)
                 {
                     AddSymbol(isImport.Key);
+                    moduleList.Add(isImport.Key);
                 }
             }
-
+            SetSymbolInfo(moduleList);
             CheckAllSymbol();
+        }
+
+        private static readonly string symbolInfoFilePathpath = PathEx.Combine(PathConfig.ResetCorePath, "Core", ModuleConst.symbolInfoFileName);
+        public static List<MODULE_SYMBOL> GetSymbolInfo()
+        {
+            XDocument xDoc = XDocument.Load(symbolInfoFilePathpath);
+            List<string> symbolNames = xDoc.ReadValueFromXML<List<string>>(new string[] { "Symbols" });
+            List<MODULE_SYMBOL> symbolList = new List<MODULE_SYMBOL>();
+            foreach (string name in symbolNames)
+            {
+                symbolList.Add((MODULE_SYMBOL)Enum.Parse(typeof(MODULE_SYMBOL), name));
+            }
+            return symbolList;
+        }
+
+        public static void SetSymbolInfo(List<MODULE_SYMBOL> symbolInfo)
+        {
+            XDocument xDoc = XDocument.Load(symbolInfoFilePathpath);
+            List<string> symbolNames = new List<string>();
+            foreach (MODULE_SYMBOL symbol in symbolInfo)
+            {
+                symbolNames.Add(symbol.ToString());
+            }
+            xDoc.WriteValueToXML(symbolInfoFilePathpath, new string[] { "Symbols" }, symbolNames);
         }
 
         //刷新备份文件夹
@@ -288,7 +316,6 @@ namespace ResetCore.ModuleControl
             ModuleControl.CheckAllSymbol();
         }
 
-        
         //删除ResetCore
         public static void RemoveResetCore()
         {
@@ -372,6 +399,7 @@ namespace ResetCore.ModuleControl
             }
         }
 
+        
 
     }
 

@@ -5,6 +5,7 @@ using System.IO;
 
 namespace ResetCore.ModuleControl
 {
+
     //模块种类
     public enum MODULE_SYMBOL
     {
@@ -47,6 +48,8 @@ namespace ResetCore.ModuleControl
 
     public static class ModuleConst
     {
+        public static readonly string symbolInfoFileName = "SymbolInfo.xml";
+
         public static readonly List<MODULE_SYMBOL> defaultSymbol = new List<MODULE_SYMBOL>()
         {
             MODULE_SYMBOL.EVENT,
@@ -59,33 +62,33 @@ namespace ResetCore.ModuleControl
 
         public static readonly Dictionary<MODULE_SYMBOL, string> SymbolName = new Dictionary<MODULE_SYMBOL, string>()
         {
-            {MODULE_SYMBOL.ASSET,"ASSET"},
-            {MODULE_SYMBOL.UTIL,"UTIL"},
-            {MODULE_SYMBOL.EVENT,"EVENT"},
-            {MODULE_SYMBOL.DATA_SUPPORT,"DATA_SUPPORT"},
+            {MODULE_SYMBOL.ASSET, MODULE_SYMBOL.ASSET.ToString()},
+            {MODULE_SYMBOL.UTIL, MODULE_SYMBOL.UTIL.ToString()},
+            {MODULE_SYMBOL.EVENT, MODULE_SYMBOL.EVENT.ToString()},
+            {MODULE_SYMBOL.DATA_SUPPORT, MODULE_SYMBOL.DATA_SUPPORT.ToString()},
 
-            {MODULE_SYMBOL.AOP,"AOP"},
-            {MODULE_SYMBOL.BEHAVIOR_TREE,"BEHAVIOR_TREE"},
-            {MODULE_SYMBOL.CSTOOL,"CSTOOL"},
-            {MODULE_SYMBOL.DATA_GENER,"DATA_GENER"},
-            {MODULE_SYMBOL.DATA_STRUCT,"DATA_STRUCT"},
-            {MODULE_SYMBOL.DEBUG,"DEBUG"},
-            {MODULE_SYMBOL.DLLMANAGER,"DLLMANAGER"},
-            {MODULE_SYMBOL.FSM,"FSM"},
-            {MODULE_SYMBOL.GAMESYSTEMS,"GAMESYSTEMS"},
-            {MODULE_SYMBOL.RESOURCES_MANAGER,"RESOURCES_MANAGER"},
-            {MODULE_SYMBOL.LUA,"LUA"},
-            {MODULE_SYMBOL.MYSQL,"MYSQL"},
-            {MODULE_SYMBOL.NETPOST,"NETPOST"},
-            {MODULE_SYMBOL.NGUI,"NGUI"},
-            {MODULE_SYMBOL.OBJECT,"OBJECT"},
-            {MODULE_SYMBOL.PLATFORM_HELPER,"PLATFORMHELPER"},
-            {MODULE_SYMBOL.SHADER,"SHADER"},
-            {MODULE_SYMBOL.TEST,"TEST"},
-            {MODULE_SYMBOL.UGUI,"UGUI"},
+            {MODULE_SYMBOL.AOP, MODULE_SYMBOL.AOP.ToString()},
+            {MODULE_SYMBOL.BEHAVIOR_TREE, MODULE_SYMBOL.BEHAVIOR_TREE.ToString()},
+            {MODULE_SYMBOL.CSTOOL, MODULE_SYMBOL.CSTOOL.ToString()},
+            {MODULE_SYMBOL.DATA_GENER, MODULE_SYMBOL.DATA_GENER.ToString()},
+            {MODULE_SYMBOL.DATA_STRUCT, MODULE_SYMBOL.DATA_STRUCT.ToString()},
+            {MODULE_SYMBOL.DEBUG, MODULE_SYMBOL.DEBUG.ToString()},
+            {MODULE_SYMBOL.DLLMANAGER, MODULE_SYMBOL.DLLMANAGER.ToString()},
+            {MODULE_SYMBOL.FSM, MODULE_SYMBOL.FSM.ToString()},
+            {MODULE_SYMBOL.GAMESYSTEMS, MODULE_SYMBOL.GAMESYSTEMS.ToString()},
+            {MODULE_SYMBOL.RESOURCES_MANAGER, MODULE_SYMBOL.RESOURCES_MANAGER.ToString()},
+            {MODULE_SYMBOL.LUA, MODULE_SYMBOL.LUA.ToString()},
+            {MODULE_SYMBOL.MYSQL, MODULE_SYMBOL.MYSQL.ToString()},
+            {MODULE_SYMBOL.NETPOST, MODULE_SYMBOL.NETPOST.ToString()},
+            {MODULE_SYMBOL.NGUI, MODULE_SYMBOL.NGUI.ToString()},
+            {MODULE_SYMBOL.OBJECT, MODULE_SYMBOL.OBJECT.ToString()},
+            {MODULE_SYMBOL.PLATFORM_HELPER, MODULE_SYMBOL.PLATFORM_HELPER.ToString()},
+            {MODULE_SYMBOL.SHADER, MODULE_SYMBOL.SHADER.ToString()},
+            {MODULE_SYMBOL.TEST, MODULE_SYMBOL.TEST.ToString()},
+            {MODULE_SYMBOL.UGUI, MODULE_SYMBOL.UGUI.ToString()},
 
-            {MODULE_SYMBOL.AR,"AR"},
-            {MODULE_SYMBOL.VR_VIVE,"VR_VIVE"},
+            {MODULE_SYMBOL.AR, MODULE_SYMBOL.AR.ToString()},
+            {MODULE_SYMBOL.VR_VIVE, MODULE_SYMBOL.VR_VIVE.ToString()},
         };
 
         public static readonly Dictionary<MODULE_SYMBOL, string> SymbolFoldNames = new Dictionary<MODULE_SYMBOL, string>()

@@ -277,9 +277,14 @@ namespace ResetCore.Util
         /// </summary>
         public void StopAll()
         {
+            List<CoroutineTask> tampList = new List<CoroutineTask>();
             foreach (CoroutineTask task in taskList.Values)
             {
-                task.Stop();
+                tampList.Add(task);
+            }
+            for (int i = 0; i < tampList.Count; i++)
+            {
+                tampList[i].Stop();
             }
         }
 
