@@ -243,9 +243,11 @@ namespace ResetCore.Event
             if (triggerObject == null)
             {
                 m_eventController.TriggerEvent(eventType);
-                foreach (EventController controller in MonoEventDispatcher.monoEventControllerDict.Values)
+                List<EventController> temp = new List<EventController>(MonoEventDispatcher.monoEventControllerDict.Values);
+                for (int i = 0; i < temp.Count; i++)
                 {
-                    controller.TriggerEvent(eventType);
+                    if (temp[i].Equals(null)) continue;
+                    temp[i].TriggerEvent(eventType);
                 }
             }
             else
@@ -264,9 +266,11 @@ namespace ResetCore.Event
             if (triggerObject == null)
             {
                 m_eventController.TriggerEvent<T>(eventType, arg1);
-                foreach (EventController controller in MonoEventDispatcher.monoEventControllerDict.Values)
+                List<EventController> temp = new List<EventController>(MonoEventDispatcher.monoEventControllerDict.Values);
+                for (int i = 0; i < temp.Count; i++)
                 {
-                    controller.TriggerEvent<T>(eventType, arg1);
+                    if (temp[i].Equals(null)) continue;
+                    temp[i].TriggerEvent<T>(eventType, arg1);
                 }
             }
             else
@@ -285,9 +289,11 @@ namespace ResetCore.Event
             if (triggerObject == null)
             {
                 m_eventController.TriggerEvent<T, U>(eventType, arg1, arg2);
-                foreach (EventController controller in MonoEventDispatcher.monoEventControllerDict.Values)
+                List<EventController> temp = new List<EventController>(MonoEventDispatcher.monoEventControllerDict.Values);
+                for (int i = 0; i < temp.Count; i++)
                 {
-                    controller.TriggerEvent<T, U>(eventType, arg1, arg2);
+                    if (temp[i].Equals(null)) continue;
+                    temp[i].TriggerEvent<T, U>(eventType, arg1, arg2);
                 }
             }
             else
@@ -306,9 +312,11 @@ namespace ResetCore.Event
             if (triggerObject == null)
             {
                 m_eventController.TriggerEvent<T, U, V>(eventType, arg1, arg2, arg3);
-                foreach (EventController controller in MonoEventDispatcher.monoEventControllerDict.Values)
+                List<EventController> temp = new List<EventController>(MonoEventDispatcher.monoEventControllerDict.Values);
+                for (int i = 0; i < temp.Count; i++)
                 {
-                    controller.TriggerEvent<T, U, V>(eventType, arg1, arg2, arg3);
+                    if (temp[i].Equals(null)) continue;
+                    temp[i].TriggerEvent<T, U, V>(eventType, arg1, arg2, arg3);
                 }
             }
             else
@@ -327,9 +335,11 @@ namespace ResetCore.Event
             if (triggerObject == null)
             {
                 m_eventController.TriggerEvent<T, U, V, W>(eventType, arg1, arg2, arg3, arg4);
-                foreach (EventController controller in MonoEventDispatcher.monoEventControllerDict.Values)
+                List<EventController> temp = new List<EventController>(MonoEventDispatcher.monoEventControllerDict.Values);
+                for (int i = 0; i < temp.Count; i++)
                 {
-                    controller.TriggerEvent<T, U, V, W>(eventType, arg1, arg2, arg3, arg4);
+                    if (temp[i].Equals(null)) continue;
+                    temp[i].TriggerEvent<T, U, V, W>(eventType, arg1, arg2, arg3, arg4);
                 }
             }
             else

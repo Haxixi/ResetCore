@@ -273,7 +273,12 @@ namespace ResetCore.ModuleControl
         private static readonly string symbolInfoFilePathpath = PathEx.Combine(PathConfig.ResetCorePath, "Core", ModuleConst.symbolInfoFileName);
         public static List<MODULE_SYMBOL> GetSymbolInfo()
         {
-            XDocument xDoc = XDocument.Load(symbolInfoFilePathpath);
+            XDocument xDoc;
+            if (!File.Exists(symbolInfoFilePathpath))
+            {
+                SetSymbolInfo(ModuleConst.defaultSymbol);
+            }
+            xDoc = XDocument.Load(symbolInfoFilePathpath);
             List<string> symbolNames = xDoc.ReadValueFromXML<List<string>>(new string[] { "Symbols" });
             List<MODULE_SYMBOL> symbolList = new List<MODULE_SYMBOL>();
             foreach (string name in symbolNames)
@@ -285,7 +290,13 @@ namespace ResetCore.ModuleControl
 
         public static void SetSymbolInfo(List<MODULE_SYMBOL> symbolInfo)
         {
-            XDocument xDoc = XDocument.Load(symbolInfoFilePathpath);
+            XDocument xDoc;
+            if (!File.Exists(symbolInfoFilePathpath))
+            {
+                xDoc = new XDocument(new XElement("Root"));
+                xDoc.SafeSaveWithoutDeclaration(symbolInfoFilePathpath);
+            }
+            xDoc = XDocument.Load(symbolInfoFilePathpath);
             List<string> symbolNames = new List<string>();
             foreach (MODULE_SYMBOL symbol in symbolInfo)
             {
@@ -387,6 +398,10 @@ namespace ResetCore.ModuleControl
                 PathEx.MakeDirectoryExist(PathConfig.ExtraToolPath);
                 CompressHelper.DecompressToDirectory(PathConfig.ExtraToolPath, PathConfig.ExtraToolPathInPackage);
             }
+            else
+            {
+                Debug.logger.LogWarning("Reset Core 初始化","未找到工具集");
+            }
         }
 
         //将额外工具解压到工程目录下
@@ -396,6 +411,10 @@ namespace ResetCore.ModuleControl
             {
                 PathEx.MakeDirectoryExist(PathConfig.SDKBackupPath);
                 CompressHelper.DecompressToDirectory(PathConfig.SDKBackupPath, PathConfig.SDKPathInPackage);
+            }
+            else
+            {
+                Debug.logger.LogWarning("Reset Core 初始化", "SDK工具");
             }
         }
 

@@ -60,9 +60,9 @@ namespace ResetCore.Event
                     list.Add(pair.Key);
                 }
             }
-            foreach (string str in list)
+            for (int i = 0; i < list.Count; i++)
             {
-                this.m_theRouter.Remove(str);
+                this.m_theRouter.Remove(list[i]);
             }
         }
 
@@ -81,10 +81,10 @@ namespace ResetCore.Event
             if (!flag)
             {
                 list.Add(eventName);
-            }    
-            foreach (string str in list)
+            }
+            for (int i = 0; i < list.Count; i++ )
             {
-                this.m_theRouter.Remove(str);
+                this.m_theRouter.Remove(list[i]);
             }
         }
 
