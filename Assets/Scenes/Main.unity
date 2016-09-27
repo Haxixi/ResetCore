@@ -894,6 +894,13 @@ MonoBehaviour:
   pointUpEventList: []
   selectEventList: []
   updateSelectedEventList: []
+  pointerClickEventClip: 
+  pointDownEventClip: 
+  pointEnterEventClip: 
+  pointExitEventClip: 
+  pointUpEventClip: 
+  selectEventClip: 
+  updateSelectedEventClip: 
 --- !u!114 &1202399861
 MonoBehaviour:
   m_ObjectHideFlags: 0
