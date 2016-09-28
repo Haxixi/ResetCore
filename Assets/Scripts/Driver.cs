@@ -20,21 +20,18 @@ public class Driver : MonoSingleton<Driver> {
 
     void Awake()
     {
-        Init();
+       
     }
     // Use this for initialization
     void Start()
     {
-        
-       //EventDispatcher.AddEventListener<int>("asdasd", )
+       
     }
 
-  
 
     public override void Init()
     {
         base.Init();
-        
     }
 
     //private List<GameObject> cubes = new List<GameObject>();
@@ -42,8 +39,6 @@ public class Driver : MonoSingleton<Driver> {
     void Update()
     {
         
-        
     }
-
     
 }

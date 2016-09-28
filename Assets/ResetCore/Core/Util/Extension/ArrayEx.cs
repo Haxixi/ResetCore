@@ -20,4 +20,17 @@ public static class ArrayEx {
         }
     }
 
+    public static bool Contains<T>(this Array array, T obj)
+    {
+        for (int i = 0; i < array.Length; i++)
+        {
+            if (array.GetValue(i).Equals(obj))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 }
