@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Reflection;
+using System.Collections.Generic;
+using System;
 
 namespace ResetCore.ReAssembly
 {
@@ -10,12 +12,16 @@ namespace ResetCore.ReAssembly
     public class ScriptComponentLoader : MonoBehaviour
     {
         //assembly名称
-        [SerializeField]
-        private string assemblyName;
+        public string assemblyName;
         
         //类型名称
-        [SerializeField]
-        private string componentName;
+        public string componentName;
+        
+        //记录属性的
+        public ScriptableObject srcObj;
+
+        //是否已经初始化
+        public bool inited = false;
 
         /// <summary>
         /// 默认Assembly
@@ -42,10 +48,20 @@ namespace ResetCore.ReAssembly
                 Debug.LogError("script " + componentName + " can not be found in " + (string.IsNullOrEmpty(assemblyName)? "defaultCSharpAssembly" : assemblyName));
                 return;
             }
+            Component comp;
             if (componentName != null)
             {
-                gameObject.AddComponent(type);
+                comp = gameObject.AddComponent(type);
+                FieldInfo[] fieldInfos = comp.GetType().GetFields();
+                Type objType = srcObj.GetType();
+                for (int i = 0; i < fieldInfos.Length; i++)
+                {
+                    object value = objType.GetField(fieldInfos[i].Name).GetValue(srcObj);
+                    fieldInfos[i].SetValue(comp, value);
+                }
             }
+
+            
             Destroy(this);
         }
     }

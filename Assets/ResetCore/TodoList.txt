@@ -20,3 +20,4 @@ GameSystem：
 
 Assets:
 非版本号热更新
+热更挂载器的属性记录功能
