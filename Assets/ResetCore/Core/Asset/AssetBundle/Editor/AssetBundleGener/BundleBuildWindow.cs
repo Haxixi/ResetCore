@@ -190,7 +190,7 @@ namespace ResetCore.Asset
             {
                 foreach (string path in pathList)
                 {
-                    string fileName = StringEx.GetFileName(path);
+                    string fileName = FileEx.GetFileName(path);
                     string resPath = ResourcesLoaderHelper.GetResourcesBundlePathByObjectName(fileName);
                     if(resPath == null)
                     {
@@ -270,7 +270,7 @@ namespace ResetCore.Asset
             bundlePathList.Add(mainBundlePath + AssetBundleConst.ManifestEx);
             foreach (string path in pathList)
             {
-                string fileName = StringEx.GetFileName(path);
+                string fileName = FileEx.GetFileName(path);
                 string resPath = ResourcesLoaderHelper.GetResourcesBundlePathByObjectName(fileName);
                 bundlePathList.Add(resPath);
                 resPath = ResourcesLoaderHelper.GetResourcesBundleManifestPathByObjectName(fileName);

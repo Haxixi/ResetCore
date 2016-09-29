@@ -20,7 +20,7 @@ public class Driver : MonoSingleton<Driver> {
 
     void Awake()
     {
-       
+
     }
     // Use this for initialization
     void Start()

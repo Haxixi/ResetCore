@@ -11,38 +11,7 @@ namespace ResetCore.Util
 {
     public static class StringEx
     {
-
-        public static string GetDirectoryName(string fileName)
-        {
-            return fileName.Substring(0, fileName.LastIndexOf('/'));
-        }
-
-        public static string GetFileName(string path, char separator = '/')
-        {
-            return path.Substring(path.LastIndexOf(separator) + 1);
-        }
-
-        public static string GetFileNameWithoutExtention(string fileName, char separator = '/')
-        {
-            return GetFilePathWithoutExtention(GetFileName(fileName, separator));
-        }
-
-        public static string GetFilePathWithoutExtention(string fileName)
-        {
-            if (fileName.Contains("."))
-                return fileName.Substring(0, fileName.LastIndexOf('.'));
-            return fileName;
-        }
-
-        public static string GetStreamPath(string fileName)
-        {
-            string str = Application.streamingAssetsPath + "/" + fileName;
-            if (Application.platform != RuntimePlatform.Android)
-            {
-                str = "file://" + str;
-            }
-            return str;
-        }
+       
 
         public static char Spriter1 = ',';
         public static char Spriter2 = ':';
@@ -50,12 +19,23 @@ namespace ResetCore.Util
         public static char FBracket1 = '(';
         public static char BBracket1 = ')';
 
-
+        /// <summary>
+        /// 从字符串中获取值
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static T GetValue<T>(this string value)
         {
             return (T)GetValue(value, typeof(T));
         }
 
+        /// <summary>
+        /// 从字符串中获取值
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public static object GetValue(this string value, System.Type type)
         {
             if (string.IsNullOrEmpty(value))
@@ -193,6 +173,11 @@ namespace ResetCore.Util
             return null;
         }
 
+        /// <summary>
+        /// 从“？~？”的字符串中获取随机数
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
         public static float GetRandom(this string str)
         {
             string[] strs = str.Split('~');
@@ -208,6 +193,11 @@ namespace ResetCore.Util
             }
         }
 
+        /// <summary>
+        /// 将值转化为字符串
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string ConverToString(this object value)
         {
             //Debug.logger.Log("ConverToString " + Spriter1 + "  "+ Spriter2);
@@ -517,11 +507,23 @@ namespace ResetCore.Util
             return Type.GetType(str);
         }
 
+        /// <summary>
+        /// 是否为可转换字符串的类型
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public static bool IsConvertableType(this Type type)
         {
             return convertableTypes.Contains(type);
         }
 
+        /// <summary>
+        /// 解析颜色
+        /// </summary>
+        /// <param name="_inputString"></param>
+        /// <param name="result"></param>
+        /// <param name="colorSpriter"></param>
+        /// <returns></returns>
         public static bool ParseColor(string _inputString, out Color result, char colorSpriter = ',')
         {
             string str = _inputString.Trim();
@@ -548,6 +550,12 @@ namespace ResetCore.Util
             }
         }
 
+        /// <summary>
+        /// 解析列表
+        /// </summary>
+        /// <param name="strList"></param>
+        /// <param name="listSpriter"></param>
+        /// <returns></returns>
         public static List<string> ParseList(this string strList, char listSpriter = ',')
         {
             List<string> list = new List<string>();
@@ -570,6 +578,13 @@ namespace ResetCore.Util
             return list;
         }
 
+        /// <summary>
+        /// 解析词典
+        /// </summary>
+        /// <param name="strMap"></param>
+        /// <param name="keyValueSpriter"></param>
+        /// <param name="mapSpriter"></param>
+        /// <returns></returns>
         public static Dictionary<string, string> ParseMap(this string strMap, char keyValueSpriter = ':', char mapSpriter = ',')
         {
             Dictionary<string, string> dictionary = new Dictionary<string, string>();
@@ -591,6 +606,13 @@ namespace ResetCore.Util
             return dictionary;
         }
 
+        /// <summary>
+        /// 解析四维向量
+        /// </summary>
+        /// <param name="_inputString"></param>
+        /// <param name="result"></param>
+        /// <param name="vectorSpriter"></param>
+        /// <returns></returns>
         public static bool ParseVector4(string _inputString, out Vector4 result, char vectorSpriter = ',')
         {
             string str = _inputString.Trim();
@@ -617,6 +639,13 @@ namespace ResetCore.Util
             }
         }
 
+        /// <summary>
+        /// 解析四元数
+        /// </summary>
+        /// <param name="_inputString"></param>
+        /// <param name="result"></param>
+        /// <param name="spriter"></param>
+        /// <returns></returns>
         public static bool ParseQuaternion(string _inputString, out Quaternion result, char spriter = ',')
         {
             Vector4 vec = new Vector4();
@@ -625,6 +654,13 @@ namespace ResetCore.Util
             return flag;
         }
 
+        /// <summary>
+        /// 解析三维向量
+        /// </summary>
+        /// <param name="_inputString"></param>
+        /// <param name="result"></param>
+        /// <param name="spriter"></param>
+        /// <returns></returns>
         public static bool ParseVector3(string _inputString, out Vector3 result, char spriter = ',')
         {
             string str = _inputString.Trim();
@@ -650,6 +686,13 @@ namespace ResetCore.Util
             }
         }
 
+        /// <summary>
+        /// 解析二维向量
+        /// </summary>
+        /// <param name="_inputString"></param>
+        /// <param name="result"></param>
+        /// <param name="spriter"></param>
+        /// <returns></returns>
         public static bool ParseVector2(string _inputString, out Vector2 result, char spriter = ',')
         {
             string str = _inputString.Trim();
@@ -674,6 +717,14 @@ namespace ResetCore.Util
             }
         }
 
+        /// <summary>
+        /// 替换第一个匹配值
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="oldValue"></param>
+        /// <param name="newValue"></param>
+        /// <param name="startAt"></param>
+        /// <returns></returns>
         public static string ReplaceFirst(this string input, string oldValue, string newValue, int startAt = 0)
         {
             int index = input.IndexOf(oldValue, startAt);
@@ -684,11 +735,21 @@ namespace ResetCore.Util
             return (input.Substring(0, index) + newValue + input.Substring(index + oldValue.Length));
         }
 
+        /// <summary>
+        /// 是否存在中文字符
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public static bool HasChinese(this string input)
         {
             return Regex.IsMatch(input, @"[\u4e00-\u9fa5]");
         }
 
+        /// <summary>
+        /// 是否存在空格
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public static bool HasSpace(this string input)
         {
             return input.Contains(" ");
