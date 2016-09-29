@@ -10,7 +10,7 @@ namespace ResetCore.UGUI
     [AddComponentMenu("UI/Extra/UILocalization")]
     public class UILocalization : MonoBehaviour
     {
-
+        
         private bool started = false;
 
         public string key;
@@ -23,24 +23,28 @@ namespace ResetCore.UGUI
                 return textToShow;
             }
             set
-        {
-            if (string.IsNullOrEmpty(value)) return;
+            {
+#if DATA_GENER
+                if (string.IsNullOrEmpty(value)) return;
 
-            key = value;
-            textToShow = LanguageManager.GetWord(key);
-            Text txt = GetComponent<Text>();
-            Image image = GetComponent<Image>();
-            if(txt != null)
-            {
-                txt.text = textToShow;
+                key = value;
+                textToShow = LanguageManager.GetWord(key);
+                Text txt = GetComponent<Text>();
+                Image image = GetComponent<Image>();
+                if(txt != null)
+                {
+                    txt.text = textToShow;
+                }
+                if (image != null)
+                {
+                   //命名要求为： 包名-sprite名
+                    if (string.IsNullOrEmpty(textToShow)) return;
+                   image.sprite = SpriteHelper.GetSpriteByFullName(textToShow);
+                }
+#else
+                key = value;
+#endif
             }
-            if (image != null)
-            {
-                //命名要求为： 包名-sprite名
-                if (string.IsNullOrEmpty(textToShow)) return;
-                image.sprite = SpriteHelper.GetSpriteByFullName(textToShow);
-            }
-        }
         }
 
         private void OnLocalize()
@@ -71,7 +75,5 @@ namespace ResetCore.UGUI
                 OnLocalize();
             }
         }
-
     }
-
 }
