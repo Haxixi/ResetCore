@@ -78,7 +78,7 @@ namespace ResetCore.Data.GameDatas.Json
 
         public Dictionary<int, T> FormatXMLData<T>(string fileName)
         {
-            Dictionary<int, T> result = new Dictionary<int, T>();
+            //Dictionary<int, T> result = new Dictionary<int, T>();
 
             Dictionary<int, Dictionary<string, string>> strDictionary = new Dictionary<int, Dictionary<string, string>>();
             if(!JsonParser.LoadIntMap(fileName, out strDictionary)){

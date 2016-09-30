@@ -152,7 +152,6 @@ namespace ResetCore.UGUI
                     }
                     string spritePath = spriteList[num];
 
-                    string spriteName = Path.GetFileNameWithoutExtension(spritePath);
                     Sprite spriteTex = AssetDatabase.LoadAssetAtPath<Sprite>(spritePath);
                     if (spriteTex == null)
                     {

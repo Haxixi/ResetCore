@@ -10,7 +10,7 @@ namespace ResetCore.ResObject
     {
         public override void OnInspectorGUI()
         {
-            AudioManager am = target as AudioManager;
+            //AudioManager am = target as AudioManager;
             base.OnInspectorGUI();
 #if !DATA_GENER
             if (am.localization)

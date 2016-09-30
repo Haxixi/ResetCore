@@ -23,7 +23,7 @@ namespace ResetCore.Excel
 
             List<Dictionary<string, object>> rowObjs = excelReader.GetRowObjs();
 
-            ArrayList result = new ArrayList();
+            //ArrayList result = new ArrayList();
             for (int i = 0; i < rowObjs.Count; i++)
             {
                 var item = Activator.CreateInstance(objDataType);

@@ -84,7 +84,7 @@ namespace ResetCore.Data.GameDatas.Protobuf
             MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(asset.text));
 
             Dictionary<int, T> resDict = new Dictionary<int, T>();
-            Type listType = typeof(List<T>);
+            //Type listType = typeof(List<T>);
 
             List<T> resList = ProtoBuf.Serializer.Deserialize<List<T>>(ms);
             int listCount = resList.Count;
