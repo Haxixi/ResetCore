@@ -10,9 +10,10 @@ namespace ResetCore.ResObject
     {
         public override void OnInspectorGUI()
         {
-            //AudioManager am = target as AudioManager;
+            
             base.OnInspectorGUI();
 #if !DATA_GENER
+            AudioManager am = target as AudioManager;
             if (am.localization)
             {
                 EditorGUILayout.HelpBox("If you want to use localization, please open the DataGener module", MessageType.Info);

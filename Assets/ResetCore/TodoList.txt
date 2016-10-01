@@ -26,3 +26,6 @@ Assets:
 
 Redebug：
 学习Logcat对Debug进行筛选
+
+导入管理器：
+FBX导入自动生成Animator

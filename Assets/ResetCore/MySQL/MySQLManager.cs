@@ -95,6 +95,15 @@ namespace ResetCore.MySQL
             }
             return null;
         }
+
+        /// <summary>
+        /// 获取注释
+        /// </summary>
+        /// <returns></returns>
+        //public static DataSet GetComment()
+        //{
+        //    ExecuteQuery("SELECT {0},{1} FROM ")
+        //}
     }
 }
 

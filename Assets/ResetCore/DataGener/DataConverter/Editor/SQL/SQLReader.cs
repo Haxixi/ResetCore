@@ -8,6 +8,27 @@ using ResetCore.MySQL;
 
 public class SQLReader : IDataReadable
 {
+    /// <summary>
+    /// 数据库名
+    /// </summary>
+    public string database { get; private set; }
+    /// <summary>
+    /// 账号
+    /// </summary>
+    public string id { get; private set; }
+    /// <summary>
+    /// 密码
+    /// </summary>
+    public string pwd { get; private set; }
+    /// <summary>
+    /// 服务器ip
+    /// </summary>
+    public string host { get; private set; }
+    /// <summary>
+    /// 接口名
+    /// </summary>
+    public string port { get; private set; }
+
     public string currentDataTypeName
     {
         get
@@ -28,12 +49,18 @@ public class SQLReader : IDataReadable
     {
         get
         {
-            throw new NotImplementedException();
+            return host;
         }
     }
 
     public SQLReader(string database, string id = "root", string pwd = "123456", string host = "127.0.0.1", string port = "3306")
     {
+        this.database = database;
+        this.id = id;
+        this.pwd = pwd;
+        this.host = host;
+        this.port = port;
+
         MySQLManager.OpenSql(host, database, id, pwd, port);
     }
 
