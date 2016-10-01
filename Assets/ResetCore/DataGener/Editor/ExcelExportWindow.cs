@@ -48,7 +48,7 @@ namespace ResetCore.Excel
 
                 switch (currentExcelType)
                 {
-                    case ExcelType.Normal:
+                    case DataType.Normal:
                         {
                             
                             ShowExportXml();
@@ -60,7 +60,7 @@ namespace ResetCore.Excel
                             ShowExportJson();
                         }
                         break;
-                    case ExcelType.Pref:
+                    case DataType.Pref:
                         {
                             ShowExportPrf();
                         }
@@ -73,7 +73,7 @@ namespace ResetCore.Excel
         }
 
         
-        private ExcelType currentExcelType = ExcelType.Normal;
+        private DataType currentExcelType = DataType.Normal;
 
         string excelFilePath = "";
         string fileName = "";
@@ -145,7 +145,7 @@ namespace ResetCore.Excel
             {
                 EditorGUILayout.LabelField("Worksheet: ", GUILayout.Width(100));
                 currentSheetIndex = EditorGUILayout.Popup(currentSheetIndex, sheetsNames, GUILayout.Width(60));
-                currentExcelType = (ExcelType)EditorGUILayout.EnumPopup(currentExcelType, GUILayout.Width(60));
+                currentExcelType = (DataType)EditorGUILayout.EnumPopup(currentExcelType, GUILayout.Width(60));
                 if (sheetsNames != null)
                 {
                     currentSheetName = sheetsNames[currentSheetIndex];
@@ -237,18 +237,18 @@ namespace ResetCore.Excel
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("导出Xml", GUILayout.Width(100)))
             {
-                Excel2Xml.GenXml(excelReader);
+                Source2Xml.GenXml(excelReader);
             }
             if (GUILayout.Button("导出XmlData.cs", GUILayout.Width(100)))
             {
-                Excel2Xml.GenCS(excelReader);
+                Source2Xml.GenCS(excelReader);
             }
             GUILayout.EndHorizontal();
 
             if (GUILayout.Button("全部导出", GUILayout.Width(100)))
             {
-                Excel2Xml.GenXml(excelReader);
-                Excel2Xml.GenCS(excelReader);
+                Source2Xml.GenXml(excelReader);
+                Source2Xml.GenCS(excelReader);
             }
         }
 
@@ -261,18 +261,18 @@ namespace ResetCore.Excel
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("导出Objdat", GUILayout.Width(100)))
             {
-                Excel2ScrObj.GenObj(excelReader);
+                Source2ScrObj.GenObj(excelReader);
             }
             if (GUILayout.Button("导出ObjData.cs", GUILayout.Width(100)))
             {
-                Excel2ScrObj.GenCS(excelReader);
+                Source2ScrObj.GenCS(excelReader);
             }
             GUILayout.EndHorizontal();
 
             if (GUILayout.Button("全部导出", GUILayout.Width(100)))
             {
-                Excel2ScrObj.GenCS(excelReader);
-                Excel2ScrObj.GenObj(excelReader);
+                Source2ScrObj.GenCS(excelReader);
+                Source2ScrObj.GenObj(excelReader);
             }
         }
 
@@ -285,18 +285,18 @@ namespace ResetCore.Excel
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("导出Json", GUILayout.Width(100)))
             {
-                Excel2Json.GenJson(excelReader);
+                Source2Json.GenJson(excelReader);
             }
             if (GUILayout.Button("导出JsonData.cs", GUILayout.Width(100)))
             {
-                Excel2Json.GenCS(excelReader);
+                Source2Json.GenCS(excelReader);
             }
             GUILayout.EndHorizontal();
 
             if (GUILayout.Button("全部导出", GUILayout.Width(100)))
             {
-                Excel2Json.GenJson(excelReader);
-                Excel2Json.GenCS(excelReader);
+                Source2Json.GenJson(excelReader);
+                Source2Json.GenCS(excelReader);
             }
         }
 
@@ -309,18 +309,18 @@ namespace ResetCore.Excel
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("导出Protobuf", GUILayout.Width(100)))
             {
-                Excel2Protobuf.GenProtobuf(excelReader);
+                Source2Protobuf.GenProtobuf(excelReader);
             }
             if (GUILayout.Button("导出ProtoData.cs", GUILayout.Width(100)))
             {
-                Excel2Protobuf.GenCS(excelReader);
+                Source2Protobuf.GenCS(excelReader);
             }
             GUILayout.EndHorizontal();
 
             if (GUILayout.Button("全部导出", GUILayout.Width(100)))
             {
-                Excel2Protobuf.GenCS(excelReader);
-                Excel2Protobuf.GenProtobuf(excelReader);
+                Source2Protobuf.GenCS(excelReader);
+                Source2Protobuf.GenProtobuf(excelReader);
             }
         }
 
@@ -333,18 +333,18 @@ namespace ResetCore.Excel
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Export PrefData", GUILayout.Width(100)))
             {
-                Excel2PrefData.GenPref(excelReader);
+                Source2PrefData.GenPref(excelReader);
             }
             if (GUILayout.Button("Export PrefData.cs", GUILayout.Width(100)))
             {
-                Excel2PrefData.GenCS(excelReader);
+                Source2PrefData.GenCS(excelReader);
             }
             GUILayout.EndHorizontal();
 
             if (GUILayout.Button("Export ALL", GUILayout.Width(100)))
             {
-                Excel2PrefData.GenPref(excelReader);
-                Excel2PrefData.GenCS(excelReader);
+                Source2PrefData.GenPref(excelReader);
+                Source2PrefData.GenCS(excelReader);
             }
         }
     }

@@ -6,15 +6,16 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using ResetCore.Data.GameDatas.Xml;
+using ResetCore.Data;
 
 namespace ResetCore.Excel
 {
-    public class Excel2PrefData
+    public class Source2PrefData
     {
 
-        public static void GenPref(ExcelReader excelReader, string outputPath = null)
+        public static void GenPref(IDataReadable reader, string outputPath = null)
         {
-            ExcelReader exReader = excelReader;
+            IDataReadable exReader = reader;
 
             XDocument xDoc = new XDocument();
             XElement root = new XElement("Root");
@@ -31,7 +32,7 @@ namespace ResetCore.Excel
             if(outputPath == null)
             {
                 outputPath = PathConfig.GetLocalGameDataPath(PathConfig.DataType.Pref)
-                    + Path.GetFileNameWithoutExtension(excelReader.currentSheetName) + PrefData.m_fileExtention;
+                    + Path.GetFileNameWithoutExtension(reader.currentDataTypeName) + PrefData.m_fileExtention;
             }
             if (!Directory.Exists(Path.GetDirectoryName(outputPath)))
             {
@@ -42,10 +43,10 @@ namespace ResetCore.Excel
             AssetDatabase.Refresh();
         }
 
-        public static void GenCS(ExcelReader excelReader)
+        public static void GenCS(IDataReadable reader)
         {
-            string className = excelReader.currentSheetName;
-            DataClassesGener.CreateNewClass(className, typeof(PrefData), excelReader.fieldDict);
+            string className = reader.currentDataTypeName;
+            DataClassesGener.CreateNewClass(className, typeof(PrefData), reader.fieldDict);
         }
 
     }

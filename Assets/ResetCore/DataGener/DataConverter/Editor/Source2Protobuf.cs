@@ -12,22 +12,22 @@ using ResetCore.Data.GameDatas.Protobuf;
 
 namespace ResetCore.Excel
 {
-    public class Excel2Protobuf
+    public class Source2Protobuf
     {
-        public static void GenProtobuf(ExcelReader excelReader, string outputPath = null)
+        public static void GenProtobuf(IDataReadable reader, string outputPath = null)
         {
-            string className = excelReader.currentSheetName;
+            string className = reader.currentDataTypeName;
             Type protobufDataType = Type.GetType(ProtobufData.nameSpace + "." + className + ",Assembly-CSharp");
             //Debug.Log(ProtobufData.nameSpace + "." + className + ",Assembly-CSharp" + " 是否存在" + protobufDataType.ToString());
 
             if (protobufDataType == null)
             {
-                GenCS(excelReader);
+                GenCS(reader);
                 protobufDataType = Type.GetType(ProtobufData.nameSpace + "." + className + ",Assembly-CSharp");
                 Debug.logger.Log("Gen the CS File Please");
             }
 
-            List<Dictionary<string, object>> rowObjs = excelReader.GetRowObjs();
+            List<Dictionary<string, object>> rowObjs = reader.GetRowObjs();
 
             List<object> result = new List<object>();
             for (int i = 0; i < rowObjs.Count; i++)
@@ -72,17 +72,17 @@ namespace ResetCore.Excel
 
         }
 
-        public static void GenCS(ExcelReader excelReader)
+        public static void GenCS(IDataReadable reader)
         {
 
 
-            string className = excelReader.currentSheetName;
+            string className = reader.currentDataTypeName;
 
             CodeGener protobufBaseGener = new CodeGener(ProtobufData.nameSpace, className);
             protobufBaseGener.newClass.AddMemberCostomAttribute("ProtoBuf.ProtoContract");
             protobufBaseGener.AddImport("System", "ProtoBuf");
 
-            List<string> comment = excelReader.GetComment();
+            List<string> comment = reader.GetComment();
 
             protobufBaseGener
                 .AddBaseType("ProtobufData<" + className + ">")
@@ -91,7 +91,7 @@ namespace ResetCore.Excel
                     member.AddFieldMemberInit("\"" + className + "\"");
                 }, System.CodeDom.MemberAttributes.Static | System.CodeDom.MemberAttributes.Final | System.CodeDom.MemberAttributes.Public);
 
-            excelReader.GetTitle().ForEach((i, title) =>
+            reader.GetTitle().ForEach((i, title) =>
             {
                 string[] titleSplit = title.Split('|');
                 string varName = titleSplit[0];

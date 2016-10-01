@@ -10,31 +10,32 @@ using System.Reflection;
 using System.Linq;
 using System.ComponentModel;
 using ResetCore.Util;
+using ResetCore.Data;
 
 namespace ResetCore.Excel
 {
-    public enum ExcelType
+    public enum DataType
     {
         Normal,
         Pref
     }
 
-    public class ExcelReader
+    public class ExcelReader : IDataReadable
     {
-        private ExcelType excelType = ExcelType.Normal;
+        private DataType excelType = DataType.Normal;
         private readonly IWorkbook workbook = null;
-        public ISheet sheet { get; private set; }
+        private ISheet sheet { get; set; }
         public string filepath { get; private set; }
-        public string currentSheetName { get; private set; }
+        public string currentDataTypeName { get; private set; }
 
         public Dictionary<string, Type> fieldDict { get; private set; }
 
-        public ExcelReader(string path, string sheetName = "", ExcelType type = ExcelType.Normal)
+        public ExcelReader(string path, string sheetName = "", DataType type = DataType.Normal)
         {
             try
             {
                 this.filepath = path;
-                this.currentSheetName = sheetName;
+                this.currentDataTypeName = sheetName;
                 this.excelType = type;
 
                 using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -56,16 +57,16 @@ namespace ResetCore.Excel
                         throw new Exception("Wrong file.");
                     }
 
-                    if (!string.IsNullOrEmpty(currentSheetName))
+                    if (!string.IsNullOrEmpty(currentDataTypeName))
                     {
-                        sheet = workbook.GetSheet(currentSheetName);
+                        sheet = workbook.GetSheet(currentDataTypeName);
                     }
                     else
                     {
                         if (workbook.GetSheetAt(0) != null)
                         {
                             sheet = workbook.GetSheetAt(0);
-                            currentSheetName = sheet.SheetName;
+                            currentDataTypeName = sheet.SheetName;
                         }
                         else
                         {
@@ -111,13 +112,13 @@ namespace ResetCore.Excel
         {
             List<string> result = new List<string>();
 
-            if (excelType == ExcelType.Normal)
+            if (excelType == DataType.Normal)
             {
                 #region Normal
                 return GetRow(start);
                 #endregion
             }
-            else if(excelType == ExcelType.Pref)
+            else if(excelType == DataType.Pref)
             {
                 #region Pref
                 return GetLine(start);
@@ -181,13 +182,13 @@ namespace ResetCore.Excel
         public List<string> GetComment(int start = 1)
         {
             List<string> result = new List<string>();
-            if(excelType == ExcelType.Normal)
+            if(excelType == DataType.Normal)
             {
                 #region Normal
                 return GetRow(start);
                 #endregion
             }
-            else if (excelType == ExcelType.Pref)
+            else if (excelType == DataType.Pref)
             {
                 #region Pref
                 return GetLine(start);

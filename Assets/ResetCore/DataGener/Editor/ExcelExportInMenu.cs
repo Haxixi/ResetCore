@@ -13,25 +13,25 @@ namespace ResetCore.Excel
         /// <summary>
         /// 导出选中的Excel为Xml
         /// </summary>
-        [MenuItem("Assets/DataHelper/Xml/Export Selected Excel")]
+        [MenuItem("Assets/DataHelper/Excel/Xml/Export Selected Excel")]
         public static void ExportAllSelectedExcelToXml()
         {
             ExportData((item, sheetName) =>
             {
-                ExcelReader excelReader = new ExcelReader(item, sheetName);
-                Excel2Xml.GenXml(excelReader);
-                Excel2Xml.GenCS(excelReader);
+                ExcelReader reader = new ExcelReader(item, sheetName);
+                Source2Xml.GenXml(reader);
+                Source2Xml.GenCS(reader);
             });
         }
 
-        [MenuItem("Assets/DataHelper/Json/Export Selected Excel")]
+        [MenuItem("Assets/DataHelper/Excel/Json/Export Selected Excel")]
         public static void ExportAllSelectedExcelToJson()
         {
             ExportData((item, sheetName) =>
             {
-                ExcelReader excelReader = new ExcelReader(item, sheetName);
-                Excel2Json.GenJson(excelReader);
-                Excel2Json.GenCS(excelReader);
+                ExcelReader reader = new ExcelReader(item, sheetName);
+                Source2Json.GenJson(reader);
+                Source2Json.GenCS(reader);
             });
         }
 
@@ -51,16 +51,16 @@ namespace ResetCore.Excel
         //    foreach (string item in paths)
         //    {
         //        Debug.Log(item);
-        //        ExcelReader excelReader = new ExcelReader(item);
-        //        foreach (string sheetName in excelReader.GetSheetNames())
+        //        ExcelReader reader = new ExcelReader(item);
+        //        foreach (string sheetName in reader.GetSheetNames())
         //        {
         //            EditorUtility.DisplayProgressBar
         //                ("Exporting Excel", "Current: " + num + "/" + paths.Length + " File: " + Path.GetFileName(item) +
         //                " Sheet: " + sheetName, (float)num / (float)paths.Length);
 
-        //            excelReader = new ExcelReader(item, sheetName);
-        //            Excel2Protobuf.GenCS(excelReader);
-        //            Excel2Protobuf.GenProtobuf(excelReader);
+        //            reader = new ExcelReader(item, sheetName);
+        //            Excel2Protobuf.GenCS(reader);
+        //            Excel2Protobuf.GenProtobuf(reader);
         //        }
         //        num++;
         //    }
@@ -71,14 +71,14 @@ namespace ResetCore.Excel
         /// <summary>
         /// 导出选中的Excel为首选项
         /// </summary>
-        [MenuItem("Assets/DataHelper/PrefData/Export Selected Excel")]
+        [MenuItem("Assets/DataHelper/Excel/PrefData/Export Selected Excel")]
         public static void ExportAllSelectedExcelToPrefData()
         {
             ExportData((item, sheetName) =>
             {
-                ExcelReader excelReader = new ExcelReader(item, sheetName, ExcelType.Pref);
-                Excel2PrefData.GenPref(excelReader);
-                Excel2PrefData.GenCS(excelReader);
+                ExcelReader reader = new ExcelReader(item, sheetName, DataType.Pref);
+                Source2PrefData.GenPref(reader);
+                Source2PrefData.GenCS(reader);
             });
         }
 
@@ -87,11 +87,11 @@ namespace ResetCore.Excel
         /// <summary>
         /// 导出所有本地化数据
         /// </summary>
-        [MenuItem("Assets/DataHelper/Language/Export All Localization File")]
-        [MenuItem("Tools/GameData/Language/Export All Localization File")]
+        [MenuItem("Assets/DataHelper/Excel/Language/Export All Localization File")]
+        [MenuItem("Tools/GameData/Language/Export All Localization File By Excel")]
         static void ExportLanguageFile()
         {
-            Excel2Localization.ExportExcelFile();
+            Source2Localization.ExportExcelFile();
         }
 
         /// <summary>
@@ -114,8 +114,8 @@ namespace ResetCore.Excel
             int num = 1;
             foreach (string item in paths)
             {
-                ExcelReader excelReader = new ExcelReader(item);
-                foreach (string sheetName in excelReader.GetSheetNames())
+                ExcelReader reader = new ExcelReader(item);
+                foreach (string sheetName in reader.GetSheetNames())
                 {
                     EditorUtility.DisplayProgressBar
                         ("Exporting Excel", "Current: " + num + "/" + paths.Length + " File: " + Path.GetFileName(item) +

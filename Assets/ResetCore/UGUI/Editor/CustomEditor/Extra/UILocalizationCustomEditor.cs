@@ -42,7 +42,7 @@ namespace ResetCore.UGUI
 
             if (GUILayout.Button("Export Localization"))
             {
-                Excel2Localization.ExportExcelFile();
+                Source2Localization.ExportExcelFile();
             }
 
             Array types = Enum.GetValues(typeof(LanguageConst.LanguageType));

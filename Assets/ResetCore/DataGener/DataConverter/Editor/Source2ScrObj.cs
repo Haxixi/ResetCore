@@ -8,20 +8,21 @@ using System.Reflection;
 using System.Linq;
 using ResetCore.Util;
 using UnityEditor;
+using ResetCore.Data;
 
 namespace ResetCore.Excel
 {
-    public class Excel2ScrObj
+    public class Source2ScrObj
     {
 
-        public static void GenObj(ExcelReader excelReader, string outputPath = null)
+        public static void GenObj(IDataReadable reader, string outputPath = null)
         {
-            string className = excelReader.currentSheetName;
+            string className = reader.currentDataTypeName;
 
             Type objDataType = Type.GetType(ObjData.nameSpace + "." + className + ",Assembly-CSharp");
             ObjDataBundle data = ScriptableObject.CreateInstance<ObjDataBundle>();
 
-            List<Dictionary<string, object>> rowObjs = excelReader.GetRowObjs();
+            List<Dictionary<string, object>> rowObjs = reader.GetRowObjs();
 
             //ArrayList result = new ArrayList();
             for (int i = 0; i < rowObjs.Count; i++)
@@ -62,10 +63,10 @@ namespace ResetCore.Excel
 
         }
 
-        public static void GenCS(ExcelReader excelReader)
+        public static void GenCS(IDataReadable reader)
         {
-            string className = excelReader.currentSheetName;
-            DataClassesGener.CreateNewClass(className, typeof(ObjData), excelReader.fieldDict);
+            string className = reader.currentDataTypeName;
+            DataClassesGener.CreateNewClass(className, typeof(ObjData), reader.fieldDict);
         }
     }
 

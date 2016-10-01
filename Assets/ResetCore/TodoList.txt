@@ -3,8 +3,10 @@ UGUI：
 
 DataGener:
 ExcelWriter写入工具
+Sql导入导出支持
 字体本地化
 全局变量替换
+本地化SQL支持
 
 ResourcesManager:
 数据清理器
@@ -21,3 +23,6 @@ GameSystem：
 Assets:
 非版本号热更新
 热更挂载器的属性记录功能
+
+Redebug：
+学习Logcat对Debug进行筛选

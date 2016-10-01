@@ -11,8 +11,18 @@ namespace ResetCore.MySQL
 {
     public class MySQLManager
     {
+        /// <summary>
+        /// 是否被打开
+        /// </summary>
+        public static bool isOpen
+        {
+            get
+            {
+                return current != null;
+            }
+        }
 
-        public static MySqlConnection current { get; private set; }
+        private static MySqlConnection current { get; set; }
 
         /// <summary>
         /// 打开连接
