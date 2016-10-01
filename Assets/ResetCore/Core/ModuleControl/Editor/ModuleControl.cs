@@ -132,11 +132,22 @@ namespace ResetCore.ModuleControl
                     && Directory.Exists(modulePath)
                     && Directory.GetFiles(modulePath).Length != 0)
                 {
-                    RemoveModule(symbol);
-                    EditorUtility.DisplayProgressBar("Check Modules", "Remove Module " +
-                        symbol.ToString() + "from ResetCore " + (i + 1) + "/" +
-                        symbolArr.Length, (float)(i + 1) / (float)symbolArr.Length);
-                    needRestart = true;
+                    if (ModuleConst.defaultSymbol.Contains(symbol))
+                    {
+                        AddModule(symbol);
+                        EditorUtility.DisplayProgressBar("Check Modules", "Add Module " +
+                            symbol.ToString() + "to ResetCore " + (i + 1) + "/" +
+                            symbolArr.Length, (float)(i + 1) / (float)symbolArr.Length);
+                        needRestart = true;
+                    }
+                    else
+                    {
+                        RemoveModule(symbol);
+                        EditorUtility.DisplayProgressBar("Check Modules", "Remove Module " +
+                            symbol.ToString() + "from ResetCore " + (i + 1) + "/" +
+                            symbolArr.Length, (float)(i + 1) / (float)symbolArr.Length);
+                        needRestart = true;
+                    }
                 }
 
             }
@@ -256,6 +267,12 @@ namespace ResetCore.ModuleControl
             List<MODULE_SYMBOL> moduleList = new List<MODULE_SYMBOL>();
             foreach (KeyValuePair<MODULE_SYMBOL, bool> isImport in isImportDict)
             {
+                if (ModuleConst.defaultSymbol.Contains(isImport.Key))
+                {
+                    AddSymbol(isImport.Key);
+                    moduleList.Add(isImport.Key);
+                    continue;
+                }
                 if (isImport.Value == false)
                 {
                     RemoveSymbol(isImport.Key);

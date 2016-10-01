@@ -108,20 +108,20 @@ namespace ResetCore.Excel
         /// </summary>
         /// <param name="start"></param>
         /// <returns></returns>
-        public List<string> GetTitle(int start = 0)
+        public List<string> GetTitle()
         {
             List<string> result = new List<string>();
 
             if (excelType == DataType.Normal)
             {
                 #region Normal
-                return GetRow(start);
+                return GetRow(0);
                 #endregion
             }
             else if(excelType == DataType.Pref)
             {
                 #region Pref
-                return GetLine(start);
+                return GetLine(0);
                 #endregion
             }
             else
@@ -134,9 +134,9 @@ namespace ResetCore.Excel
         /// <summary>
         /// 获取标题
         /// </summary>
-        public List<string> GetMemberNames(int start = 0)
+        public List<string> GetMemberNames()
         {
-            List<string> title = GetTitle(start);
+            List<string> title = GetTitle();
             List<string> result = new List<string>();
             title.ForEach((tit) =>
             {
@@ -155,9 +155,9 @@ namespace ResetCore.Excel
         /// <summary>
         /// 获取类型
         /// </summary>
-        public List<Type> GetMemberTypes(int start = 0)
+        public List<Type> GetMemberTypes()
         {
-            List<string> title = GetTitle(start);
+            List<string> title = GetTitle();
             List<Type> result = new List<Type>();
 
             title.ForEach((tit) =>
@@ -179,19 +179,19 @@ namespace ResetCore.Excel
         /// </summary>
         /// <param name="start"></param>
         /// <returns></returns>
-        public List<string> GetComment(int start = 1)
+        public List<string> GetComment()
         {
             List<string> result = new List<string>();
             if(excelType == DataType.Normal)
             {
                 #region Normal
-                return GetRow(start);
+                return GetRow(1);
                 #endregion
             }
             else if (excelType == DataType.Pref)
             {
                 #region Pref
-                return GetLine(start);
+                return GetLine(1);
                 #endregion
             }
             else
@@ -302,9 +302,9 @@ namespace ResetCore.Excel
         /// </summary>
         /// <param name="start"></param>
         /// <returns></returns>
-        public List<Dictionary<string, string>> GetRows(int start = 2)
+        public List<Dictionary<string, string>> GetRows()
         {
-            
+            int start = 2;
             List<string> clomnNameList = GetMemberNames();
             int length = clomnNameList.Count;
             List<string> tagName = new List<string>();

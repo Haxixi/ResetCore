@@ -22,7 +22,7 @@ namespace ResetCore.Excel
             xDoc.Add(root);
 
             List<string> name = exReader.GetMemberNames();
-            List<string> value = exReader.GetLine(2);
+            List<string> value = exReader.GetColume(2);
             for (int i = 0; i < name.Count; i++)
             {
                 XElement item = new XElement(name[i], value[i]);

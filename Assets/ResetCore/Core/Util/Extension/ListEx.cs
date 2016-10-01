@@ -58,6 +58,47 @@ namespace ResetCore.Util
             Debug.LogError("权值范围计算错误！");
             return -1;
         }
+
+        /// <summary>
+        /// 拷贝到
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="begin"></param>
+        /// <param name="end"></param>
+        public static void CopyTo<T>(this List<T> from, List<T> to, int begin = 0, int end = -1)
+        {
+            if(begin < 0)
+            {
+                begin = 0;
+            }
+            int endIndex = Mathf.Min(from.Count, to.Count) - 1;
+            if (end != -1 && end < endIndex)
+            {
+                endIndex = end;
+            }
+            for(int i = begin; i < end; i++)
+            {
+                to[i] = from[i];
+            }
+        }
+
+        /// <summary>
+        /// 将List转为Array
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="from"></param>
+        /// <returns></returns>
+        public static T[] ToArraySavely<T>(this List<T> from)
+        {
+            T[] res = new T[from.Count];
+            for(int i = 0; i < from.Count; i++)
+            {
+                res[i] = from[i];
+            }
+            return res;
+        }
     }
 
 }

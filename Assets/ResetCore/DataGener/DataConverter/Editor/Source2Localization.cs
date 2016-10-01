@@ -32,7 +32,7 @@ namespace ResetCore.Excel
             xDoc.Add(root);
 
             //List<string> commentLine = reader.GetLine(0, 1);
-            List<string> keyLine = reader.GetLine(1, 1);
+            List<string> keyLine = reader.GetColume(1, 1);
 
             int num = 2;
             Array languageType = Enum.GetValues(typeof(LanguageConst.LanguageType));
@@ -41,7 +41,7 @@ namespace ResetCore.Excel
                 XElement languageEle = new XElement("item");
                 root.Add(languageEle);
 
-                List<string> valueLine = reader.GetLine(num, 1, keyLine.Count);
+                List<string> valueLine = reader.GetColume(num, 1, keyLine.Count);
 
                 for (int i = 0; i < keyLine.Count; i++)
                 {

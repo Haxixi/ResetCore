@@ -100,10 +100,98 @@ namespace ResetCore.MySQL
         /// 获取注释
         /// </summary>
         /// <returns></returns>
-        //public static DataSet GetComment()
-        //{
-        //    ExecuteQuery("SELECT {0},{1} FROM ")
-        //}
+        public static List<string> GetComment(string tableName)
+        {
+            DataSet fullInfo = GetFullTableInfo(tableName);
+            return fullInfo.GetColume("Comment");
+        }
+
+        /// <summary>
+        /// 获取域信息
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public static List<string> GetTitle(string tableName)
+        {
+            DataSet fullInfo = GetFullTableInfo(tableName);
+            return fullInfo.GetColume("Field");
+        }
+
+
+        /// <summary>
+        /// 获取列信息
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="lineNumber"></param>
+        /// <returns></returns>
+        public static List<string> GetColumn(string tableName, int lineNumber)
+        {
+            DataSet fullInfo = GetDataSet(tableName);
+            return fullInfo.GetColume(lineNumber);
+        }
+
+        /// <summary>
+        /// 获取行信息
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="rowNumber"></param>
+        /// <returns></returns>
+        public static List<string> GetRow(string tableName, int rowNumber)
+        {
+            DataSet fullInfo = GetDataSet(tableName);
+            return fullInfo.GetRow(rowNumber);
+        }
+
+        /// <summary>
+        /// 获取所有的行信息
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public static List<Dictionary<string, string>> GetAllRow(string tableName)
+        {
+            DataSet fullInfo = GetDataSet(tableName);
+            List<Dictionary<string, string>> res = new List<Dictionary<string, string>>();
+            
+            foreach(DataRow row in fullInfo.Tables[0].Rows)
+            {
+                Dictionary<string, string> rowData = new Dictionary<string, string>();
+                foreach (DataColumn col in fullInfo.Tables[0].Columns)
+                {
+                    rowData.Add(col.ColumnName, row[col.ColumnName] as string);
+                }
+                res.Add(rowData);
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// 获取完整的表信息
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public static DataSet GetFullTableInfo(string tableName)
+        {
+            return ExecuteQuery("show full columns from " + tableName);
+        }
+
+        /// <summary>
+        /// 读取整张数据表
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public static DataSet GetDataSet(string tableName)
+        {
+            return ExecuteQuery("SELECT * FROM `" + tableName + "` WHERE 1");
+        }
+
+        /// <summary>
+        /// 查找所有表名
+        /// </summary>
+        /// <returns></returns>
+        public static DataSet GetAllTableName()
+        {
+            return ExecuteQuery("show tables");
+        }
     }
 }
 

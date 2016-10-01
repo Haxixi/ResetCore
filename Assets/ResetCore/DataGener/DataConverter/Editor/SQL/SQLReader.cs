@@ -5,6 +5,7 @@ using ResetCore.Data;
 using System;
 using System.Collections.Generic;
 using ResetCore.MySQL;
+using ResetCore.Util;
 
 public class SQLReader : IDataReadable
 {
@@ -29,89 +30,204 @@ public class SQLReader : IDataReadable
     /// </summary>
     public string port { get; private set; }
 
-    public string currentDataTypeName
-    {
-        get
-        {
-            throw new NotImplementedException();
-        }
-    }
+    /// <summary>
+    /// 当前数据名
+    /// </summary>
+    public string currentDataTypeName { get; private set; }
 
+    private Dictionary<string, Type> _fieldDict = new Dictionary<string, Type>();
+    /// <summary>
+    /// 返回值域表
+    /// </summary>
     public Dictionary<string, Type> fieldDict
     {
         get
         {
-            throw new NotImplementedException();
+            return fieldDict;
         }
     }
 
-    public string filepath
+    /// <summary>
+    /// 是否有效
+    /// </summary>
+    /// <returns></returns>
+    public bool IsValid()
     {
-        get
-        {
-            return host;
-        }
+        return MySQLManager.isOpen;
     }
 
-    public SQLReader(string database, string id = "root", string pwd = "123456", string host = "127.0.0.1", string port = "3306")
+    /// <summary>
+    /// 返回地址
+    /// </summary>
+    public string filepath { get{ return host; } }
+
+    public SQLReader(string database, string tableName, string id = "root", string pwd = "123456", string host = "127.0.0.1", string port = "3306")
     {
         this.database = database;
         this.id = id;
         this.pwd = pwd;
         this.host = host;
         this.port = port;
+        this.currentDataTypeName = tableName;
 
         MySQLManager.OpenSql(host, database, id, pwd, port);
     }
-
-    public List<string> GetComment(int start = 1)
+    
+    /// <summary>
+    /// 获得注释
+    /// </summary>
+    /// <returns></returns>
+    public List<string> GetComment()
     {
-        throw new NotImplementedException();
+        return MySQLManager.GetComment(currentDataTypeName);
     }
 
-    public List<string> GetLine(int lineNum, int startRow = 0, int endRow = -1)
+    /// <summary>
+    /// 获得列信息
+    /// </summary>
+    /// <param name="lineNum"></param>
+    /// <param name="startRow"></param>
+    /// <param name="endRow"></param>
+    /// <returns></returns>
+    public List<string> GetColume(int colNum, int startRow = 0, int endRow = -1)
     {
-        throw new NotImplementedException();
+        if (IsValid()) return null;
+
+        List<string> res = new List<string>();
+        List<string> allColData = MySQLManager.GetColumn(currentDataTypeName, colNum);
+        allColData.CopyTo(res, startRow, endRow);
+        return res;
     }
 
-    public List<string> GetMemberNames(int start = 0)
-    {
-        throw new NotImplementedException();
-    }
-
-    public List<Type> GetMemberTypes(int start = 0)
-    {
-        throw new NotImplementedException();
-    }
-
+    /// <summary>
+    /// 得到行信息
+    /// </summary>
+    /// <param name="rowNum"></param>
+    /// <param name="startLine"></param>
+    /// <param name="endLine"></param>
+    /// <returns></returns>
     public List<string> GetRow(int rowNum, int startLine = 0, int endLine = -1)
     {
-        throw new NotImplementedException();
+        if (IsValid()) return null;
+
+        List<string> res = new List<string>();
+        List<string> allRowData = MySQLManager.GetRow(currentDataTypeName, rowNum);
+        allRowData.CopyTo(res, startLine, endLine);
+        return res;
     }
 
+    /// <summary>
+    /// 获取每列标题
+    /// </summary>
+    /// <returns></returns>
+    public List<string> GetTitle()
+    {
+        if (IsValid()) return null;
+
+        return MySQLManager.GetTitle(currentDataTypeName);
+    }
+
+    /// <summary>
+    /// 获取变量名
+    /// </summary>
+    /// <returns></returns>
+    public List<string> GetMemberNames()
+    {
+        if (IsValid()) return null;
+
+        List<string> titles = GetTitle();
+        List<string> memberNames = new List<string>();
+        titles.ForEach((i, title) =>
+        {
+            if (!title.Contains("|"))
+            {
+                memberNames.Add(title);
+            }
+            else
+            {
+                string memberName = title.Split('|')[0];
+                memberNames.Add(memberName);
+            }
+        });
+        return memberNames;
+    }
+
+    /// <summary>
+    /// 获取变量名
+    /// </summary>
+    /// <returns></returns>
+    public List<Type> GetMemberTypes()
+    {
+        if (IsValid()) return null;
+
+        List<string> titles = GetTitle();
+        List<Type> result = new List<Type>();
+        titles.ForEach((tit) =>
+        {
+            if (tit.Contains("|"))
+            {
+                result.Add(tit.Split('|')[1].GetTypeByString());
+            }
+            else
+            {
+                result.Add(typeof(string));
+            }
+        });
+        return result;
+    }
+
+   
+    /// <summary>
+    /// 获得所有行对象
+    /// </summary>
+    /// <param name="start"></param>
+    /// <returns></returns>
     public List<Dictionary<string, object>> GetRowObjs(int start = 2)
     {
-        throw new NotImplementedException();
+        if (IsValid()) return null;
+        List<Dictionary<string, object>> objList = new List<Dictionary<string, object>>();
+        List<Dictionary<string, string>> rowsData = GetRows();
+        //成员类型
+        List<Type> typeList = GetMemberTypes();
+
+        foreach (Dictionary<string, string> row in rowsData)
+        {
+            Dictionary<string, object> obj = new Dictionary<string, object>();
+            int index = 0;
+            foreach(KeyValuePair<string, string> kvp in row)
+            {
+                obj.Add(kvp.Key, kvp.Value.GetValue(typeList[index]));
+                index++;
+            }
+            objList.Add(obj);
+        }
+
+        return objList;
     }
 
-    public List<Dictionary<string, string>> GetRows(int start = 2)
+    /// <summary>
+    /// 获得所有行信息
+    /// </summary>
+    /// <returns></returns>
+    public List<Dictionary<string, string>> GetRows()
     {
-        throw new NotImplementedException();
+        if (IsValid()) return null;
+
+        return MySQLManager.GetAllRow(currentDataTypeName);
     }
 
+    /// <summary>
+    /// 获得所有表名
+    /// </summary>
+    /// <returns></returns>
     public string[] GetSheetNames()
     {
-        throw new NotImplementedException();
+        if (IsValid()) return null;
+
+        return MySQLManager.GetAllTableName().GetColume(0).ToArraySavely();
     }
 
-    public List<string> GetTitle(int start = 0)
-    {
-        throw new NotImplementedException();
-    }
 
-    public bool IsValid()
-    {
-        return MySQLManager.isOpen;
-    }
+ 
 }
 #endif
