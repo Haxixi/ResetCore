@@ -121,7 +121,7 @@ namespace ResetCore.Excel
             else if(excelType == DataType.Pref)
             {
                 #region Pref
-                return GetLine(0);
+                return GetColume(0);
                 #endregion
             }
             else
@@ -191,7 +191,7 @@ namespace ResetCore.Excel
             else if (excelType == DataType.Pref)
             {
                 #region Pref
-                return GetLine(1);
+                return GetColume(1);
                 #endregion
             }
             else
@@ -412,7 +412,7 @@ namespace ResetCore.Excel
         /// </summary>
         /// <param name="lineNum"></param>
         /// <returns></returns>
-        public List<string> GetLine(int lineNum, int startRow = 0, int endRow = -1)
+        public List<string> GetColume(int lineNum, int startRow = 0, int endRow = -1)
         {
             List<string> result = new List<string>();
             int lastRowNum = sheet.LastRowNum;
