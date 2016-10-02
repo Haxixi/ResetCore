@@ -4,9 +4,14 @@ using System.IO;
 
 namespace ResetCore.Util
 {
-    public class DirectoryEx
+    public static class DirectoryEx
     {
-
+        /// <summary>
+        /// 拷贝文件夹
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="copySubDirs"></param>
         public static void DirectoryCopy(string from, string to, bool copySubDirs)
         {
             DirectoryInfo dir = new DirectoryInfo(from);
@@ -35,6 +40,54 @@ namespace ResetCore.Util
                     DirectoryCopy(subdir.FullName, temppath, copySubDirs);
                 }
             }
+        }
+
+        /// <summary>
+        /// 获取文件
+        /// </summary>
+        public static FileInfo GetFile(this DirectoryInfo dir, string fileName, SearchOption option = SearchOption.TopDirectoryOnly)
+        {
+            FileInfo[] files = dir.GetFiles(fileName, option);
+            if (files.Length == 0) return null;
+            return files[0];
+        }
+
+        /// <summary>
+        /// 是否存在文件
+        /// </summary>
+        /// <param name="dir"></param>
+        /// <param name="fileName"></param>
+        public static bool ContainsFile(this DirectoryInfo dir, string fileName, SearchOption option = SearchOption.TopDirectoryOnly)
+        {
+            FileInfo[] files = dir.GetFiles(fileName, option);
+            return (files.Length > 0);
+        }
+
+        /// <summary>
+        /// 获取目录
+        /// </summary>
+        /// <param name="dir"></param>
+        /// <param name="dirName"></param>
+        /// <param name="option"></param>
+        /// <returns></returns>
+        public static DirectoryInfo GetDirectroy(this DirectoryInfo dir, string dirName, SearchOption option = SearchOption.TopDirectoryOnly)
+        {
+            DirectoryInfo[] dirs = dir.GetDirectories(dirName, option);
+            if (dirs.Length == 0) return null;
+            return dirs[0];
+        }
+        
+        /// <summary>
+        /// 是否存在目录
+        /// </summary>
+        /// <param name="dir"></param>
+        /// <param name="dirName"></param>
+        /// <param name="option"></param>
+        /// <returns></returns>
+        public static bool ContainsDirectroy(this DirectoryInfo dir, string dirName, SearchOption option = SearchOption.TopDirectoryOnly)
+        {
+            DirectoryInfo[] dirs = dir.GetDirectories(dirName, option);
+            return (dirs.Length > 0);
         }
     }
 
