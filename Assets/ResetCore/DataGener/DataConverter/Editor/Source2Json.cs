@@ -7,7 +7,7 @@ using System.IO;
 using ResetCore.Json;
 using ResetCore.Data;
 
-namespace ResetCore.Excel
+namespace ResetCore.Data
 {
     public class Source2Json
     {

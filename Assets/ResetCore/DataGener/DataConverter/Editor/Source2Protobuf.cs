@@ -10,7 +10,7 @@ using System.Linq;
 using System.IO;
 using ResetCore.Data.GameDatas.Protobuf;
 
-namespace ResetCore.Excel
+namespace ResetCore.Data
 {
     public class Source2Protobuf
     {

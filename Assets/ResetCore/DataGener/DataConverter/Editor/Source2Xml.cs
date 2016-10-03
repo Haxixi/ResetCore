@@ -1,14 +1,10 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using System.Collections.Generic;
-using System;
 using System.IO;
 using UnityEditor;
 using ResetCore.Data.GameDatas.Xml;
-using ResetCore.Data;
 
-namespace ResetCore.Excel
+namespace ResetCore.Data
 {
     public class Source2Xml
     {

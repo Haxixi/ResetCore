@@ -5,8 +5,9 @@ using System.Linq;
 using System.IO;
 using ResetCore.Data;
 using System;
+using ResetCore.Excel;
 
-namespace ResetCore.Excel
+namespace ResetCore.Data
 {
     public class ExcelExportInMenu
     {
@@ -114,7 +115,7 @@ namespace ResetCore.Excel
             int num = 1;
             foreach (string item in paths)
             {
-                ExcelReader reader = new ExcelReader(item);
+                IDataReadable reader = new ExcelReader(item);
                 foreach (string sheetName in reader.GetSheetNames())
                 {
                     EditorUtility.DisplayProgressBar

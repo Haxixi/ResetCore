@@ -15,6 +15,7 @@ public class PathConfig
 
     //ResetCore根目录
     public static string ResetCorePath = Application.dataPath + "/ResetCore/";
+    //ResetCore备份目录
     public static string ResetCoreTempPath = Path.Combine(projectPath, "ResetCoreTemp");
     //ResetCore备份根目录
     public static string ResetCoreBackUpPath = Path.Combine(ResetCoreTempPath, "Backup");

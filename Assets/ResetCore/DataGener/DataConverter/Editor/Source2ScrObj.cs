@@ -8,9 +8,8 @@ using System.Reflection;
 using System.Linq;
 using ResetCore.Util;
 using UnityEditor;
-using ResetCore.Data;
 
-namespace ResetCore.Excel
+namespace ResetCore.Data
 {
     public class Source2ScrObj
     {

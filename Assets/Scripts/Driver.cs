@@ -21,15 +21,15 @@ public class Driver : MonoSingleton<Driver> {
 
     void Awake()
     {
-        MySQLManager.OpenSql("127.0.0.1", "test", "root", "", "3306");
-        MySQLManager.GetComment("testtable");
     }
     // Use this for initialization
     void Start()
     {
-       
     }
 
+    void OnDestroy()
+    {
+    }
 
     public override void Init()
     {

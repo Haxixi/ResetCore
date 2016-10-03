@@ -1,14 +1,11 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using System.Collections.Generic;
 using System;
-using ResetCore.Data;
 using System.IO;
-using ResetCore.Data.GameDatas.Xml;
 using UnityEditor;
+using ResetCore.Excel;
 
-namespace ResetCore.Excel
+namespace ResetCore.Data
 {
     public class Source2Localization
     {
