@@ -3,6 +3,7 @@ using System.Collections;
 using System.Data;
 using MySql.Data;
 using System.Collections.Generic;
+using ResetCore.Util;
 
 namespace ResetCore.MySQL
 {
@@ -20,7 +21,7 @@ namespace ResetCore.MySQL
             List<string> result = new List<string>();
             foreach (DataColumn col in dataSet.Tables[tableIndex].Columns)
             {
-                result.Add(dataSet.Tables[tableIndex].Rows[index][col.ColumnName] as string);
+                result.Add(dataSet.Tables[tableIndex].Rows[index][col.ColumnName].ConverToString());
             }
             return result;
         }
@@ -37,7 +38,7 @@ namespace ResetCore.MySQL
             List<string> result = new List<string>();
             foreach (DataRow row in dataSet.Tables[tableIndex].Rows)
             {
-                result.Add(row[index] as string);
+                result.Add(row[index].ConverToString());
             }
             return result;
         }
@@ -54,7 +55,7 @@ namespace ResetCore.MySQL
             List<string> result = new List<string>();
             foreach (DataRow row in dataSet.Tables[tableIndex].Rows)
             {
-                result.Add(row[colName] as string);
+                result.Add(row[colName].ConverToString());
             }
             return result;
         }

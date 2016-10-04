@@ -12,9 +12,17 @@ using ResetCore.Data.GameDatas.Protobuf;
 
 namespace ResetCore.Data
 {
-    public class Source2Protobuf
+    public class Source2Protobuf : ISource2
     {
-        public static void GenProtobuf(IDataReadable reader, string outputPath = null)
+        public DataType dataType
+        {
+            get
+            {
+                return DataType.Normal;
+            }
+        }
+
+        public void GenData(IDataReadable reader, string outputPath = null)
         {
             string className = reader.currentDataTypeName;
             Type protobufDataType = Type.GetType(ProtobufData.nameSpace + "." + className + ",Assembly-CSharp");
@@ -72,7 +80,7 @@ namespace ResetCore.Data
 
         }
 
-        public static void GenCS(IDataReadable reader)
+        public void GenCS(IDataReadable reader)
         {
 
 

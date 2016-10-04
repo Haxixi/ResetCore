@@ -5,12 +5,22 @@ using System;
 
 namespace ResetCore.Data
 {
+    public enum DataType
+    {
+        Normal,
+        Pref
+    }
+
     public interface IDataReadable
     {
         /// <summary>
+        /// 数据类型Normal或者Pref
+        /// </summary>
+        DataType dataType { get; }
+        /// <summary>
         /// 当前的数据类型名称
         /// </summary>
-        string currentDataTypeName { get; }
+        string currentDataTypeName { get; set; }
         /// <summary>
         /// 数据的域信息
         /// </summary>

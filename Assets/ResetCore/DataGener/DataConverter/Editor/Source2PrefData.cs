@@ -3,16 +3,24 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using ResetCore.Data.GameDatas.Xml;
+using System;
 
 namespace ResetCore.Data
 {
-    public class Source2PrefData
+    public class Source2PrefData : ISource2
     {
-
-        public static void GenPref(IDataReadable reader, string outputPath = null)
+        public DataType dataType
         {
-            IDataReadable exReader = reader;
+            get
+            {
+                return DataType.Pref;
+            }
+        }
 
+        public void GenData(IDataReadable reader, string outputPath = null)
+        {
+            
+            IDataReadable exReader = reader;
             XDocument xDoc = new XDocument();
             XElement root = new XElement("Root");
             xDoc.Add(root);
@@ -39,7 +47,7 @@ namespace ResetCore.Data
             AssetDatabase.Refresh();
         }
 
-        public static void GenCS(IDataReadable reader)
+        public void GenCS(IDataReadable reader)
         {
             string className = reader.currentDataTypeName;
             DataClassesGener.CreateNewClass(className, typeof(PrefData), reader.fieldDict);

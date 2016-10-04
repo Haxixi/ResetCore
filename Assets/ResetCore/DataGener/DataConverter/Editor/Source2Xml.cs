@@ -6,9 +6,16 @@ using ResetCore.Data.GameDatas.Xml;
 
 namespace ResetCore.Data
 {
-    public class Source2Xml
+    public class Source2Xml : ISource2
     {
-        public static void GenXml(IDataReadable reader, string outputPath = null)
+        public DataType dataType
+        {
+            get
+            {
+                return DataType.Normal;
+            }
+        }
+        public void GenData(IDataReadable reader, string outputPath = null)
         {
 
             IDataReadable exReader = reader;
@@ -43,7 +50,7 @@ namespace ResetCore.Data
             AssetDatabase.Refresh();
         }
 
-        public static void GenCS(IDataReadable reader)
+        public void GenCS(IDataReadable reader)
         {
             string className = reader.currentDataTypeName;
             DataClassesGener.CreateNewClass(className, typeof(XmlData), reader.fieldDict);

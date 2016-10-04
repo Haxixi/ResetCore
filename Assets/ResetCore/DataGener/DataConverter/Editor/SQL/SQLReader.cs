@@ -12,6 +12,10 @@ namespace ResetCore.Data
     public class SQLReader : IDataReadable
     {
         /// <summary>
+        /// 数据类型
+        /// </summary>
+        public DataType dataType { get; set; }
+        /// <summary>
         /// 数据库名
         /// </summary>
         public string database { get; private set; }
@@ -35,19 +39,13 @@ namespace ResetCore.Data
         /// <summary>
         /// 当前数据名
         /// </summary>
-        public string currentDataTypeName { get; private set; }
+        public string currentDataTypeName { get; set; }
 
         private Dictionary<string, Type> _fieldDict = new Dictionary<string, Type>();
         /// <summary>
         /// 返回值域表
         /// </summary>
-        public Dictionary<string, Type> fieldDict
-        {
-            get
-            {
-                return fieldDict;
-            }
-        }
+        public Dictionary<string, Type> fieldDict { get; private set; }
 
         /// <summary>
         /// 是否有效
@@ -63,7 +61,7 @@ namespace ResetCore.Data
         /// </summary>
         public string filepath { get { return host; } }
 
-        public SQLReader(string database, string tableName, string id = "root", string pwd = "123456", string host = "127.0.0.1", string port = "3306")
+        public SQLReader(string database, string tableName = "", string id = "root", string pwd = "123456", string host = "127.0.0.1", string port = "3306")
         {
             this.database = database;
             this.id = id;
@@ -73,6 +71,21 @@ namespace ResetCore.Data
             this.currentDataTypeName = tableName;
 
             MySQLManager.OpenSql(host, database, id, pwd, port);
+
+            if (string.IsNullOrEmpty(currentDataTypeName))
+            {
+                string name = MySQLManager.GetAllTableName().GetRow(0).TryGet(0);
+                currentDataTypeName = name;
+            }
+
+            fieldDict = new Dictionary<string, Type>();
+            List<string> members = GetMemberNames();
+            List<Type> types = GetMemberTypes();
+
+            for (int i = 0; i < members.Count; i++)
+            {
+                fieldDict.Add(members[i], types[i]);
+            }
         }
 
         /// <summary>
@@ -93,7 +106,7 @@ namespace ResetCore.Data
         /// <returns></returns>
         public List<string> GetColume(int colNum, int startRow = 0, int endRow = -1)
         {
-            if (IsValid()) return null;
+            if (!IsValid()) return null;
 
             List<string> res = new List<string>();
             List<string> allColData = MySQLManager.GetColumn(currentDataTypeName, colNum);
@@ -110,7 +123,7 @@ namespace ResetCore.Data
         /// <returns></returns>
         public List<string> GetRow(int rowNum, int startLine = 0, int endLine = -1)
         {
-            if (IsValid()) return null;
+            if (!IsValid()) return null;
 
             List<string> res = new List<string>();
             List<string> allRowData = MySQLManager.GetRow(currentDataTypeName, rowNum);
@@ -124,7 +137,7 @@ namespace ResetCore.Data
         /// <returns></returns>
         public List<string> GetTitle()
         {
-            if (IsValid()) return null;
+            if (!IsValid()) return null;
 
             return MySQLManager.GetTitle(currentDataTypeName);
         }
@@ -135,7 +148,7 @@ namespace ResetCore.Data
         /// <returns></returns>
         public List<string> GetMemberNames()
         {
-            if (IsValid()) return null;
+            if (!IsValid()) return null;
 
             List<string> titles = GetTitle();
             List<string> memberNames = new List<string>();
@@ -160,7 +173,7 @@ namespace ResetCore.Data
         /// <returns></returns>
         public List<Type> GetMemberTypes()
         {
-            if (IsValid()) return null;
+            if (!IsValid()) return null;
 
             List<string> titles = GetTitle();
             List<Type> result = new List<Type>();
@@ -186,7 +199,7 @@ namespace ResetCore.Data
         /// <returns></returns>
         public List<Dictionary<string, object>> GetRowObjs(int start = 2)
         {
-            if (IsValid()) return null;
+            if (!IsValid()) return null;
             List<Dictionary<string, object>> objList = new List<Dictionary<string, object>>();
             List<Dictionary<string, string>> rowsData = GetRows();
             //成员类型
@@ -213,9 +226,19 @@ namespace ResetCore.Data
         /// <returns></returns>
         public List<Dictionary<string, string>> GetRows()
         {
-            if (IsValid()) return null;
-
-            return MySQLManager.GetAllRow(currentDataTypeName);
+            if (!IsValid()) return null;
+            var rows = MySQLManager.GetAllRow(currentDataTypeName);
+            List<Dictionary<string, string>> res = new List<Dictionary<string, string>>();
+            foreach (var row in rows)
+            {
+                var newRow = new Dictionary<string, string>();
+                foreach (KeyValuePair<string, string> dict in row)
+                {
+                    newRow.Add(dict.Key.Split('|')[0], dict.Value);
+                }
+                res.Add(newRow);
+            }
+            return res;
         }
 
         /// <summary>
@@ -224,12 +247,10 @@ namespace ResetCore.Data
         /// <returns></returns>
         public string[] GetSheetNames()
         {
-            if (IsValid()) return null;
+            if (!IsValid()) return null;
 
             return MySQLManager.GetAllTableName().GetColume(0).ToArraySavely();
         }
-
-
 
     }
 }

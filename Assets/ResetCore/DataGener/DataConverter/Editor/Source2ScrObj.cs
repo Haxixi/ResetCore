@@ -11,10 +11,16 @@ using UnityEditor;
 
 namespace ResetCore.Data
 {
-    public class Source2ScrObj
+    public class Source2ScrObj : ISource2
     {
-
-        public static void GenObj(IDataReadable reader, string outputPath = null)
+        public DataType dataType
+        {
+            get
+            {
+                return DataType.Normal;
+            }
+        }
+        public void GenData(IDataReadable reader, string outputPath = null)
         {
             string className = reader.currentDataTypeName;
 
@@ -62,7 +68,7 @@ namespace ResetCore.Data
 
         }
 
-        public static void GenCS(IDataReadable reader)
+        public void GenCS(IDataReadable reader)
         {
             string className = reader.currentDataTypeName;
             DataClassesGener.CreateNewClass(className, typeof(ObjData), reader.fieldDict);

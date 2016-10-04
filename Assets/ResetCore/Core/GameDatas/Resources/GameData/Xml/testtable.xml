@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Root>
+  <item>
+    <id>1</id>
+    <TestData>1</TestData>
+    <TestString>asd</TestString>
+  </item>
+  <item>
+    <id>2</id>
+    <TestData>0</TestData>
+    <TestString>asd</TestString>
+  </item>
+  <item>
+    <id>3</id>
+    <TestData>2</TestData>
+    <TestString>asd</TestString>
+  </item>
+</Root>

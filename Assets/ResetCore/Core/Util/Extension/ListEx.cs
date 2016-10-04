@@ -99,6 +99,22 @@ namespace ResetCore.Util
             }
             return res;
         }
+
+        /// <summary>
+        /// 尝试获取，如果没有该数则返回null
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="from"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public static T TryGet<T>(this List<T> from, int index)
+        {
+            if(from.Count > index)
+            {
+                return from[index];
+            }
+            return default(T);
+        }
     }
 
 }

@@ -32,7 +32,7 @@ namespace ResetCore.MySQL
         /// <param name="id">账号</param>
         /// <param name="pwd">密码</param>
         /// <param name="port">端口（默认为3306）</param>
-        public static void OpenSql(string host, string database, string id, string pwd, string port = "3306")
+        public static void OpenSql(string host, string database = "", string id = "root", string pwd = "", string port = "3306")
         {
             if (current != null)
             {
@@ -40,15 +40,29 @@ namespace ResetCore.MySQL
             }
             try
             {
-                string connectionString =
-                    string.Format("Server = {0};port={4};Database = {1}; User ID = {2}; Password = {3};", host, database, id, pwd, port);
-                current = new MySqlConnection(connectionString);
-                current.Open();
+                if (!string.IsNullOrEmpty(database))
+                {
+                    string connectionString =
+                       string.Format("Server = {0};port={4};Database = {1}; User ID = {2}; Password = {3};", host, database, id, pwd, port);
+                    current = new MySqlConnection(connectionString);
+                    current.Open();
+                }
+                else
+                {
+                    string connectionString =
+                       string.Format("Server = {0};port={3}; User ID = {1}; Password = {2};", host, id, pwd, port);
+                    current = new MySqlConnection(connectionString);
+                    current.Open();
+                    OpenSql(host, GetAllDatabaseName().GetColume(0)[0], id, pwd, port);
+                    
+                }
+              
             }
             catch (Exception e)
             {
+                Close();
+                Debug.LogException(e);
                 throw new Exception("服务器连接失败，请重新检查是否打开MySql服务。" + e.Message.ToString());
-
             }
         }
 
@@ -79,17 +93,15 @@ namespace ResetCore.MySQL
                 DataSet ds = new DataSet();
                 try
                 {
-
                     MySqlDataAdapter da = new MySqlDataAdapter(sqlString, current);
                     da.Fill(ds);
 
                 }
                 catch (Exception ee)
                 {
+                    Close();
+                    Debug.logger.LogException(ee);
                     throw new Exception("SQL:" + sqlString + "/n" + ee.Message.ToString());
-                }
-                finally
-                {
                 }
                 return ds;
             }
@@ -157,7 +169,7 @@ namespace ResetCore.MySQL
                 Dictionary<string, string> rowData = new Dictionary<string, string>();
                 foreach (DataColumn col in fullInfo.Tables[0].Columns)
                 {
-                    rowData.Add(col.ColumnName, row[col.ColumnName] as string);
+                    rowData.Add(col.ColumnName, row[col.ColumnName].ConverToString());
                 }
                 res.Add(rowData);
             }
@@ -192,6 +204,26 @@ namespace ResetCore.MySQL
         {
             return ExecuteQuery("show tables");
         }
+
+        /// <summary>
+        /// 显示所有数据库名
+        /// </summary>
+        /// <returns></returns>
+        public static DataSet GetAllDatabaseName()
+        {
+            return ExecuteQuery("show databases");
+        }
+
+        /// <summary>
+        /// 设置当前数据库
+        /// </summary>
+        /// <param name="databaseName"></param>
+        public static void SetDatabase(string databaseName)
+        {
+            if (string.IsNullOrEmpty(databaseName)) return;
+            ExecuteQuery("use " + databaseName);
+        }
+
     }
 }
 

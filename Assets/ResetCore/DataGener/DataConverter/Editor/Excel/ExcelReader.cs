@@ -14,19 +14,13 @@ using ResetCore.Data;
 
 namespace ResetCore.Excel
 {
-    public enum DataType
-    {
-        Normal,
-        Pref
-    }
-
     public class ExcelReader : IDataReadable
     {
-        private DataType excelType = DataType.Normal;
+        public DataType dataType { get; set; }
         private readonly IWorkbook workbook = null;
         private ISheet sheet { get; set; }
         public string filepath { get; private set; }
-        public string currentDataTypeName { get; private set; }
+        public string currentDataTypeName { get; set; }
 
         public Dictionary<string, Type> fieldDict { get; private set; }
 
@@ -36,7 +30,7 @@ namespace ResetCore.Excel
             {
                 this.filepath = path;
                 this.currentDataTypeName = sheetName;
-                this.excelType = type;
+                this.dataType = type;
 
                 using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
@@ -112,13 +106,13 @@ namespace ResetCore.Excel
         {
             List<string> result = new List<string>();
 
-            if (excelType == DataType.Normal)
+            if (dataType == DataType.Normal)
             {
                 #region Normal
                 return GetRow(0);
                 #endregion
             }
-            else if(excelType == DataType.Pref)
+            else if(dataType == DataType.Pref)
             {
                 #region Pref
                 return GetColume(0);
@@ -182,13 +176,13 @@ namespace ResetCore.Excel
         public List<string> GetComment()
         {
             List<string> result = new List<string>();
-            if(excelType == DataType.Normal)
+            if(dataType == DataType.Normal)
             {
                 #region Normal
                 return GetRow(1);
                 #endregion
             }
-            else if (excelType == DataType.Pref)
+            else if (dataType == DataType.Pref)
             {
                 #region Pref
                 return GetColume(1);

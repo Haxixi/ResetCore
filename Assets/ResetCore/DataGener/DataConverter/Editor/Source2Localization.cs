@@ -12,7 +12,7 @@ namespace ResetCore.Data
         public static void ExportExcelFile()
         {
             IDataReadable reader = new ExcelReader(PathConfig.LanguageDataExcelPath);
-            GenXml(reader);
+            GenData(reader);
         }
 
         public static void ExportMySQLFile()
@@ -20,7 +20,7 @@ namespace ResetCore.Data
 
         }
 
-        private static void GenXml(IDataReadable rder)
+        private static void GenData(IDataReadable rder)
         {
             IDataReadable reader = rder; 
 

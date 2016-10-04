@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace ResetCore.Data
 {
-    public class ExcelExportWindow : EditorWindow
+    public class ExcelExportWindow : BaseExportWindow
     {
 
         //显示窗口的函数
@@ -20,47 +20,6 @@ namespace ResetCore.Data
             window.Show();
         }
 
-       
-
-        ExcelReader excelReader;
-        void OnGUI()
-        {
-            ShowOpenExcel();
-            EditorGUILayout.Space();
-
-            if (excelReader != null)
-            {
-                ShowSetType();
-                EditorGUILayout.Space();
-
-                switch (currentExcelType)
-                {
-                    case DataType.Normal:
-                        {
-                            
-                            ShowExportXml();
-                            EditorGUILayout.Space();
-                            //ShowExportProtobuf();
-                            //EditorGUILayout.Space();
-                            //ShowExportObj();
-                            //EditorGUILayout.Space();
-                            ShowExportJson();
-                        }
-                        break;
-                    case DataType.Pref:
-                        {
-                            ShowExportPrf();
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-        }
-
-        
-        private DataType currentExcelType = DataType.Normal;
 
         string excelFilePath = "";
         string fileName = "";
@@ -68,7 +27,8 @@ namespace ResetCore.Data
         int currentSheetIndex = 0;
         string currentSheetName = "";
 
-        private void ShowOpenExcel()
+
+        protected override void ShowOpen()
         {
             GUIStyle headStyle = GUIHelper.MakeHeader();
             GUILayout.Label("Select File", headStyle);
@@ -105,10 +65,10 @@ namespace ResetCore.Data
                         excelFilePath = path.Substring(index);
 
                         //
-                        excelReader = new ExcelReader(path);
+                        reader = new ExcelReader(path);
 
                         // pass absolute path
-                        sheetsNames = excelReader.GetSheetNames();
+                        sheetsNames = reader.GetSheetNames();
                     }
                     else
                     {
@@ -126,42 +86,37 @@ namespace ResetCore.Data
 
             EditorGUILayout.Space();
 
-            if (excelReader == null) return;
+            if (reader == null) return;
 
             using (new GUILayout.HorizontalScope())
             {
                 EditorGUILayout.LabelField("Worksheet: ", GUILayout.Width(100));
-                currentSheetIndex = EditorGUILayout.Popup(currentSheetIndex, sheetsNames, GUILayout.Width(60));
-                currentExcelType = (DataType)EditorGUILayout.EnumPopup(currentExcelType, GUILayout.Width(60));
+                currentSheetIndex = EditorGUILayout.Popup(currentSheetIndex, sheetsNames, GUILayout.Width(100));
+                currentExcelType = (DataType)EditorGUILayout.EnumPopup(currentExcelType, GUILayout.Width(100));
                 if (sheetsNames != null)
                 {
                     currentSheetName = sheetsNames[currentSheetIndex];
-                }
-                if (GUILayout.Button("Refresh", GUILayout.Width(60)))
-                {
+
                     // reopen the excel file e.g) new worksheet is added so need to reopen.
-                    excelReader = new ExcelReader(path, currentSheetName, currentExcelType);
-                    Debug.logger.Log("Current Path： " + path + "\nCurrent Sheet: " + currentSheetName
-                        + "\nCurrent Excel Type: " + currentExcelType.ToString());
-                    sheetsNames = excelReader.GetSheetNames();
+                    reader = new ExcelReader(path, currentSheetName, currentExcelType);
+                    sheetsNames = reader.GetSheetNames();
 
                     // one of worksheet was removed, so reset the selected worksheet index
                     // to prevent the index out of range error.
                     if (sheetsNames.Length <= currentSheetIndex)
                     {
                         currentSheetIndex = 0;
-
                         string message = "Worksheet was changed. Check the 'Worksheet' and 'Update' it again if it is necessary.";
                         EditorUtility.DisplayDialog("Info", message, "OK");
                     }
                 }
             }
 
-            
+
 
         }
 
-        private void ShowSetType()
+        protected override void ShowSetType()
         {
             GUIStyle headStyle = GUIHelper.MakeHeader();
             GUILayout.Label("设置类型种类", headStyle);
@@ -182,9 +137,9 @@ namespace ResetCore.Data
 
             EditorGUILayout.BeginVertical("box");
 
-            Dictionary<string, Type> fieldDict = excelReader.fieldDict;
+            Dictionary<string, Type> fieldDict = reader.fieldDict;
 
-            List<string> comment = excelReader.GetComment();
+            List<string> comment = reader.GetComment();
 
 
             int index = 0;
@@ -214,126 +169,5 @@ namespace ResetCore.Data
             }
             EditorGUILayout.EndVertical();
         }
-
-        private void ShowExportXml()
-        {
-            GUIStyle headStyle = GUIHelper.MakeHeader();
-            GUILayout.Label("导出Xml（支持大多数类型）", headStyle);
-            EditorGUILayout.Space();
-
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("导出Xml", GUILayout.Width(100)))
-            {
-                Source2Xml.GenXml(excelReader);
-            }
-            if (GUILayout.Button("导出XmlData.cs", GUILayout.Width(100)))
-            {
-                Source2Xml.GenCS(excelReader);
-            }
-            GUILayout.EndHorizontal();
-
-            if (GUILayout.Button("全部导出", GUILayout.Width(100)))
-            {
-                Source2Xml.GenXml(excelReader);
-                Source2Xml.GenCS(excelReader);
-            }
-        }
-
-        private void ShowExportObj()
-        {
-            GUIStyle headStyle = GUIHelper.MakeHeader();
-            GUILayout.Label("导出Obj(开发中)", headStyle);
-            EditorGUILayout.Space();
-
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("导出Objdat", GUILayout.Width(100)))
-            {
-                Source2ScrObj.GenObj(excelReader);
-            }
-            if (GUILayout.Button("导出ObjData.cs", GUILayout.Width(100)))
-            {
-                Source2ScrObj.GenCS(excelReader);
-            }
-            GUILayout.EndHorizontal();
-
-            if (GUILayout.Button("全部导出", GUILayout.Width(100)))
-            {
-                Source2ScrObj.GenCS(excelReader);
-                Source2ScrObj.GenObj(excelReader);
-            }
-        }
-
-        private void ShowExportJson()
-        {
-            GUIStyle headStyle = GUIHelper.MakeHeader();
-            GUILayout.Label("导出Json（支持大多数类型）", headStyle);
-            EditorGUILayout.Space();
-
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("导出Json", GUILayout.Width(100)))
-            {
-                Source2Json.GenJson(excelReader);
-            }
-            if (GUILayout.Button("导出JsonData.cs", GUILayout.Width(100)))
-            {
-                Source2Json.GenCS(excelReader);
-            }
-            GUILayout.EndHorizontal();
-
-            if (GUILayout.Button("全部导出", GUILayout.Width(100)))
-            {
-                Source2Json.GenJson(excelReader);
-                Source2Json.GenCS(excelReader);
-            }
-        }
-
-        private void ShowExportProtobuf()
-        {
-            GUIStyle headStyle = GUIHelper.MakeHeader();
-            GUILayout.Label("导出Protobuf(仅支持C#内置类型)", headStyle);
-            EditorGUILayout.Space();
-
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("导出Protobuf", GUILayout.Width(100)))
-            {
-                Source2Protobuf.GenProtobuf(excelReader);
-            }
-            if (GUILayout.Button("导出ProtoData.cs", GUILayout.Width(100)))
-            {
-                Source2Protobuf.GenCS(excelReader);
-            }
-            GUILayout.EndHorizontal();
-
-            if (GUILayout.Button("全部导出", GUILayout.Width(100)))
-            {
-                Source2Protobuf.GenCS(excelReader);
-                Source2Protobuf.GenProtobuf(excelReader);
-            }
-        }
-
-        private void ShowExportPrf()
-        {
-            GUIStyle headStyle = GUIHelper.MakeHeader();
-            GUILayout.Label("Export PrefData", headStyle);
-            EditorGUILayout.Space();
-
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Export PrefData", GUILayout.Width(100)))
-            {
-                Source2PrefData.GenPref(excelReader);
-            }
-            if (GUILayout.Button("Export PrefData.cs", GUILayout.Width(100)))
-            {
-                Source2PrefData.GenCS(excelReader);
-            }
-            GUILayout.EndHorizontal();
-
-            if (GUILayout.Button("Export ALL", GUILayout.Width(100)))
-            {
-                Source2PrefData.GenPref(excelReader);
-                Source2PrefData.GenCS(excelReader);
-            }
-        }
     }
-
 }

@@ -17,57 +17,14 @@ namespace ResetCore.Data
         [MenuItem("Assets/DataHelper/Excel/Xml/Export Selected Excel")]
         public static void ExportAllSelectedExcelToXml()
         {
-            ExportData((item, sheetName) =>
-            {
-                ExcelReader reader = new ExcelReader(item, sheetName);
-                Source2Xml.GenXml(reader);
-                Source2Xml.GenCS(reader);
-            });
+            ExportAllSelectExcel(new Source2Xml());
         }
 
         [MenuItem("Assets/DataHelper/Excel/Json/Export Selected Excel")]
         public static void ExportAllSelectedExcelToJson()
         {
-            ExportData((item, sheetName) =>
-            {
-                ExcelReader reader = new ExcelReader(item, sheetName);
-                Source2Json.GenJson(reader);
-                Source2Json.GenCS(reader);
-            });
+            ExportAllSelectExcel(new Source2Json());
         }
-
-        /// <summary>
-        /// 导出选中的Excel为Protobuf（暂时不可用）
-        /// </summary>
-        //[MenuItem("Assets/DataHelper/Protobuf/Export Selected Excel")]
-        //public static void ExportAllSelectedExcelToProtobuf()
-        //{
-        //    var selection = Selection.GetFiltered(typeof(UnityEngine.Object), SelectionMode.DeepAssets);
-        //    var paths = (from s in selection
-        //                 let path = AssetDatabase.GetAssetPath(s)
-        //                 where (path.EndsWith(".xlsx") || path.EndsWith(".xls"))
-        //                 select path).ToArray();
-
-        //    int num = 1;
-        //    foreach (string item in paths)
-        //    {
-        //        Debug.Log(item);
-        //        ExcelReader reader = new ExcelReader(item);
-        //        foreach (string sheetName in reader.GetSheetNames())
-        //        {
-        //            EditorUtility.DisplayProgressBar
-        //                ("Exporting Excel", "Current: " + num + "/" + paths.Length + " File: " + Path.GetFileName(item) +
-        //                " Sheet: " + sheetName, (float)num / (float)paths.Length);
-
-        //            reader = new ExcelReader(item, sheetName);
-        //            Excel2Protobuf.GenCS(reader);
-        //            Excel2Protobuf.GenProtobuf(reader);
-        //        }
-        //        num++;
-        //    }
-        //    EditorUtility.ClearProgressBar();
-        //    Debug.logger.Log("Finished");
-        //}
 
         /// <summary>
         /// 导出选中的Excel为首选项
@@ -75,15 +32,36 @@ namespace ResetCore.Data
         [MenuItem("Assets/DataHelper/Excel/PrefData/Export Selected Excel")]
         public static void ExportAllSelectedExcelToPrefData()
         {
-            ExportData((item, sheetName) =>
-            {
-                ExcelReader reader = new ExcelReader(item, sheetName, DataType.Pref);
-                Source2PrefData.GenPref(reader);
-                Source2PrefData.GenCS(reader);
-            });
+            ExportAllSelectExcel(new Source2PrefData());
         }
 
-        
+        /// <summary>
+        /// 导出选中的Excel为Protobuf（暂时不可用）
+        /// </summary>
+        [MenuItem("Assets/DataHelper/Protobuf/Export Selected Excel(暂时不可用)")]
+        public static void ExportAllSelectedExcelToProtobuf()
+        {
+            ExportAllSelectExcel(new Source2Protobuf());
+        }
+
+        /// <summary>
+        ///  导出选中的Excel为Scriptable Object（暂时不可用）
+        /// </summary>
+        [MenuItem("Assets/DataHelper/Scriptable Object/Export Selected Excel（暂时不可用）")]
+        public static void ExportAllSelectedExcelToScriptableObject()
+        {
+            ExportAllSelectExcel(new Source2ScrObj());
+        }
+
+        private static void ExportAllSelectExcel(ISource2 source2)
+        {
+            ExportData((item, sheetName) =>
+            {
+                ExcelReader reader = new ExcelReader(item, sheetName, source2.dataType);
+                source2.GenData(reader);
+                source2.GenCS(reader);
+            });
+        }
 
         /// <summary>
         /// 导出所有本地化数据

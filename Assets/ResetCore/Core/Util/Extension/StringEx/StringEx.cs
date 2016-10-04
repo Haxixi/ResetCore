@@ -27,6 +27,10 @@ namespace ResetCore.Util
         /// <returns></returns>
         public static T GetValue<T>(this string value)
         {
+            if (string.IsNullOrEmpty(value))
+            {
+                return default(T);
+            }
             return (T)GetValue(value, typeof(T));
         }
 
@@ -40,7 +44,7 @@ namespace ResetCore.Util
         {
             if (string.IsNullOrEmpty(value))
             {
-                return Activator.CreateInstance(type);
+                return type.IsValueType ? Activator.CreateInstance(type) : null;
             }
             //Debug.logger.Log("GetValue " + Spriter1 + "  " + Spriter2);
             if (type != null)
@@ -201,6 +205,7 @@ namespace ResetCore.Util
         public static string ConverToString(this object value)
         {
             //Debug.logger.Log("ConverToString " + Spriter1 + "  "+ Spriter2);
+            if (value == null) return "";
             System.Type type = value.GetType();
             if (type == null)
             {
