@@ -42,6 +42,7 @@ namespace ResetCore.Util
         /// <returns></returns>
         public static string GetDirectoryName(string fileName)
         {
+            fileName = PathEx.MakePathStandard(fileName);
             return fileName.Substring(0, fileName.LastIndexOf('/'));
         }
 
@@ -53,6 +54,7 @@ namespace ResetCore.Util
         /// <returns></returns>
         public static string GetFileName(string path, char separator = '/')
         {
+            path = PathEx.MakePathStandard(path);
             return path.Substring(path.LastIndexOf(separator) + 1);
         }
 
