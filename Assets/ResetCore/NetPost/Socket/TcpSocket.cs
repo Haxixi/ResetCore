@@ -301,13 +301,39 @@ namespace ResetCore.NetPost
             {
                 if (onError != null)
                     onError(SocketState.ACCEPT, se.ErrorCode, se.Message);
+                return;
             }
+            catch(Exception e)
+            {
+                if (onError != null)
+                    onError(SocketState.ACCEPT, 0, e.Message);
+            }
+
+            if (onConnect != null)
+                onConnect(0, 0, "");
+
+
         }
         /// <summary>
         /// 当连接完成时回调
         /// </summary>
         private AsyncCallback connectCallback;
-        private void OnConnect(IAsyncResult iar) { }
+        private void OnConnect(IAsyncResult iar)
+        {
+            try
+            {
+                //结束连接
+                socket.EndConnect(iar);
+
+                IPEndPoint local = socket.LocalEndPoint as IPEndPoint;
+                localAddress = local.Address.ToString();
+                localPort = local.Port;
+            }
+            catch(SocketException se)
+            {
+
+            }
+        }
         /// <summary>
         /// 当断开连接时回调
         /// </summary>
