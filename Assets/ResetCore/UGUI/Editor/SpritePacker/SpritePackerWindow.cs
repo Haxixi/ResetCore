@@ -46,6 +46,7 @@ namespace ResetCore.UGUI
         
         //当前包内sprite列表
         private List<string> _spriteList;
+        private XDocument xDoc;
         private List<string> spriteList
         {
             get
@@ -63,6 +64,8 @@ namespace ResetCore.UGUI
                     .SafeSaveWithoutDeclaration(spriteNameListFileAbstractPath);
             }
         }
+
+        //private List<Sprite> spriteTexList = new List<Sprite>();
 
 
 
@@ -134,6 +137,8 @@ namespace ResetCore.UGUI
 
         int line = 5;
         int row = 5;
+
+        Dictionary<string, Sprite> spriteDict = new Dictionary<string, Sprite>();
         private void ShowSpriteList()
         {
             GUILayout.Label("Sprite List", GUIHelper.MakeHeader(30));
@@ -152,7 +157,17 @@ namespace ResetCore.UGUI
                     }
                     string spritePath = spriteList[num];
 
-                    Sprite spriteTex = AssetDatabase.LoadAssetAtPath<Sprite>(spritePath);
+                    Sprite spriteTex;
+                    if (!spriteDict.ContainsKey(spritePath))
+                    {
+                        spriteTex = AssetDatabase.LoadAssetAtPath<Sprite>(spritePath);
+                        spriteDict.Add(spritePath, spriteTex);
+                    }
+                    else
+                    {
+                        spriteTex = spriteDict[spritePath];
+                    }
+
                     if (spriteTex == null)
                     {
                         spriteList.Remove(spritePath);
@@ -284,9 +299,6 @@ namespace ResetCore.UGUI
 
                 string savePath = GetSpritePrefabPath(currentPackageName + "-" + sp.name);
                 PathEx.MakeDirectoryExist(savePath);
-                Debug.logger.Log(UIConst.spritePrefabPathAbstractPath);
-                Debug.logger.Log(PathEx.ConvertAbstractToAssetPath(UIConst.spritePrefabPathAbstractPath));
-                Debug.logger.Log(savePath);
                 PrefabUtility.CreatePrefab(savePath, go);
                 DestroyImmediate(go);
             }

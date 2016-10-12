@@ -3,10 +3,9 @@ UGUI：
 
 DataGener:
 ExcelWriter写入工具
-Sql导入导出支持
 字体本地化
 全局变量替换
-本地化SQL支持
+数据导出器的本地化支持
 
 ResourcesManager:
 数据清理器
