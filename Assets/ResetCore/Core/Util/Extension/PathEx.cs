@@ -7,6 +7,18 @@ namespace ResetCore.Util
     public class PathEx
     {
         /// <summary>
+        /// 工程根目录
+        /// </summary>
+        public static string projectPath
+        {
+            get
+            {
+                DirectoryInfo directory = new DirectoryInfo(Application.dataPath);
+                return MakePathStandard(directory.Parent.FullName);
+            }
+        }
+
+        /// <summary>
         /// 使目录存在,Path可以是目录名也可以是文件名
         /// </summary>
         /// <param name="path"></param>
@@ -26,11 +38,11 @@ namespace ResetCore.Util
         public static string Combine(params string[] paths)
         {
             string result = "";
-            foreach(string path in paths)
+            foreach (string path in paths)
             {
                 result = Path.Combine(result, path);
             }
-            MakePathStandard(result);
+            result = MakePathStandard(result);
             return result;
         }
 
@@ -48,7 +60,7 @@ namespace ResetCore.Util
 
             return Path.GetDirectoryName(path);
         }
-        
+
         /// <summary>
         /// 将绝对路径转换为相对于Asset的路径
         /// </summary>
@@ -56,7 +68,39 @@ namespace ResetCore.Util
         /// <returns></returns>
         public static string ConvertAbstractToAssetPath(string path)
         {
-            return MakePathStandard(path.Replace(PathConfig.projectPath + "/", ""));
+            path = MakePathStandard(path);
+            return MakePathStandard(path.Replace(projectPath + "/", ""));
+        }
+
+        /// <summary>
+        /// 将绝对路径转换为相对于Asset的路径且去除后缀
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static string ConvertAbstractToAssetPathWithoutExtention(string path)
+        {
+            return FileEx.GetFilePathWithoutExtention(ConvertAbstractToAssetPath(path));
+        }
+
+        /// <summary>
+        /// 将相对于Asset的路径转换为绝对路径
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static string ConvertAssetPathToAbstractPath(string path)
+        {
+            path = MakePathStandard(path);
+            return Combine(projectPath, path);
+        }
+
+        /// <summary>
+        /// 将相对于Asset的路径转换为绝对路径且去除后缀
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static string ConvertAssetPathToAbstractPathWithoutExtention(string path)
+        {
+            return FileEx.GetFilePathWithoutExtention(ConvertAssetPathToAbstractPath(path));
         }
 
         /// <summary>
@@ -68,6 +112,8 @@ namespace ResetCore.Util
         {
             return path.Trim().Replace("\\", "/");
         }
+
+
     }
 
 }
