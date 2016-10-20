@@ -114,32 +114,6 @@
   <p>Assets/Resources/Sound/SE/SE_Tip2</p>
   <n>PackageList.xml</n>
   <p>Assets/Resources/SpritePacker/PackageList</p>
-  <n>default-env_bg.prefab</n>
-  <p>Assets/Resources/SpritePacker/default/default-env_bg</p>
-  <n>haha-env_Clouds.prefab</n>
-  <p>Assets/Resources/SpritePacker/haha/haha-env_Clouds</p>
-  <n>haha-env_cloudTop.prefab</n>
-  <p>Assets/Resources/SpritePacker/haha/haha-env_cloudTop</p>
-  <n>haha-env_Fog.prefab</n>
-  <p>Assets/Resources/SpritePacker/haha/haha-env_Fog</p>
-  <n>haha-env_Gherkin.prefab</n>
-  <p>Assets/Resources/SpritePacker/haha/haha-env_Gherkin</p>
-  <n>haha-env_PlatformBridge.prefab</n>
-  <p>Assets/Resources/SpritePacker/haha/haha-env_PlatformBridge</p>
-  <n>ss-env_Bank.prefab</n>
-  <p>Assets/Resources/SpritePacker/ss/ss-env_Bank</p>
-  <n>ss-env_bg.prefab</n>
-  <p>Assets/Resources/SpritePacker/ss/ss-env_bg</p>
-  <n>ss-env_BigBen.prefab</n>
-  <p>Assets/Resources/SpritePacker/ss/ss-env_BigBen</p>
-  <n>ss-env_Clouds.prefab</n>
-  <p>Assets/Resources/SpritePacker/ss/ss-env_Clouds</p>
-  <n>ss-env_cloudTop.prefab</n>
-  <p>Assets/Resources/SpritePacker/ss/ss-env_cloudTop</p>
-  <n>ss-env_Fog.prefab</n>
-  <p>Assets/Resources/SpritePacker/ss/ss-env_Fog</p>
-  <n>ss-env_Gherkin.prefab</n>
-  <p>Assets/Resources/SpritePacker/ss/ss-env_Gherkin</p>
   <n>Bullet.prefab</n>
   <p>Assets/Resources/TestBehaviorTree/Bullet</p>
   <n>Enemy.prefab</n>

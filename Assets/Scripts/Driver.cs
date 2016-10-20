@@ -13,15 +13,24 @@ using ResetCore.UGUI;
 using ResetCore.Data.GameDatas.Xml;
 using ResetCore.Event;
 using ResetCore.MySQL;
+using ResetCore.NetPost;
 
 //using ResetCore.Data.GameDatas;
 
 public class Driver : MonoSingleton<Driver> {
 
+    TcpSocket tcpSocket = new TcpSocket();
 
     void Awake()
     {
-
+        tcpSocket.onReveive += new TcpSocketReceiveDelegate(TestReveive);
+        tcpSocket.onSend += new TcpSocketSendDelegate(TestSend);
+        tcpSocket.Connect("127.0.0.1", 9999);
+        CoroutineTaskManager.Instance.LoopTodoByTime(() =>
+        {
+            tcpSocket.Send(System.Text.Encoding.UTF8.GetBytes("Test Message"));
+            tcpSocket.BeginReceive();
+        }, 1, -1);
     }
     // Use this for initialization
     void Start()
@@ -30,6 +39,17 @@ public class Driver : MonoSingleton<Driver> {
 
     void OnDestroy()
     {
+        tcpSocket.Disconnect();
+    }
+
+    public void TestReveive(int len, byte[] bytes)
+    {
+        Debug.LogError("发送" + System.Text.Encoding.UTF8.GetString(bytes));
+    }
+
+    public void TestSend(int len)
+    {
+        Debug.LogError("发送长度为" + len);
     }
 
     public override void Init()

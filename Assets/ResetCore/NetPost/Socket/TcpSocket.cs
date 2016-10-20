@@ -60,12 +60,12 @@ namespace ResetCore.NetPost
 
         #region 公开的回调函数
 
-        public TcpSocketListenDelegate onListen { get; private set; }
-        public TcpSocketConnectDelegate onConnect { get; private set; }
-        public TcpSocketDisconnectDelegate onDisconnect { get; private set; }
-        public TcpSocketErrorDelegate onError { get; private set; }
-        public TcpSocketReceiveDelegate onReveive { get; private set; }
-        public TcpSocketSendDelegate onSend { get; private set; }
+        public TcpSocketListenDelegate onListen { get; set; }
+        public TcpSocketConnectDelegate onConnect { get; set; }
+        public TcpSocketDisconnectDelegate onDisconnect { get; set; }
+        public TcpSocketErrorDelegate onError { get; set; }
+        public TcpSocketReceiveDelegate onReveive { get; set; }
+        public TcpSocketSendDelegate onSend { get; set; }
 
         #endregion
 
@@ -325,30 +325,210 @@ namespace ResetCore.NetPost
                 //结束连接
                 socket.EndConnect(iar);
 
+                //读取本地地址
                 IPEndPoint local = socket.LocalEndPoint as IPEndPoint;
                 localAddress = local.Address.ToString();
                 localPort = local.Port;
             }
-            catch(SocketException se)
+            catch (SocketException se)
             {
+                //引发连接失败事件
+                if (onConnect != null)
+                    onConnect(3, se.ErrorCode, se.Message);
 
+                //引发报错事件
+                if (onError != null)
+                    onError(SocketState.END_CONNECT, se.ErrorCode, se.Message);
+
+                return;
             }
+            catch (Exception exp)
+            {
+                //引发连接失败事件
+                if (onConnect != null)
+                    onConnect(4, 0, exp.Message);
+
+                //引发报错事件
+                if (onError != null)
+                    onError(SocketState.END_CONNECT, 0, exp.Message);
+
+                return;
+            }
+
+            //引发连接成功事件
+            if (onConnect != null)
+                onConnect(0, 0, "");
         }
+
         /// <summary>
         /// 当断开连接时回调
         /// </summary>
         private AsyncCallback disconnectCallback;
-        private void OnDisconnect(IAsyncResult iar) { }
+        private void OnDisconnect(IAsyncResult iar)
+        {
+            try
+            {
+                //结束断开连接
+                socket.EndDisconnect(iar);
+
+                //关闭套接字
+                socket.Close();
+            }
+            catch (SocketException se)
+            {
+                //引发断线事件
+                if (onDisconnect != null)
+                    onDisconnect(CloseType.MY_POSSITIVE, SocketState.END_DISCONNECT, se.ErrorCode, se.Message);
+
+                //引发报错事件
+                if (onError != null)
+                    onError(SocketState.END_DISCONNECT, se.ErrorCode, se.Message);
+
+                return;
+            }
+            catch (Exception exp)
+            {
+                //引发断线事件
+                if (onDisconnect != null)
+                    onDisconnect(CloseType.MY_POSSITIVE, SocketState.END_DISCONNECT, 0, exp.Message);
+
+                //引发报错事件
+                if (onError != null)
+                    onError(SocketState.END_DISCONNECT, 0, exp.Message);
+
+                return;
+            }
+
+            //引发断线事件
+            if (onDisconnect != null)
+                onDisconnect(CloseType.MY_POSSITIVE, SocketState.END_DISCONNECT, 0, "");
+
+        }
         /// <summary>
         /// 当发送完成时回调
         /// </summary>
         private AsyncCallback sendCallback;
-        private void OnSend(IAsyncResult iar) { }
+        private void OnSend(IAsyncResult iar)
+        {
+            //发送的数据长度
+            int len = 0;
+
+            try
+            {
+                //结束发送
+                len = socket.EndSend(iar);
+            }
+            catch (SocketException se)
+            {
+                //关闭套接字
+                socket.Close();
+
+                //引发断线事件
+                if (onDisconnect != null)
+                    onDisconnect(CloseType.THEIR_PASSIVE, SocketState.END_SEND, se.ErrorCode, se.Message);
+
+                //引发报错事件
+                if (onError != null)
+                    onError(SocketState.END_SEND, se.ErrorCode, se.Message);
+                return;
+            }
+            catch (Exception exp)
+            {
+                //关闭套接字
+                socket.Close();
+
+                //引发断线事件
+                if (onDisconnect != null)
+                    onDisconnect(CloseType.THEIR_PASSIVE, SocketState.END_SEND, 0, exp.Message);
+
+                //引发报错事件
+                if (onError != null)
+                    onError(SocketState.END_SEND, 0, exp.Message);
+
+                return;
+            }
+
+            //引发发送数据事件
+            if (onSend != null)
+                onSend(len);
+        }
         /// <summary>
         /// 当接收信息时回调
         /// </summary>
         private AsyncCallback receiveCallback;
-        private void OnReceive(IAsyncResult iar) { }
+        private void OnReceive(IAsyncResult iar)
+        {
+            //接收到的数据长度
+            int len;
+
+            try
+            {
+                //结束接收
+                len = socket.EndReceive(iar);
+
+                //接收到零长度数据处理
+                if (len == 0)
+                {
+                    //如果是主动关闭
+                    if (isCloseSelf)
+                        return;
+
+                    //关闭套接字
+                    socket.Close();
+
+                    //引发断开连接事件
+                    if (onDisconnect != null)
+                        onDisconnect(CloseType.THEIR_POSSITIVE, SocketState.END_RECEIVE, 0, "");
+
+                    return;
+                }
+            }
+            catch (SocketException se)
+            {
+                //如果是主动关闭
+                if (isCloseSelf)
+                    return;
+
+                //关闭套接字
+                socket.Close();
+
+                //引发断开连接事件
+                if (onDisconnect != null)
+                    onDisconnect(CloseType.THEIR_POSSITIVE, SocketState.END_RECEIVE, se.ErrorCode, se.Message);
+
+                //引发报错事件
+                if (onError != null)
+                    onError(SocketState.END_RECEIVE, se.ErrorCode, se.Message);
+                return;
+            }
+            catch (Exception exp)
+            {
+                //如果是主动关闭
+                if (isCloseSelf)
+                    return;
+
+                //关闭套接字
+                socket.Close();
+
+                //引发断开连接事件
+                if (onDisconnect != null)
+                    onDisconnect(CloseType.THEIR_POSSITIVE, SocketState.END_RECEIVE, 0, exp.Message);
+
+
+                //引发报错事件
+                if (onError != null)
+                    onError(SocketState.END_RECEIVE, 0, exp.Message);
+
+                return;
+            }
+
+            //引发接收数据事件
+            if (onReveive != null)
+                onReveive(len, receiveBuffer);
+
+            //继续接收
+            BeginReceive();
+        }
 
 
         #endregion//回调函数

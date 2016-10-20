@@ -56,7 +56,9 @@ namespace ResetCore.NetPost
     /// <param name="socketCode">套接字错误码</param>
     /// <param name="socketMessage">套接字错误信息</param>
     public delegate void TcpSocketErrorDelegate(SocketState state, int socketCode, string socketMessage);
-    #endregion
+    #endregion//Tcp套接字代理
+
+
 
     #region Udp套接字代理
     /// <summary>
@@ -91,5 +93,5 @@ namespace ResetCore.NetPost
     /// <param name="socketCode">套接字错误码</param>
     /// <param name="socketMessage">套接字错误信息</param>
     public delegate void UdpSocketErrorDelegate(SocketState state, int socketCode, string socketMessage);
-    #endregion
+    #endregion //Udp套接字代理
 }
