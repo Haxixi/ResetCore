@@ -38,12 +38,33 @@ namespace ResetCore.Util
         }
 
         /// <summary>
-        /// 
+        /// 获取所有的callback
         /// </summary>
         /// <param name="go"></param>
         public static GameObjectCallBack GetCallbacks(this GameObject go)
         {
             return go.GetOrCreateComponent<GameObjectCallBack>();
+        }
+
+        /// <summary>
+        /// 查找指定祖先节点下的对象
+        /// </summary>
+        /// <param name="ancestorName">祖先节点对象</param>
+        /// <param name="name">对象名称</param>
+        /// <returns>对象</returns>
+        public static GameObject FindObjectInChild(Transform ancestorNode, string name)
+        {
+            for (int i = 0; i < ancestorNode.childCount; i++)
+            {
+                GameObject tmp;
+                if (ancestorNode.GetChild(i).name == name)
+                    return ancestorNode.GetChild(i).gameObject;
+                else
+                    tmp = FindObjectInChild(ancestorNode.GetChild(i), name);
+                if (tmp != null)
+                    return tmp;
+            }
+            return null;
         }
 
     }
