@@ -1,220 +1,187 @@
 ﻿using UnityEngine;
 using System.Collections;
-using ResetCore.Asset;
 using System.Collections.Generic;
 
 namespace ResetCore.Util
 {
-    public class ObjectPool : MonoSingleton<ObjectPool>
+    /// <summary>
+    /// 对象池
+    /// </summary>
+    public class ObjectPool
     {
-        private static Dictionary<string, GameObject> poolDic;
-        [HeaderAttribute("单个池内最大允许存在的物体数")]
-        public int MaxSize = 30;
-        [HeaderAttribute("单个池内清理下限")]
-        public int CleanToSize = 15;
 
-        [HeaderAttribute("当池内找不到是否搜索其他池")]
-        public bool IsCheckAllPool = true;
-        [HeaderAttribute("当隐藏时是否将池外物体加入池内")]
-        public bool AddOutterObjectToPool = true;
-        [HeaderAttribute("制作物体时是否重置其Transform")]
-        public bool IsResetObject = false;
+        /// <summary>
+        /// 储存池
+        /// </summary>
+        private static Dictionary<string, ObjectPool> poolDict = new Dictionary<string, ObjectPool>();
 
+        /// <summary>
+        /// 禁止被实例化
+        /// </summary>
+        protected ObjectPool() { }
 
-        public override void Init()
+        #region 双参数池
+        /// <summary>
+        /// 创建池
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static ObjectPool<K, T> CreatePool<K, T>(string name)
         {
-            base.Init();
-            poolDic = new Dictionary<string, GameObject>();
+            ObjectPool<K, T> newPool = new ObjectPool<K, T>();
+            poolDict.Add(name, newPool);
+            return newPool;
         }
 
         /// <summary>
-        /// 池内寻找物体，若没有找到，则创建并加入池
+        /// 获取池
         /// </summary>
-        /// <param name="objectName">物体名</param>
-        /// <param name="poolName">池名</param>
-        /// <returns>返回的物体</returns>
-        public GameObject CreateOrFindGameObject(string objectName, string poolName = "Defualt")
+        /// <typeparam name="T"></typeparam>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static ObjectPool<K, T> GetPool<K, T>(string name)
         {
-            //检查池的存在性
-            CheckPoolExist(poolName);
-
-            //清理池
-            CleanPool(poolName);
-
-            GameObject finalGo = null;
-            Transform poolTran = poolDic[poolName].transform;
-
-            //寻找匹配物体
-            finalGo = CheckPool(objectName, poolTran);
-
-            //若没有找到，检查其他池
-            if (finalGo == null && IsCheckAllPool)
+            if (poolDict.ContainsKey(name))
             {
-                finalGo = CheckAllPool(objectName, poolName);
-            }
-
-            //如果还是没有 那就创建
-            if (finalGo == null)
-            {
-                finalGo = CreateObject(objectName);
-                finalGo.transform.parent = poolTran;
-            }
-
-            if (finalGo == null)
-            {
-                return null;
-            }
-                
-            finalGo.name = objectName;
-            if (IsResetObject)
-            {
-                finalGo.ResetTransform();
-            }
-
-            finalGo.SetActive(true);
-
-            return finalGo;
-        }
-
-
-        /// <summary>
-        /// 隐藏或者删除物体，当AddOutterObjectToPool为true时加入池中，否则销毁
-        /// </summary>
-        /// <param name="go">要隐藏的物体</param>
-        /// <param name="poolName">若在池外，则要加入的池名</param>
-        public void HideOrDestroyObject(GameObject go, string poolName = "Defualt")
-        {
-            if (IsInPool(go))
-            {
-                go.SetActive(false);
+                return poolDict[name] as ObjectPool<K, T>;
             }
             else
             {
-                if (AddOutterObjectToPool)
-                {
-                    CheckPoolExist(poolName);
-                    go.transform.parent = poolDic[poolName].transform;
-                    go.SetActive(false);
-                }
-                else
-                {
-                    Destroy(go);
-                }
+                return null;
             }
         }
 
         /// <summary>
-        /// 将物体加入某个池
+        /// 移除池
         /// </summary>
-        /// <param name="go">要加入的物体</param>
-        /// <param name="poolName">所加入的池</param>
-        public void AddObjectToPool(GameObject go, string poolName = "Defualt")
+        /// <typeparam name="T"></typeparam>
+        /// <param name="name"></param>
+        public static void RemovePool<K, T>(string name)
         {
-            CheckPoolExist(poolName);
-
-            if (go.transform.parent != null && go.transform.parent == poolDic[poolName].transform)
+            if (poolDict.ContainsKey(name))
             {
-                return;
-            }
-
-            go.transform.parent = poolDic[poolName].transform;
-        }
-
-        private void CheckPoolExist(string poolName)
-        {
-            if (!poolDic.ContainsKey(poolName))
-            {
-                GameObject newPool = new GameObject(poolName);
-                newPool.transform.parent = transform;
-                newPool.transform.position = Vector2.zero;
-                poolDic.Add(poolName, newPool);
+                poolDict.Remove(name);
             }
         }
+        #endregion //双参数池
 
-        private GameObject CheckPool(string objectName, Transform poolTran)
+
+        #region 单参数池
+        /// <summary>
+        /// 创建池
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static ObjectPool<string, T> CreatePool<T>(string name)
         {
-            for (int i = 0; i < poolTran.childCount; i++)
+            ObjectPool<string, T> newPool = new ObjectPool<string, T>();
+            poolDict.Add(name, newPool);
+            return newPool;
+        }
+
+        /// <summary>
+        /// 获取池
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static ObjectPool<string, T> GetPool<T>(string name)
+        {
+            if (poolDict.ContainsKey(name))
             {
-                Transform childTran = poolTran.GetChild(i);
-                string childName = childTran.name;
-
-                if (childName.Contains("(Clone)"))
-                {
-                    childName = childName.ReplaceFirst("(Clone)", "");
-                }
-
-                if (childName == objectName && childTran.gameObject.activeSelf == false)
-                {
-                    return childTran.gameObject;
-                }
+                return poolDict[name] as ObjectPool<string, T>;
             }
-            return null;
-        }
-
-        //检查所有池
-        private GameObject CheckAllPool(string objectName, string poolToSkipName)
-        {
-            GameObject finalGo = null;
-            foreach (GameObject pool in poolDic.Values)
+            else
             {
-                if (pool != poolDic[poolToSkipName])
-                {
-                    finalGo = CheckPool(objectName, pool.transform);
-                    if (finalGo != null)
-                    {
-                        return finalGo;
-                    }
-                }
-            }
-            return finalGo;
-        }
-
-        private bool IsInPool(GameObject go)
-        {
-            return (go.transform.parent != null && go.transform.parent.parent != null && go.transform.parent.parent == transform);
-        }
-
-        private GameObject CreateObject(string objectName)
-        {
-            GameObject newGo = ResourcesLoaderHelper.Instance.LoadAndGetInstance(objectName + ".prefab");
-
-            return newGo;
-        }
-
-        private void CleanPool(string poolName)
-        {
-            Transform poolTran = poolDic[poolName].transform;
-            int num = poolTran.childCount;
-            if (num < MaxSize)
-            {
-                return;
-            }
-
-            for (int i = num - 1; i >= 0; i--)
-            {
-                if (num < CleanToSize)
-                {
-                    break;
-                }
-
-                Transform childTran = poolTran.GetChild(i);
-                if (childTran.gameObject.activeSelf == false)
-                {
-                    Destroy(childTran.gameObject);
-                    num--;
-                }
+                return null;
             }
         }
 
-        public void CleanAllPool()
+        /// <summary>
+        /// 移除池
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="name"></param>
+        public static void RemovePool<T>(string name)
         {
-            transform.DoToAllChildren((child) =>
+            if (poolDict.ContainsKey(name))
             {
-                child.DeleteAllChild();
-            });
+                poolDict.Remove(name);
+            }
         }
-
+        #endregion //单参数池
     }
+
+    public class ObjectPool<K, T> : ObjectPool
+    {
+        private Dictionary<K, T> pool;
+
+        public ObjectPool()
+        {
+            pool = new Dictionary<K, T>();
+        }
+
+        /// <summary>
+        /// 取出池
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public T Get(K key)
+        {
+            return pool.ContainsKey(key) ? pool[key] : default(T);
+        }
+
+        /// <summary>
+        /// 弹出池
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public T PopOut(K key)
+        {
+            T value = Get(key);
+            Remove(key);
+            return value;
+        }
+
+
+        /// <summary>
+        /// 放入池
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public void Put(K key, T value)
+        {
+            if (!pool.ContainsKey(key))
+            {
+                pool.Add(key, value);
+            }
+            else
+            {
+                pool[key] = value;
+            }
+        }
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="key"></param>
+        public void Remove(K key)
+        {
+            if (pool.ContainsKey(key))
+            {
+                pool.Remove(key);
+            }
+        }
+
+        /// <summary>
+        /// 清理池
+        /// </summary>
+        public void Clear()
+        {
+            pool = new Dictionary<K, T>();
+        }
+    }
+
 }
-
-
