@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 namespace ResetCore.NetPost
 {
@@ -9,7 +10,7 @@ namespace ResetCore.NetPost
         public abstract string handlerName { get; }
 
         //抱头长度
-        public readonly int headLength = 4;
+        public readonly int headLength = sizeof(int);
 
         //实际数据长度
         public int dataLength;
@@ -23,6 +24,19 @@ namespace ResetCore.NetPost
         //混合数据
         public byte[] totalData;
 
+        /// <summary>
+        /// 获取包长度
+        /// </summary>
+        /// <returns></returns>
+        public int GetLength()
+        {
+            var lengthBytes = totalData.SubArray(0, 0, 4);
+
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(lengthBytes);
+            
+            return BitConverter.ToInt32(lengthBytes, 0);
+        }
     }
 }
 

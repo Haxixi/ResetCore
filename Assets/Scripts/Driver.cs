@@ -14,6 +14,8 @@ using ResetCore.Data.GameDatas.Xml;
 using ResetCore.Event;
 using ResetCore.MySQL;
 using ResetCore.NetPost;
+using ResetCore.Protobuf;
+using System;
 
 //using ResetCore.Data.GameDatas;
 
@@ -28,9 +30,14 @@ public class Driver : MonoSingleton<Driver> {
         tcpSocket.Connect("127.0.0.1", 9999);
         CoroutineTaskManager.Instance.LoopTodoByTime(() =>
         {
-            tcpSocket.Send(System.Text.Encoding.UTF8.GetBytes("Test Message"));
+            TestProtobuf data = new TestProtobuf() { testData = 1, testString = "asdasd" };
+            byte[] bytes = ProtoEx.Serialize<TestProtobuf>(data);
+
+            tcpSocket.Send(bytes);
             tcpSocket.BeginReceive();
         }, 1, -1);
+
+
     }
     // Use this for initialization
     void Start()
