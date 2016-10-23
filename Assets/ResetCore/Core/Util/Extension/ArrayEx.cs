@@ -51,5 +51,20 @@ public static class ArrayEx {
         return false;
     }
 
+    /// <summary>
+    /// 获取子数组
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="array"></param>
+    /// <param name="sourceStart"></param>
+    /// <param name="targetStart"></param>
+    /// <param name="length"></param>
+    /// <returns></returns>
+    public static T[] SubArray<T>(this T[] array, int sourceStart, int targetStart, int length)
+    {
+        T[] res = new T[length];
+        Array.Copy(array, sourceStart, res, targetStart, length);
+        return res;
+    }
 
 }
