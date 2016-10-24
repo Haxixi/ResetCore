@@ -9,6 +9,7 @@ namespace ResetCore.Event
     /// <summary>
     /// 代表了能够生成事件的函数
     /// </summary>
+    [AttributeUsage(AttributeTargets.Method)]
     public class GenEventable : Attribute
     {
         public string eventName { get; private set; }
@@ -47,35 +48,30 @@ namespace ResetCore.Event
                         {
                             EventDispatcher.AddEventListener(genEventAttr.eventName,
                                 () => { method.Invoke(mono, new object[0]); }, mono);
-                            Debug.Log("天假0");
                         }
                         break;
                     case 1:
                         {
                             EventDispatcher.AddEventListener<object>(genEventAttr.eventName,
                                 (arg1) => { method.Invoke(mono, new object[] { arg1 }); }, mono);
-                            Debug.Log("天假1");
                         }
                         break;
                     case 2:
                         {
                             EventDispatcher.AddEventListener<object, object>(genEventAttr.eventName,
                                 (arg1, arg2) => { method.Invoke(mono, new object[] { arg1, arg2 }); }, mono);
-                            Debug.Log("天假2");
                         }
                         break;
                     case 3:
                         {
                             EventDispatcher.AddEventListener<object, object, object>(genEventAttr.eventName,
                                 (arg1, arg2, arg3) => { method.Invoke(mono, new object[] { arg1, arg2, arg3 }); }, mono);
-                            Debug.Log("天假3");
                         }
                         break;
                     case 4:
                         {
                             EventDispatcher.AddEventListener<object, object, object, object>(genEventAttr.eventName,
                                 (arg1, arg2, arg3, arg4) => { method.Invoke(mono, new object[] { arg1, arg2, arg3, arg4 }); }, mono);
-                            Debug.Log("天假4");
                         }
                         break;
                     default:
