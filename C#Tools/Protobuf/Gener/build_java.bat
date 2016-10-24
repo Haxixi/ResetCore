@@ -1,1 +1,1 @@
-protoc --java_out=java %1
+protoc --java_out=java %1.proto
