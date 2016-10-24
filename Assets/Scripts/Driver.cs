@@ -16,27 +16,35 @@ using ResetCore.MySQL;
 using ResetCore.NetPost;
 using ResetCore.Protobuf;
 using System;
+using Vector3D;
 
 //using ResetCore.Data.GameDatas;
 
 public class Driver : MonoSingleton<Driver> {
 
     TcpSocket tcpSocket = new TcpSocket();
-
+    TcpSocket tcpSocket1 = new TcpSocket();
     void Awake()
     {
         tcpSocket.onReveive += new TcpSocketReceiveDelegate(TestReveive);
         tcpSocket.onSend += new TcpSocketSendDelegate(TestSend);
         tcpSocket.Connect("127.0.0.1", 9999);
+
+        tcpSocket.BeginReceive();
+        int i = 0;
         CoroutineTaskManager.Instance.LoopTodoByTime(() =>
         {
-            TestProtobuf data = new TestProtobuf() { testData = 1, testString = "asdasd" };
-            byte[] bytes = ProtoEx.Serialize<TestProtobuf>(data);
+            i++;
+            //TestProtobuf data = new TestProtobuf() { testData = 1, testString = "asdasd" };
+            Package pkg = new Package();
+            Vector3DData data = new Vector3DData();
+            data.X = i;
+            data.Y = i;
+            data.Z = i;
+            pkg.MakePakage<Vector3DData>(data);
 
-            tcpSocket.Send(bytes);
-            tcpSocket.BeginReceive();
+            tcpSocket.Send(pkg.totalData);
         }, 1, -1);
-
 
     }
     // Use this for initialization
@@ -51,7 +59,7 @@ public class Driver : MonoSingleton<Driver> {
 
     public void TestReveive(int len, byte[] bytes)
     {
-        Debug.LogError("发送" + System.Text.Encoding.UTF8.GetString(bytes));
+        Debug.LogError("收到" + System.Text.Encoding.UTF8.GetString(bytes));
     }
 
     public void TestSend(int len)

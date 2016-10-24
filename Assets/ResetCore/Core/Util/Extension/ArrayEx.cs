@@ -67,4 +67,19 @@ public static class ArrayEx {
         return res;
     }
 
+    /// <summary>
+    /// 连接两个数组
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="array"></param>
+    /// <param name="anotherArray"></param>
+    /// <returns></returns>
+    public static T[] Concat<T>(this T[] array, T[] anotherArray)
+    {
+        T[] res = new T[array.Length + anotherArray.Length];
+        Array.Copy(array, 0, res, 0, array.Length);
+        Array.Copy(anotherArray, 0, res, array.Length, anotherArray.Length);
+        return res;
+    }
+
 }

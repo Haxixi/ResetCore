@@ -594,3 +594,5 @@ sysinfo.txt
 /obj/Debug/Assembly-CSharp.pdb
 /obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
 /obj/Debug/build.force
+/AssetBundle
+/AssetBundleExport
