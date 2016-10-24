@@ -12,7 +12,7 @@
 // Option: light framework (CF/Silverlight) enabled
     
 // Generated from: Vector3D.proto
-namespace SSJJ.Data
+namespace Vector3D
 {
   [global::ProtoBuf.ProtoContract(Name=@"Vector3DData")]
   public partial class Vector3DData : global::ProtoBuf.IExtensible
