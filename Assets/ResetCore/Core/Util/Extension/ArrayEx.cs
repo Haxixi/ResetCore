@@ -60,10 +60,10 @@ public static class ArrayEx {
     /// <param name="targetStart"></param>
     /// <param name="length"></param>
     /// <returns></returns>
-    public static T[] SubArray<T>(this T[] array, int sourceStart, int targetStart, int length)
+    public static T[] SubArray<T>(this T[] array, int sourceStart, int length)
     {
         T[] res = new T[length];
-        Array.Copy(array, sourceStart, res, targetStart, length);
+        Array.Copy(array, sourceStart, res, 0, length);
         return res;
     }
 
