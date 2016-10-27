@@ -815,7 +815,7 @@ namespace ResetCore.Util
         /// <returns></returns>
         public static bool IsConvertableType(this Type type)
         {
-            return CanConvertFromString(type) && CanConvertToString(type);
+            return CanConvertFromString(type) && CanConvertToString(type) || IsConvertableType(type);
         }
 
         /// <summary>
@@ -825,7 +825,6 @@ namespace ResetCore.Util
         /// <returns></returns>
         public static bool CanConvertFromString(this Type type)
         {
-            if (convertableTypes.Contains(type)) return true;
             var methodInfos = type.GetMethods();
             foreach (var method in methodInfos)
             {
@@ -848,7 +847,6 @@ namespace ResetCore.Util
         /// <returns></returns>
         public static bool CanConvertToString(this Type type)
         {
-            if (convertableTypes.Contains(type)) return true;
             var methodInfos = type.GetMethods();
             foreach (var method in methodInfos)
             {

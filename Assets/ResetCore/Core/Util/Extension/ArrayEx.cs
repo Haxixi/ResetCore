@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 public static class ArrayEx {
 
@@ -82,4 +83,60 @@ public static class ArrayEx {
         return res;
     }
 
+    /// <summary>
+    /// 切分数组至多个
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="array"></param>
+    /// <param name="lengthList"></param>
+    /// <returns></returns>
+    public static List<T[]> SplitByLength<T>(this T[] array, params int[] lengthList)
+    {
+        List<T[]> res = new List<T[]>();
+        int startIndex = 0;
+        T[] tempArr;
+        int length;
+        for (int i = 0; i < lengthList.Length; i++)
+        {
+            if (startIndex + lengthList[i] > array.Length)
+            {
+                length = array.Length - startIndex;
+            }
+            else
+            {
+                length = lengthList[i];
+            }
+
+            tempArr = new T[length];
+            Array.Copy(array, startIndex, tempArr, 0, length);
+            res.Add(tempArr);
+            startIndex += length;
+            tempArr = null;
+
+            if (startIndex >= array.Length)
+                break;
+        }
+
+        return res;
+    }
+
+    /// <summary>
+    /// 切出头部数组，并且返回剩余部分
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="array"></param>
+    /// <param name="length"></param>
+    /// <returns></returns>
+    public static T[] CutHeadByLength<T>(ref T[] array, int length)
+    {
+        if (length > array.Length)
+            length = array.Length;
+        T[] head = new T[length];
+        T[] tail = new T[array.Length - length];
+        
+        Array.Copy(array, 0, head, 0, length);
+        Array.Copy(array, length, tail, 0, array.Length - length);
+        array = tail;
+        return head;
+    }
 }

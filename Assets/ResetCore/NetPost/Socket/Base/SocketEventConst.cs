@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Net.Sockets;
+using System;
 
 namespace ResetCore.NetPost
 {
@@ -11,7 +12,7 @@ namespace ResetCore.NetPost
     /// <param name="code">错误码</param>
     /// <param name="socketCode">套接字错误码</param>
     /// <param name="socketMessage">套接字错误信息</param>
-    public delegate void TcpSocketListenDelegate(int code, int socketCode, string socketMessage);
+    public delegate void TcpSocketListenDelegate(Exception e = null);
 
     /// <summary>
     /// Tcp套接字客户端连接代理
@@ -25,7 +26,7 @@ namespace ResetCore.NetPost
     /// <param name="code">错误码</param>
     /// <param name="socketCode">套接字错误码</param>
     /// <param name="socketMessage">套接字错误信息</param>
-    public delegate void TcpSocketConnectDelegate(int code, int socketCode, string socketMessage);
+    public delegate void TcpSocketConnectDelegate(Exception e = null);
 
     /// <summary>
     /// Tcp套接字断开连接代理
@@ -34,7 +35,7 @@ namespace ResetCore.NetPost
     /// <param name="phase">套接字阶段</param>
     /// <param name="socketCode">套接字错误码</param>
     /// <param name="socketMessage">套接字错误信息</param>
-    public delegate void TcpSocketDisconnectDelegate(CloseType type, SocketState state, int socketCode, string socketMessage);
+    public delegate void TcpSocketCloseSocketDelegate(CloseType type, SocketState state, Exception e = null);
 
     /// <summary>
     /// Tcp套接字接收到数据代理
@@ -55,7 +56,7 @@ namespace ResetCore.NetPost
     /// <param name="phase">套接字阶段</param>
     /// <param name="socketCode">套接字错误码</param>
     /// <param name="socketMessage">套接字错误信息</param>
-    public delegate void TcpSocketErrorDelegate(SocketState state, int socketCode, string socketMessage);
+    public delegate void TcpSocketErrorDelegate(SocketState state, Exception e = null);
     #endregion//Tcp套接字代理
 
 
@@ -67,7 +68,7 @@ namespace ResetCore.NetPost
     /// <param name="code">错误码</param>
     /// <param name="socketCode">套接字错误码</param>
     /// <param name="socketMessage">套接字错误信息</param>
-    public delegate void UdpSocketListenDelegate(int code, int socketCode, string socketMessage);
+    public delegate void UdpSocketListenDelegate(Exception e = null);
 
     /// <summary>
     /// Udp套接字端口绑定代理
@@ -75,7 +76,7 @@ namespace ResetCore.NetPost
     /// <param name="code">错误码</param>
     /// <param name="socketCode">套接字错误码</param>
     /// <param name="socketMessage">套接字错误信息</param>
-    public delegate void UdpSocketBindDelegate(int code, int socketCode, string socketMessage);
+    public delegate void UdpSocketBindDelegate(Exception e = null);
 
     /// <summary>
     /// Udp套接字接收到数据代理
@@ -92,6 +93,6 @@ namespace ResetCore.NetPost
     /// <param name="phase">套接字活动阶段</param>
     /// <param name="socketCode">套接字错误码</param>
     /// <param name="socketMessage">套接字错误信息</param>
-    public delegate void UdpSocketErrorDelegate(SocketState state, int socketCode, string socketMessage);
+    public delegate void UdpSocketErrorDelegate(SocketState state, Exception e = null);
     #endregion //Udp套接字代理
 }

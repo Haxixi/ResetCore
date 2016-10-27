@@ -43,7 +43,7 @@ namespace ResetCore.NetPost
             pkg.data = ProtoEx.Serialize<T>(value);
 
             pkg.dataLength = pkg.data.Length;
-            pkg.totalLength = pkg.dataLength + headLength;
+            pkg.totalLength = pkg.dataLength + headLength + idLength;
 
             byte[] lengthData = BitConverter.GetBytes(pkg.totalLength);
             byte[] eventIdData = BitConverter.GetBytes(pkg.eventId);
