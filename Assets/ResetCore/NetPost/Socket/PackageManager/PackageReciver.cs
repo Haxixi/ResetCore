@@ -63,6 +63,7 @@ namespace ResetCore.NetPost
                         Handler.HandlePackage(package, act);
                     });
                 }
+                packageList.Clear();
             }
         }
 
@@ -71,6 +72,7 @@ namespace ResetCore.NetPost
         /// </summary>
         public void Reset()
         {
+            handleQueue.Clean();
             packageList = null;
             packageList = new List<Package>();
             packetBuffer = null;
