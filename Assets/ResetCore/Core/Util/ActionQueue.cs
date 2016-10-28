@@ -142,8 +142,8 @@ namespace ResetCore.Util
 
         public void Clean()
         {
-            m_queue = new Queue<Action>();
             m_queue.Clear();
+            m_queue = new Queue<Action>();
             isLoading = false;
         }
     }
