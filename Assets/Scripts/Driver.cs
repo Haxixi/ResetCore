@@ -37,51 +37,12 @@ public class Driver : MonoSingleton<Driver> {
             data.Y = i;
             data.Z = i;
 
-            server.Send<Vector3DData>((int)HandlerConst.HandlerId.TestHandler, data, SendType.TCP);
+            server.Send<Vector3DData>((int)HandlerConst.HandlerId.TestHandler, data, SendType.UDP);
 
             i++;
 
         }, 1, -1);
 
-        
-        //tcpSocket.onReceive += new TcpSocketReceiveDelegate(TestReveive);
-        //tcpSocket.onSend += new TcpSocketSendDelegate(TestSend);
-        //tcpSocket.Connect("127.0.0.1", 9988);
-
-        //tcpSocket.BeginReceive();
-        //int i = 0;
-        //CoroutineTaskManager.Instance.LoopTodoByTime(() =>
-        //{
-        //    i++;
-        //    Vector3DData data = new Vector3DData();
-        //    data.X = i;
-        //    data.Y = i;
-        //    data.Z = i;
-        //    Package pkg = Package.MakePakage<Vector3DData>(1, data);
-
-        //    tcpSocket.Send(pkg.totalData);
-        //}, 0.01f, -1);
-
-
-        //tcpSocket1.onReceive += new TcpSocketReceiveDelegate(TestReveive);
-        //tcpSocket1.onSend += new TcpSocketSendDelegate(TestSend);
-        //tcpSocket1.Connect("127.0.0.1", 9988);
-
-        //tcpSocket1.BeginReceive();
-        //int i1 = 0;
-        //CoroutineTaskManager.Instance.LoopTodoByTime(() =>
-        //{
-        //    i1++;
-        //    //TestProtobuf data = new TestProtobuf() { testData = 1, testString = "asdasd" };
-        //    Vector3DData data = new Vector3DData();
-        //    data.X = i1;
-        //    data.Y = i1;
-        //    data.Z = i1;
-
-        //    Package pkg = Package.MakePakage<Vector3DData>(1, data);
-
-        //    tcpSocket1.Send(pkg.totalData);
-        //}, 0.02f, -1);
 
     }
     // Use this for initialization
@@ -91,7 +52,7 @@ public class Driver : MonoSingleton<Driver> {
 
     void OnDestroy()
     {
-        server.Disconnect();
+        //server.Disconnect();
     }
 
     public void TestReveive(int len, byte[] bytes)
