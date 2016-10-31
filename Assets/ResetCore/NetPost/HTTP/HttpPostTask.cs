@@ -6,7 +6,7 @@ using System;
 
 namespace ResetCore.NetPost
 {
-    public abstract class NetPostTask
+    public abstract class HttpPostTask
     {
 
         public Dictionary<string, object> taskParams { get; private set; }
@@ -16,12 +16,12 @@ namespace ResetCore.NetPost
 
         private Action afterAct;
 
-        public abstract string taskId
+        public abstract int taskId
         {
             get;
         }
 
-        public NetPostTask(Dictionary<string, object> taskParams, Action<JsonData> finishCall = null, Action<float> progressCall = null)
+        public HttpPostTask(Dictionary<string, object> taskParams, Action<JsonData> finishCall = null, Action<float> progressCall = null)
         {
             this.taskParams = taskParams;
 
@@ -57,7 +57,7 @@ namespace ResetCore.NetPost
         {
             OnStart();
             this.afterAct = afterAct;
-            HttpProxy.Instance.AsynDownloadJsonData(PathConfig.NetPostURL, postJsonData, finishCall, progressCall);
+            HttpProxy.Instance.AsynDownloadJsonData(PathConfig.HttpNetPostURL, postJsonData, finishCall, progressCall);
         }
 
         protected virtual void OnStart()

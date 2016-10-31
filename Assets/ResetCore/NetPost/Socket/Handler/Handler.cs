@@ -8,6 +8,11 @@ namespace ResetCore.NetPost
     {
         protected abstract void Handle(Package package, Action act = null);
 
+        /// <summary>
+        /// 处理包行为，分配给相应的Handler
+        /// </summary>
+        /// <param name="package"></param>
+        /// <param name="act"></param>
         public static void HandlePackage(Package package, Action act = null)
         {
             HandlerConst.HandlerId id = EnumEx.GetValue<HandlerConst.HandlerId>(package.eventId);

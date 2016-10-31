@@ -4,9 +4,9 @@ using System.Collections;
 namespace ResetCore.NetPost
 {
 
-    public class TaskId
+    public enum TaskId
     {
-        public static readonly string TEST_TASK = "TestTaskId";
+        TEST_TASK = 1
     }
 
 }

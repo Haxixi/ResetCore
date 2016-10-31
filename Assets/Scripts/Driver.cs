@@ -26,23 +26,27 @@ public class Driver : MonoSingleton<Driver> {
     BaseServer server;
     void Awake()
     {
-        server = new BaseServer();
-        server.Connect("127.0.0.1", 9000, 9051, 10000, true);
+        //server = new BaseServer();
+        //server.Connect("127.0.0.1", 9000, 9051, 10000, true);
 
-        int i = 0;
-        CoroutineTaskManager.Instance.LoopTodoByTime(() =>
-        {
-            Vector3DData data = new Vector3DData();
-            data.X = i;
-            data.Y = i;
-            data.Z = i;
+        //int i = 0;
+        //CoroutineTaskManager.Instance.LoopTodoByTime(() =>
+        //{
+        //    Vector3DData data = new Vector3DData();
+        //    data.X = i;
+        //    data.Y = i;
+        //    data.Z = i;
 
-            server.Send<Vector3DData>((int)HandlerConst.HandlerId.TestHandler, data, SendType.UDP);
+        //    server.Send<Vector3DData>((int)HandlerConst.HandlerId.TestHandler, data, SendType.UDP);
 
-            i++;
+        //    i++;
 
-        }, 1, -1);
+        //}, 1, -1);
 
+        //HttpTaskDispatcher.AddNetPostTask(new ExampleNetTask(new Dictionary<string, object>()
+        //{
+        //    {"test", 1 }
+        //}));
 
     }
     // Use this for initialization

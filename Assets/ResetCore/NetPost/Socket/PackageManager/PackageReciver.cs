@@ -35,8 +35,6 @@ namespace ResetCore.NetPost
             do
             {
                 int packSize = GetDataLength(packetBuffer);
-                Debug.Log("接受到包长度为" + len);
-                Debug.Log("解析长度为" + packSize);
                 if(packSize == 0)
                 {
                     break;

@@ -6,7 +6,7 @@ using LitJson;
 
 namespace ResetCore.NetPost
 {
-    public class ExampleNetTask : NetPostTask
+    public class ExampleNetTask : HttpPostTask
     {
 
         public ExampleNetTask(Dictionary<string, object> taskParams, Action<JsonData> finishCall = null, Action<float> progressCall = null)
@@ -15,9 +15,9 @@ namespace ResetCore.NetPost
 
         }
 
-        public override string taskId
+        public override int taskId
         {
-            get { return TaskId.TEST_TASK; }
+            get { return (int)TaskId.TEST_TASK; }
         }
 
         protected override void OnStart()

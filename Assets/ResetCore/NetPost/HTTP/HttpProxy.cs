@@ -29,7 +29,6 @@ namespace ResetCore.NetPost
             PrintJson(json);
         }
 
-
         #region 私有函数
         private static void PrintJson(string json)
         {

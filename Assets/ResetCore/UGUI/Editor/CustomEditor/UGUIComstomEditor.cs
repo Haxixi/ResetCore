@@ -11,6 +11,7 @@ namespace ResetCore.UGUI
     [CustomEditor(typeof(BaseUI), true)]
     public class UGUIComstomEditor : Editor
     {
+        UIScriptGener scriptGener = new UIScriptGener();
 
         public override void OnInspectorGUI()
         {
@@ -18,6 +19,7 @@ namespace ResetCore.UGUI
 
             ShowInfo();
             CheckPrefab();
+            ShowGenScript();
             base.OnInspectorGUI();
         }
 
@@ -127,6 +129,14 @@ namespace ResetCore.UGUI
                     }
                    
                 }
+            }
+        }
+
+        private void ShowGenScript()
+        {
+            if(GUILayout.Button("Create Script"))
+            {
+                scriptGener.GenScript((BaseUI)target);
             }
         }
     }
