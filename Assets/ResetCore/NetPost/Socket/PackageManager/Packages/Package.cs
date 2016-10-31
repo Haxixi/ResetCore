@@ -6,6 +6,14 @@ using ResetCore.Protobuf;
 
 namespace ResetCore.NetPost
 {
+    /// <summary>
+    /// 包结构为三段式
+    /// -----------------------------
+    /// 包头（长度信息）：4字节
+    /// 包Id（HandlerId）：4字节
+    /// 包内容（Protobuf）：剩余长度
+    /// -----------------------------
+    /// </summary>
     public class Package
     {
         //处理Id
@@ -43,9 +51,14 @@ namespace ResetCore.NetPost
             pkg.data = ProtoEx.Serialize<T>(value);
 
             pkg.dataLength = pkg.data.Length;
-            pkg.totalLength = pkg.dataLength + headLength + idLength;
+            pkg.totalLength = pkg.dataLength + idLength + headLength;
 
             byte[] lengthData = BitConverter.GetBytes(pkg.totalLength);
+
+            if (BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(lengthData);
+            }
             byte[] eventIdData = BitConverter.GetBytes(pkg.eventId);
 
             pkg.totalData = lengthData.Concat(eventIdData).Concat(pkg.data);
@@ -75,19 +88,6 @@ namespace ResetCore.NetPost
             return pkg;
         }
 
-        /// <summary>
-        /// 获取包长度
-        /// </summary>
-        /// <returns></returns>
-        public int GetLength()
-        {
-            var lengthBytes = totalData.SubArray(0, 4);
-
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(lengthBytes);
-            
-            return BitConverter.ToInt32(lengthBytes, 0);
-        }
     }
 }
 

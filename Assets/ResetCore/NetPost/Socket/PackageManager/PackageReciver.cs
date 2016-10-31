@@ -35,7 +35,8 @@ namespace ResetCore.NetPost
             do
             {
                 int packSize = GetDataLength(packetBuffer);
-
+                Debug.Log("接受到包长度为" + len);
+                Debug.Log("解析长度为" + packSize);
                 if(packSize == 0)
                 {
                     break;
@@ -90,8 +91,8 @@ namespace ResetCore.NetPost
                 return 0;
 
             byte[] lengthByte = data.SubArray(0, 4);
-            //if (BitConverter.IsLittleEndian)
-            //    Array.Reverse(lengthByte);
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(lengthByte);
             int length = BitConverter.ToInt32(lengthByte, 0);
 
             return length;

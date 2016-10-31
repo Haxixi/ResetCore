@@ -47,8 +47,13 @@ namespace ResetCore.NetPost
         //行为队列
         private ActionQueue handleQueue = new ActionQueue();
 
+        //是否已经连接
+        public bool isConnect { get; private set; }
+
         public BaseServer()
         {
+            isConnect = false;
+
             tcpSocket.onCloseSocket += new TcpSocketCloseSocketDelegate(TcpOnCloseSocket);
             tcpSocket.onConnect += new TcpSocketConnectDelegate(TcpOnConnect);
             tcpSocket.onError += new TcpSocketErrorDelegate(TcpOnError);
@@ -61,8 +66,7 @@ namespace ResetCore.NetPost
             udpSocket.onListen += new UdpSocketListenDelegate(UdpOnListen);
             udpSocket.onReceive += new UdpSocketReceiveDelegate(UdpOnReceive);
 
-            CoroutineTaskManager.Instance.LoopTodoByWhile(tcpReciver.HandlePackageInQueue, 0.1f, () => !tcpReciver.Equals(null));
-            CoroutineTaskManager.Instance.LoopTodoByWhile(udpReciver.HandlePackageInQueue, 0.1f, () => !udpReciver.Equals(null));
+            
         }
 
         #region 服务器公开行为
@@ -77,6 +81,7 @@ namespace ResetCore.NetPost
         public void Connect(string remoteAddress, int remoteTcpPort
             , int remoteUdpPort, int localUdpPort, bool autoRebind = true)
         {
+            isConnect = true;
             bool bindSuccess = 
                 udpSocket.BindRemoteEndPoint(remoteAddress, remoteUdpPort, localUdpPort, autoRebind);
             bool beginReceive = udpSocket.BeginReceive();
@@ -89,6 +94,8 @@ namespace ResetCore.NetPost
             {
                 Debug.LogError("Udp连接失败！");
             }
+            CoroutineTaskManager.Instance.LoopTodoByWhile(tcpReciver.HandlePackageInQueue, 0.1f, ()=> { return isConnect; });
+            CoroutineTaskManager.Instance.LoopTodoByWhile(udpReciver.HandlePackageInQueue, 0.1f, () => { return isConnect; });
         }
 
         /// <summary>
@@ -103,12 +110,10 @@ namespace ResetCore.NetPost
             Package pkg = Package.MakePakage<T>(eventId, value);
             if (sendType == SendType.TCP)
             {
-                //TODO
                 tcpSocket.Send(pkg.totalData);
             }
             else
             {
-                //TODO
                 udpSocket.Send(pkg.totalData, pkg.totalLength);
             }
         }
@@ -118,6 +123,7 @@ namespace ResetCore.NetPost
         /// </summary>
         public void Disconnect()
         {
+            isConnect = false;
             tcpSocket.Disconnect();
             udpSocket.Stop();
 
