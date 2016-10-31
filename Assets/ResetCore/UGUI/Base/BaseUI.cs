@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace ResetCore.UGUI
 {
-    public abstract class ShowUIArg{}
+    public abstract class ShowUIArg { }
 
     public abstract class BaseUI : MonoBehaviour
     {
@@ -24,13 +24,18 @@ namespace ResetCore.UGUI
 
         protected virtual void Start() { }
 
-        public virtual void Init(ShowUIArg arg) 
+        public virtual void Init(ShowUIArg arg)
         {
             if (arg == null) return;
         }
         protected virtual void Update() { }
 
         protected virtual void OnDisable() { }
+
+        public virtual void Show(System.Action afterAct = null)
+        {
+            gameObject.SetActive(true);
+        }
 
         public virtual void Hide(System.Action afterAct = null)
         {

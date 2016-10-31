@@ -11,7 +11,7 @@ namespace ResetCore.UGUI
 
     public class UIManager : MonoSingleton<UIManager>
     {
-        
+
 
         void Awake()
         {
@@ -20,7 +20,7 @@ namespace ResetCore.UGUI
 
         void Start()
         {
-            if(Camera.main != null)
+            if (Camera.main != null)
             {
                 Camera.main.gameObject.AddComponent<CameraScale>();
             }
@@ -54,6 +54,7 @@ namespace ResetCore.UGUI
 
         public void ShowUI(UIConst.UIName name, ShowUIArg arg = null, System.Action afterAct = null)
         {
+            BaseUI uiToShow;
             if (uiDic.ContainsKey(name))
             {
                 if (uiDic[name] == null)
@@ -64,18 +65,17 @@ namespace ResetCore.UGUI
                 uiDic[name].gameObject.SetActive(true);
                 uiDic[name].transform.SetAsLastSibling();
                 uiDic[name].Init(arg);
+                uiToShow = uiDic[name];
             }
             else
             {
                 BaseUI newUI = ResourcesLoaderHelper.Instance.LoadAndGetInstance(UIConst.UIPrefabNameDic[name]).GetComponent<BaseUI>();
                 newUI.Init(arg);
                 uiDic.Add(name, newUI);
+                uiToShow = newUI;
             }
 
-            if (afterAct != null)
-            {
-                afterAct();
-            }
+            uiToShow.Show(afterAct);
 
         }
 
@@ -84,10 +84,6 @@ namespace ResetCore.UGUI
             if (uiDic.ContainsKey(name) && uiDic[name] != null)
             {
                 GetUI(name).Hide(afterAct);
-            }
-            if(afterAct != null)
-            {
-                afterAct();
             }
         }
 
