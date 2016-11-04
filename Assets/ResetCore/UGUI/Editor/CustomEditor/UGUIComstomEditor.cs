@@ -17,9 +17,12 @@ namespace ResetCore.UGUI
         {
             if (target == null) return;
 
-            ShowInfo();
-            CheckPrefab();
-            ShowGenScript();
+            if (!EditorApplication.isPlaying)
+            {
+                ShowInfo();
+                CheckPrefab();
+                ShowGenScript();
+            }
             base.OnInspectorGUI();
         }
 

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if MYSQL
+using UnityEngine;
 using System.Collections;
 
 public class SQLWriter : MonoBehaviour {
@@ -13,3 +14,4 @@ public class SQLWriter : MonoBehaviour {
 	
 	}
 }
+#endif

@@ -47,7 +47,12 @@ public class Driver : MonoSingleton<Driver> {
         //{
         //    {"test", 1 }
         //}));
-
+        HttpTaskDispatcher.AddNetPostTask(1, new Dictionary<string, object>()
+        {
+            {"test", 1 },
+            {"test2", "asd" },
+            {"test3", 1.2 }
+        });
     }
     // Use this for initialization
     void Start()

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if MYSQL
+using UnityEngine;
 using System.Collections;
 using ResetCore.Data;
 using System;
@@ -253,3 +254,4 @@ namespace ResetCore.Data
 
     }
 }
+#endif
