@@ -140,6 +140,17 @@ namespace ResetCore.Util
         }
 
         /// <summary>
+        /// 对自身所有的子物体（包括子物体的子物体）
+        /// </summary>
+        /// <param name="tran"></param>
+        /// <param name="todo"></param>
+        public static void DoToSelfAndAllChildren(this Transform tran, System.Action<Transform> todo)
+        {
+            todo(tran);
+            DoToAllChildren(tran, todo, true);
+        }
+
+        /// <summary>
         /// 删除所有子物体
         /// </summary>
         /// <param name="tran"></param>

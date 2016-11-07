@@ -137,7 +137,7 @@ namespace ResetCore.UGUI
 
         private void ShowGenScript()
         {
-            if(GUILayout.Button("Create Script"))
+            if(GUILayout.Button("Create View Script", GUILayout.Height(30)))
             {
                 scriptGener.GenScript((BaseUI)target);
             }

@@ -11,6 +11,8 @@ namespace ResetCore.UGUI
         //存储Prefab的路径
         public static string uiPrefabPath = "UI";
 
+      
+
         public enum UIName
         {
             TestUI,

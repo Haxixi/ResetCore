@@ -1,5 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
+using ResetCore.Util;
+using UnityEngine.UI;
+using System.Text;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace ResetCore.UGUI
 {
@@ -14,6 +20,8 @@ namespace ResetCore.UGUI
         {
             return component.GetType().Assembly.GetName().Name != "UnityEngine.UI";
         }
+
+        
     }
 
 }

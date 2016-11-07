@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using ResetCore.Util;
 using UnityEngine.UI;
 using System.Text;
+using ResetCore.CodeDom;
 
 namespace ResetCore.UGUI
 {
@@ -13,55 +14,38 @@ namespace ResetCore.UGUI
     public class UIScriptGener
     {
 
-        public List<Type> uiCompTypeList = new List<Type>()
-        {
-            typeof(Image),
-            typeof(Button),
-            typeof(Text),
-        };
-
-        private static readonly string genableSign = "g-";
-
-        //根ui名+当前绑定Go名+组件类型
-        private Dictionary<string, Component> componentDict;
+        
         private GameObject rootGo;
+        private Type uiType;
         public void GenScript(BaseUI ui)
         {
-            componentDict = new Dictionary<string, Component>();
             rootGo = ui.gameObject;
-            GetUIComponents(ui.gameObject);
-            Debug.LogError(componentDict.ConverToString());
+            uiType = ui.GetType();
+            string viewClassName = uiType.Name + "View";
+            CodeGener gener = new CodeGener(UIView.uiViewNameSpace, viewClassName);
+            gener.AddBaseType("UIView")
+                .AddImport("ResetCore.UGUI");
+
+            rootGo.transform.DoToSelfAndAllChildren((tran) =>
+            {
+                GameObject go = tran.gameObject;
+                if (!go.name.StartsWith(UIView.genableSign)) return;
+
+                string goName = go.name.Replace(UIView.genableSign, string.Empty);
+                var coms = go.GetComponents<Component>();
+                foreach(var com in coms)
+                {
+                    Type comType = com.GetType();
+                    if (!UIView.uiCompTypeList.Contains(comType)) continue;
+
+                    gener.AddMemberProperty(comType, UIView.comNameDict[comType] + goName);
+                }
+
+            });
+            gener.GenCSharp(PathEx.Combine(Application.dataPath, UIView.uiViewScriptPath));
         }
 
-        //获取所有的UI组件
-        private void GetUIComponents(GameObject go)
-        {
-            var coms = go.GetComponents<Component>();
-            foreach (var com in coms)
-            {
-                Type comType = com.GetType();
-                if (uiCompTypeList.Contains(comType) && com.gameObject.name.StartsWith(genableSign))
-                {
-                    StringBuilder builder = new StringBuilder();
-                    string name = builder.Append(rootGo.name).Append("_")
-                        .Append(com.gameObject.name.Replace("g-", "")).Append("_").Append(comType.Name).ToString();
-                    if (!componentDict.ContainsKey(name))
-                    {
-                        componentDict.Add(name, com);
-                    }else
-                    {
-                        Debug.LogError("重名！" + name);
-                    }
-                }
-            }
-            if(go.transform.childCount > 0)
-            {
-                go.transform.DoToAllChildren((tran) =>
-                {
-                    GetUIComponents(tran.gameObject);
-                });
-            }
-        }
+      
     }
 
 }

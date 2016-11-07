@@ -11,15 +11,13 @@ namespace ResetCore.UGUI
 {
     public class UIView
     {
-        //有效的组件
-        public List<Type> uiCompTypeList = new List<Type>()
-        {
-            typeof(Image),
-            typeof(Button),
-            typeof(Text),
-        };
+        
         //前缀
-        private static readonly string genableSign = "g-";
+        public static readonly string genableSign = "g-";
+        //自定义UIView命名空间
+        public static readonly string uiViewNameSpace = "ResetCore.UGUI.Class";
+        //UIView储存位置
+        public static readonly string uiViewScriptPath = "Scripts/UI/View";
 
         private Dictionary<string, Component> comDict;
 
@@ -27,13 +25,28 @@ namespace ResetCore.UGUI
 
         private Type rootType;
 
+        //有效的组件
+        public static readonly List<Type> uiCompTypeList = new List<Type>()
+        {
+            typeof(Image),
+            typeof(Button),
+            typeof(Text),
+        };
+
+        public static readonly Dictionary<Type, string> comNameDict = new Dictionary<Type, string>()
+        {
+            { typeof(Image), "img" },
+            { typeof(Button), "btn" },
+            { typeof(Text), "txt" },
+        };
+
         //初始化
-        public UIView(MonoBehaviour root)
+        public void Init(MonoBehaviour root)
         {
             rootComponent = root;
             rootType = root.GetType();
             comDict = new Dictionary<string, Component>();
-            GetUIComponents(root.gameObject);
+            GetUIComponents(root);
         }
 
 
@@ -75,54 +88,67 @@ namespace ResetCore.UGUI
                 return null;
             }
         }
+        
 
         /// <summary>
         /// 将必要组件加入
         /// </summary>
         /// <param name="go"></param>
-        private void GetUIComponents(GameObject go)
+        private void GetUIComponents(MonoBehaviour root)
         {
-            var coms = go.GetComponents<Component>();
-            foreach (var com in coms)
+            Type rootType = root.GetType();
+            Type uiViewType = this.GetType();
+
+            root.gameObject.transform.DoToSelfAndAllChildren((tran) =>
             {
-                Type comType = com.GetType();
-                if (uiCompTypeList.Contains(comType) && com.gameObject.name.StartsWith(genableSign))
+                GameObject go = tran.gameObject;
+                var coms = go.GetComponents<Component>();
+                //遍历所有组件
+                foreach (var com in coms)
                 {
-                    string comGoName = com.gameObject.name.Replace("g-", "");
+                    Type comType = com.GetType();
+                    if (uiCompTypeList.Contains(comType) && com.gameObject.name.StartsWith(genableSign))
+                    {
+                        string comGoName = com.gameObject.name.Replace(genableSign, string.Empty);
 
-                    StringBuilder builder = new StringBuilder();
-                    string name = builder.Append(comGoName).Append("_").Append(comType.Name).ToString();
-                    if (!comDict.ContainsKey(name))
-                    {
-                        comDict.Add(name, com);
-                    }
-                    else
-                    {
-                        Debug.LogError("重名！" + name);
-                    }
-
-                    if(com is Button)
-                    {
-                        Button btn = com as Button;
-                        MethodInfo method = rootType.GetMethod("On" + comGoName);
-                        if(method != null)
+                        //加入键值
+                        StringBuilder builder = new StringBuilder();
+                        string name = builder.Append(comNameDict[comType]).Append(comGoName).ToString();
+                        if (!comDict.ContainsKey(name))
                         {
-                            UIEventListener.Get(btn.gameObject).onClick = (btnGo) =>
+                            comDict.Add(name, com);
+                        }
+                        else
+                        {
+                            Debug.LogError("重名！" + name);
+                        }
+
+                        //生成按钮回调
+                        if (com is Button)
+                        {
+                            Button btn = com as Button;
+                            MethodInfo method = rootType.GetMethod("On" + comGoName);
+                            if (method != null)
                             {
-                                method.Invoke(rootComponent, new object[0]);
-                            };
+                                UIEventListener.Get(btn.gameObject).onClick = (btnGo) =>
+                                {
+                                    method.Invoke(rootComponent, new object[0]);
+                                };
+                            }
+                        }
+
+                        //赋予组件值
+                        PropertyInfo prop = uiViewType.GetProperty(name);
+                        if (prop != null)
+                        {
+                            prop.SetValue(this, com, Const.EmptyArg);
                         }
                     }
                 }
-            }
-            if (go.transform.childCount > 0)
-            {
-                go.transform.DoToAllChildren((tran) =>
-                {
-                    GetUIComponents(tran.gameObject);
-                });
-            }
+            });
         }
+
+       
     }
 
 }

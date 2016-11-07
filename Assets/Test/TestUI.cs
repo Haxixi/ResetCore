@@ -3,24 +3,21 @@ using System.Collections;
 using ResetCore.UGUI;
 using UnityEngine.UI;
 using ResetCore.Event;
+using ResetCore.UGUI.Class;
 
 public class TestUI : BaseNormalUI {
 
-    UIView v;
+    TestUIView v = new TestUIView();
 
     protected override void Awake()
     {
         base.Awake();
-        v = new UIView(this);
-
+        v.Init(this);
     }
 
    public void OnTestButton()
     {
-        
-        v.GetUIByName<Text>("Text").text = "HAHAHA";
-
-        
+        v.txtText.text = "HAHAHAH";
     }
 
 }

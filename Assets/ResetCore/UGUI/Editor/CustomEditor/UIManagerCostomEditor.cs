@@ -30,10 +30,15 @@ namespace ResetCore.UGUI
 
             EditorGUILayout.HelpBox("This is UIManager you can Manage all the UIInfo here", MessageType.None);
 
-            if (GUILayout.Button("Open UIConst", GUILayout.Height(50), GUILayout.MaxWidth(300)))
+            if (GUILayout.Button("Open UIConst", GUILayout.Height(50), GUILayout.MaxWidth(200)))
             {
                 Object obj = EditorResources.GetAsset<Object>("UIConst", "ResetCore", "UGUI") as Object;
                 AssetDatabase.OpenAsset(obj);
+            }
+            EditorGUILayout.Space();
+            if (GUILayout.Button("PSD2UGUI", GUILayout.Height(50), GUILayout.MaxWidth(200)))
+            {
+                PSD2UGUI.PsdFile2UGUI();
             }
 
             EditorGUILayout.Space();
