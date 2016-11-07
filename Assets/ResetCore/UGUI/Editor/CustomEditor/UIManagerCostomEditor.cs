@@ -38,7 +38,7 @@ namespace ResetCore.UGUI
             EditorGUILayout.Space();
             if (GUILayout.Button("PSD2UGUI", GUILayout.Height(50), GUILayout.MaxWidth(200)))
             {
-                PSD2UGUI.PsdFile2UGUI();
+                //PSD2UGUI.PsdFile2UGUI();
             }
 
             EditorGUILayout.Space();
