@@ -41,6 +41,17 @@ namespace ResetCore.Event
             this.m_theRouter[eventType] = (Action<T, U, V, W>)Delegate.Combine((Action<T, U, V, W>)this.m_theRouter[eventType], handler);
         }
 
+        //移除某个委托队列
+        public void RemoveEvent(string eventType)
+        {
+            if (m_theRouter.ContainsKey(eventType))
+            {
+                var temp = m_theRouter[eventType];
+                m_theRouter.Remove(eventType);
+                temp = null;
+            }
+        }
+
         public void CleanUp()
         {
             List<string> list = new List<string>();

@@ -104,6 +104,10 @@ namespace ResetCore.Event
             EventDispatcher.TriggerEvent<T>(dataId, value);
         }
 
+        public static void Bind<T>(string eventName, System.Func<T> getter, System.Action<T> setter)
+        {
+
+        }
     }
 
 }

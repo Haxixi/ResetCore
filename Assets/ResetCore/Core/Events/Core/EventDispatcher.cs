@@ -143,6 +143,24 @@ namespace ResetCore.Event
         #endregion //监听器工具
 
         #region 移除监听器
+
+        /// <summary>
+        /// 移除事件
+        /// </summary>
+        /// <param name="eventType"></param>
+        /// <param name="bindObject"></param>
+        public static void RemoveEvent(string eventType, object bindObject = null)
+        {
+            if (bindObject == null)
+            {
+                m_eventController.RemoveEvent(eventType);
+            }
+            else
+            {
+                MonoEventDispatcher.GetMonoController(bindObject).RemoveEvent(eventType);
+            }
+        }
+
         /// <summary>
         /// 移除监听器
         /// </summary>
