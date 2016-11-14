@@ -1,19 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class DeviceManager {
-
-    private Device _currentDevice = null;
-
-    public Device currentDevice
+namespace ResetCore.PlatformHelper
+{
+    public class DeviceManager
     {
-        get
+
+        private Device _currentDevice = null;
+
+        public Device currentDevice
         {
-            if(_currentDevice == null)
+            get
             {
-                _currentDevice = Device.GetDevice();
+                if (_currentDevice == null)
+                {
+                    _currentDevice = Device.GetDevice();
+                }
+                return _currentDevice;
             }
-            return _currentDevice;
         }
     }
+
 }
