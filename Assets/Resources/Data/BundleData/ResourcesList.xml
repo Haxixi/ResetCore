@@ -114,6 +114,36 @@
   <p>Assets/Resources/Sound/SE/SE_Tip2</p>
   <n>PackageList.xml</n>
   <p>Assets/Resources/SpritePacker/PackageList</p>
+  <n>Test-env_Bank.prefab</n>
+  <p>Assets/Resources/SpritePacker/Test/Test-env_Bank</p>
+  <n>Test-env_bg.prefab</n>
+  <p>Assets/Resources/SpritePacker/Test/Test-env_bg</p>
+  <n>Test-env_BigBen.prefab</n>
+  <p>Assets/Resources/SpritePacker/Test/Test-env_BigBen</p>
+  <n>Test-env_Clouds.prefab</n>
+  <p>Assets/Resources/SpritePacker/Test/Test-env_Clouds</p>
+  <n>Test-env_cloudTop.prefab</n>
+  <p>Assets/Resources/SpritePacker/Test/Test-env_cloudTop</p>
+  <n>Test-env_Fog.prefab</n>
+  <p>Assets/Resources/SpritePacker/Test/Test-env_Fog</p>
+  <n>Test-env_Gherkin.prefab</n>
+  <p>Assets/Resources/SpritePacker/Test/Test-env_Gherkin</p>
+  <n>Test-env_PlatformBridge.prefab</n>
+  <p>Assets/Resources/SpritePacker/Test/Test-env_PlatformBridge</p>
+  <n>Test-env_PlatformTop.prefab</n>
+  <p>Assets/Resources/SpritePacker/Test/Test-env_PlatformTop</p>
+  <n>Test-env_PlatformUfo.prefab</n>
+  <p>Assets/Resources/SpritePacker/Test/Test-env_PlatformUfo</p>
+  <n>Test-env_RiverBase.prefab</n>
+  <p>Assets/Resources/SpritePacker/Test/Test-env_RiverBase</p>
+  <n>Test-env_RiverMid.prefab</n>
+  <p>Assets/Resources/SpritePacker/Test/Test-env_RiverMid</p>
+  <n>Test-env_RiverTop.prefab</n>
+  <p>Assets/Resources/SpritePacker/Test/Test-env_RiverTop</p>
+  <n>Test-env_TowerFull.prefab</n>
+  <p>Assets/Resources/SpritePacker/Test/Test-env_TowerFull</p>
+  <n>Test-env_UfoLegs.prefab</n>
+  <p>Assets/Resources/SpritePacker/Test/Test-env_UfoLegs</p>
   <n>Bullet.prefab</n>
   <p>Assets/Resources/TestBehaviorTree/Bullet</p>
   <n>Enemy.prefab</n>

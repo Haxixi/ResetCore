@@ -33,9 +33,17 @@ namespace ResetCore.UGUI
         {
 #if ASSET && !UNITY_EDITOR
             GameObject go = ResourcesLoaderHelper.Instance.LoadResource(packageName + "-" + spriteName) as GameObject;
+            if(go == null)
+            {
+                return null;
+            }
             return go.GetComponent<SpriteRenderer>().sprite;
 #else
             GameObject go = Resources.Load<GameObject>(PathEx.Combine(UIConst.spritePrefabPath, packageName, packageName + "-" + spriteName));
+            if (go == null)
+            {
+                return null;
+            }
             return go.GetComponent<SpriteRenderer>().sprite;
 #endif
         }
@@ -44,9 +52,17 @@ namespace ResetCore.UGUI
         {
 #if ASSET && !UNITY_EDITOR
             GameObject go = ResourcesLoaderHelper.Instance.LoadResource(fullSpriteName) as GameObject;
+            if(go == null)
+            {
+                return null;
+            }
             return go.GetComponent<SpriteRenderer>().sprite;
 #else
             GameObject go = Resources.Load<GameObject>(PathEx.Combine(UIConst.spritePrefabPath, fullSpriteName.Split('-')[0], fullSpriteName));
+            if(go == null)
+            {
+                return null;
+            }
             return go.GetComponent<SpriteRenderer>().sprite;
 #endif
         }

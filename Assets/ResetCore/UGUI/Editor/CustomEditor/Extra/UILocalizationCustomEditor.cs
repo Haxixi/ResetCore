@@ -45,6 +45,18 @@ namespace ResetCore.UGUI
                 Source2Localization.ExportExcelFile();
             }
 
+            if(local.GetComponent<Text>() != null)
+            {
+                if (LanguageManager.GetWord(local.key) != local.GetComponent<Text>().text)
+                {
+                    if (GUILayout.Button("Fix Text"))
+                    {
+                        Fix();
+                    }
+                }
+            }
+            
+
             Array types = Enum.GetValues(typeof(LanguageConst.LanguageType));
             if (local.gameObject.GetComponent<Text>() != null)
             {
@@ -55,7 +67,7 @@ namespace ResetCore.UGUI
                     EditorGUILayout.HelpBox(helpTxt, MessageType.None);
                 }
             }
-            if (local.gameObject.GetComponent<Image>() != null)
+            else if (local.gameObject.GetComponent<Image>() != null)
             {
                 string defSp = LanguageManager.GetWord(local.key, LanguageConst.defaultLanguage);
                 if (!string.IsNullOrEmpty(defSp))
@@ -74,6 +86,49 @@ namespace ResetCore.UGUI
 #else
             EditorGUILayout.HelpBox("You need import \"DATA_GENER\" module to use this function", MessageType.Error);
 #endif
+        }
+
+        private void Fix()
+        {
+            UILocalization local = target as UILocalization;
+            Text txt = local.gameObject.GetComponent<Text>();
+            Image img = local.gameObject.GetComponent<Image>();
+
+            int id;
+            if (string.IsNullOrEmpty(local.key) || int.TryParse(local.key.Substring(1), out id))
+            {
+                local.key = LanguageManager.GetAvalibleKey();
+            }
+
+            if (txt != null)
+            {
+                string key = local.key;
+                
+                if (LanguageManager.TryGetKey(txt.text, out key))
+                {
+                    local.key = key;
+                    return;
+                }
+                else
+                {
+                    LanguageManager.Refresh();
+                    if (!LanguageManager.ContainKey(local.key))
+                    {
+                        LanguageManager.AddNewWord(local.key, txt.text);
+                        AssetDatabase.Refresh();
+                    }
+                    else
+                    {
+                        local.key = "_" + local.key;
+                        Fix();
+                    }
+                    LanguageManager.Refresh();
+                }
+            }
+            else
+            {
+                Debug.logger.LogError("DataGener", "不存在Text");
+            }
         }
 
     }

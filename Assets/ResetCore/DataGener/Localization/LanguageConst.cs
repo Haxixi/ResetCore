@@ -6,7 +6,7 @@ namespace ResetCore.Data
 {
     public class LanguageConst
     {
-        public static readonly LanguageType defaultLanguage = LanguageType.Chinese;
+        public const LanguageType defaultLanguage = LanguageType.Chinese;
 
         public enum LanguageType
         {
