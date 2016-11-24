@@ -80,10 +80,12 @@ namespace ResetCore.NetPost
             
             if (backJsonData.ToJson() == "time")
             {
+                Debug.LogError("超时");
                 return;
             }
             if (backJsonData.ToJson() == "erro")
             {
+                Debug.LogError("错误");
                 return;
             }
         }

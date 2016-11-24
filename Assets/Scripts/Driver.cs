@@ -52,6 +52,9 @@ public class Driver : MonoSingleton<Driver> {
             {"test", 1 },
             {"test2", "asd" },
             {"test3", 1.2 }
+        }, (data) =>
+        {
+            Debug.LogError(data.ToJson());
         });
     }
     // Use this for initialization

@@ -606,47 +606,6 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 100258, guid: 5a3c2b906342a8e45bea052ff69c9b94, type: 2}
-      propertyPath: m_Name
-      value: g-TestButton
-      objectReference: {fileID: 0}
-    - target: {fileID: 123850, guid: 5a3c2b906342a8e45bea052ff69c9b94, type: 2}
-      propertyPath: m_Name
-      value: g-Text
-      objectReference: {fileID: 0}
-    - target: {fileID: 22440170, guid: 5a3c2b906342a8e45bea052ff69c9b94, type: 2}
-      propertyPath: m_AnchoredPosition.y
-      value: -27
-      objectReference: {fileID: 0}
-    - target: {fileID: 22440170, guid: 5a3c2b906342a8e45bea052ff69c9b94, type: 2}
-      propertyPath: m_SizeDelta.y
-      value: 1080
-      objectReference: {fileID: 0}
-    - target: {fileID: 123850, guid: 5a3c2b906342a8e45bea052ff69c9b94, type: 2}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 100258, guid: 5a3c2b906342a8e45bea052ff69c9b94, type: 2}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 164460, guid: 5a3c2b906342a8e45bea052ff69c9b94, type: 2}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11464454, guid: 5a3c2b906342a8e45bea052ff69c9b94, type: 2}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 1d7d574e9e18d2e49afe9a4d6a304c23,
-        type: 3}
-    - target: {fileID: 11464454, guid: 5a3c2b906342a8e45bea052ff69c9b94, type: 2}
-      propertyPath: m_Type
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22440170, guid: 5a3c2b906342a8e45bea052ff69c9b94, type: 2}
-      propertyPath: m_SizeDelta.x
-      value: 1920
-      objectReference: {fileID: 0}
     - target: {fileID: 11448814, guid: 5a3c2b906342a8e45bea052ff69c9b94, type: 2}
       propertyPath: m_Text
       value: Button
@@ -659,22 +618,6 @@ RectTransform:
   m_PrefabParentObject: {fileID: 22406804, guid: 5a3c2b906342a8e45bea052ff69c9b94,
     type: 2}
   m_PrefabInternal: {fileID: 1100769528}
---- !u!1 &1100769530 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 123850, guid: 5a3c2b906342a8e45bea052ff69c9b94, type: 2}
-  m_PrefabInternal: {fileID: 1100769528}
---- !u!114 &1100769531
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1100769530}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d725836a1cd002148bfeaae3e8d927c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  key: _BTN
 --- !u!1 &1176454636
 GameObject:
   m_ObjectHideFlags: 0
