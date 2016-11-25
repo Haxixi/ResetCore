@@ -66,7 +66,8 @@ namespace ResetCore.NetPost
             udpSocket.onListen += new UdpSocketListenDelegate(UdpOnListen);
             udpSocket.onReceive += new UdpSocketReceiveDelegate(UdpOnReceive);
 
-            
+            CoroutineTaskManager.Instance.LoopTodoByWhile(tcpReciver.HandlePackageInQueue, Time.deltaTime, () => { return isConnect; });
+            CoroutineTaskManager.Instance.LoopTodoByWhile(udpReciver.HandlePackageInQueue, Time.deltaTime, () => { return isConnect; });
         }
 
         #region 服务器公开行为
@@ -89,13 +90,13 @@ namespace ResetCore.NetPost
             if(bindSuccess && beginReceive)
             {
                 tcpSocket.Connect(remoteAddress, remoteTcpPort);
+                
             }
             else
             {
                 Debug.LogError("Udp连接失败！");
             }
-            CoroutineTaskManager.Instance.LoopTodoByWhile(tcpReciver.HandlePackageInQueue, 0.1f, ()=> { return isConnect; });
-            CoroutineTaskManager.Instance.LoopTodoByWhile(udpReciver.HandlePackageInQueue, 0.1f, () => { return isConnect; });
+            
         }
 
         /// <summary>
@@ -105,9 +106,9 @@ namespace ResetCore.NetPost
         /// <param name="eventId"></param>
         /// <param name="value"></param>
         /// <param name="sendType"></param>
-        public void Send<T>(int eventId, T value, SendType sendType)
+        public void Send<T>(int eventId, int channelId, T value, SendType sendType)
         {
-            Package pkg = Package.MakePakage<T>(eventId, value);
+            Package pkg = Package.MakePakage<T>(eventId, channelId, value, sendType);
             if (sendType == SendType.TCP)
             {
                 tcpSocket.Send(pkg.totalData);
@@ -152,7 +153,7 @@ namespace ResetCore.NetPost
             EventDispatcher.TriggerEvent<Exception>(ServerEvent.TcpOnConnect, e);
             //Todo
             tcpSocket.BeginReceive();
-            
+            Debug.logger.Log("Tcp Socket已连接");
         }
 
         private void TcpOnError(SocketState state, Exception e = null)
@@ -176,6 +177,7 @@ namespace ResetCore.NetPost
             //Todo
             lock (tcpLockObject)
             {
+                Debug.logger.Log("Tcp Socket接收包，长度为：" + len);
                 tcpReciver.ReceivePackage(len, data);
             }
         }
@@ -192,6 +194,7 @@ namespace ResetCore.NetPost
         {
             EventDispatcher.TriggerEvent<Exception>(ServerEvent.UdpOnBind, e);
             //Todo
+            Debug.logger.Log("Udp Socket已经绑定");
         }
 
         private void UdpOnError(SocketState state, Exception e = null)
@@ -216,6 +219,7 @@ namespace ResetCore.NetPost
             //Todo
             lock (tcpLockObject)
             {
+                Debug.logger.Log("Udp Socket接收包，长度为：" + len);
                 udpReciver.ReceivePackage(len, data);
             }
         }

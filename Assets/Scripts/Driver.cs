@@ -23,39 +23,41 @@ using Vector3D;
 public class Driver : MonoSingleton<Driver> {
 
 
-    BaseServer server;
+    public BaseServer server;
     void Awake()
     {
-        //server = new BaseServer();
-        //server.Connect("127.0.0.1", 9000, 9051, 10000, true);
+        server = new BaseServer();
+        server.Connect(ServerConst.ServerAddress, ServerConst.TcpRemotePort, ServerConst.UdpRemotePort, ServerConst.UdpLocalPort, true);
+        
+        int i = 0;
+        CoroutineTaskManager.Instance.LoopTodoByTime(() =>
+        {
+            Vector3DData data = new Vector3DData();
+            data.X = i;
+            data.Y = i;
+            data.Z = i;
+            Debug.Log("发送");
+            server.Send<Vector3DData>((int)HandlerConst.HandlerId.TestHandler, -1, data, SendType.UDP);
 
-        //int i = 0;
-        //CoroutineTaskManager.Instance.LoopTodoByTime(() =>
-        //{
-        //    Vector3DData data = new Vector3DData();
-        //    data.X = i;
-        //    data.Y = i;
-        //    data.Z = i;
+            i++;
 
-        //    server.Send<Vector3DData>((int)HandlerConst.HandlerId.TestHandler, data, SendType.UDP);
-
-        //    i++;
-
-        //}, 1, -1);
+        }, 1, -1);
 
         //HttpTaskDispatcher.AddNetPostTask(new ExampleNetTask(new Dictionary<string, object>()
         //{
         //    {"test", 1 }
         //}));
-        HttpTaskDispatcher.AddNetPostTask(1, new Dictionary<string, object>()
-        {
-            {"test", 1 },
-            {"test2", "asd" },
-            {"test3", 1.2 }
-        }, (data) =>
-        {
-            Debug.LogError(data.ToJson());
-        });
+
+
+        //HttpTaskDispatcher.AddNetPostTask(1, new Dictionary<string, object>()
+        //{
+        //    {"test", 1 },
+        //    {"test2", "asd" },
+        //    {"test3", 1.2 }
+        //}, (data) =>
+        //{
+        //    Debug.LogError(data.ToJson());
+        //});
     }
     // Use this for initialization
     void Start()

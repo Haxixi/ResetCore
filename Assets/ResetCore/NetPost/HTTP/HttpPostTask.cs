@@ -57,7 +57,7 @@ namespace ResetCore.NetPost
         {
             OnStart();
             this.afterAct = afterAct;
-            HttpProxy.Instance.AsynDownloadJsonData(PathConfig.HttpNetPostURL, postJsonData, finishCall, progressCall);
+            HttpProxy.Instance.AsynDownloadJsonData(ServerConst.HttpNetPostURL, postJsonData, finishCall, progressCall);
         }
 
         protected virtual void OnStart()

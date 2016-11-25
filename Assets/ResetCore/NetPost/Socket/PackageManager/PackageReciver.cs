@@ -41,7 +41,7 @@ namespace ResetCore.NetPost
                 }
 
                 hasCompletePacket = packetBuffer.Length >= packSize;
-
+                
                 if (hasCompletePacket)
                 {
                     byte[] packBytes = ArrayEx.CutHeadByLength(ref packetBuffer, packSize);
@@ -54,12 +54,13 @@ namespace ResetCore.NetPost
 
         public void HandlePackageInQueue()
         {
+
             if (packageList.Count > 0)
             {
-                foreach(var package in packageList)
+                for(int i = 0; i < packageList.Count; i ++)
                 {
                     handleQueue.AddAction((act) => {
-                        Handler.HandlePackage(package, act);
+                        Handler.HandlePackage(packageList[i], act);
                     });
                 }
                 packageList.Clear();
@@ -89,7 +90,7 @@ namespace ResetCore.NetPost
                 return 0;
 
             byte[] lengthByte = data.SubArray(0, 4);
-            if (BitConverter.IsLittleEndian)
+            if (!BitConverter.IsLittleEndian)
                 Array.Reverse(lengthByte);
             int length = BitConverter.ToInt32(lengthByte, 0);
 

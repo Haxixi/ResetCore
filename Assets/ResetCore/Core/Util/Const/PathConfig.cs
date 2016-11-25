@@ -193,16 +193,6 @@ public class PathConfig
 
 #endregion
 
-#region NetPost
-    //http服务器响应url
-    public static readonly string HttpNetPostURL = "127.0.0.1:8000";
-    //Tcp/Udp服务器地址
-    public static readonly string ServerAddress = "127.0.0.1";
-    public static readonly int TcpRemotePort = 9000;
-    public static readonly int UdpRemotePort = 9051;
-    public static readonly int UdpLocalPort = 10000;
-#endregion
-
 #region Lua
     //Lua储存路径
     public static readonly string localLuaDataXmlPath = resourcePath + "Data/Lua/";

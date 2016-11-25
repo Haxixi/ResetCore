@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using ResetCore.Event;
 
 namespace ResetCore.NetPost
 {
@@ -18,12 +19,11 @@ namespace ResetCore.NetPost
             HandlerConst.HandlerId id = EnumEx.GetValue<HandlerConst.HandlerId>(package.eventId);
             if (HandlerConst.handlerDict.ContainsKey(id))
             {
-                HandlerConst.handlerDict[id]
-                .Handle(package, act);
+                HandlerConst.handlerDict[id].Handle(package, act);
             }
             else
             {
-                Debug.LogError("不存在id：" + id.ToString());
+                Debug.logger.LogError("NetPost", "不存在id：" + id.ToString());
             }
             
         }
