@@ -8,6 +8,14 @@ namespace ResetCore.NetPost
 {
     public class PackageReciver
     {
+        /// <summary>
+        /// 当前服务器
+        /// </summary>
+        private BaseServer server;
+        public PackageReciver(BaseServer server)
+        {
+            this.server = server;
+        }
 
         /// <summary>
         /// 包队列
@@ -60,7 +68,7 @@ namespace ResetCore.NetPost
                 for(int i = 0; i < packageList.Count; i ++)
                 {
                     handleQueue.AddAction((act) => {
-                        Handler.HandlePackage(packageList[i], act);
+                        Handler.HandlePackage(server, packageList[i], act);
                     });
                 }
                 packageList.Clear();

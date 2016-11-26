@@ -7,6 +7,15 @@ namespace ResetCore.NetPost
 {
     public abstract class Handler
     {
+        /// <summary>
+        /// 处理服务器
+        /// </summary>
+        protected BaseServer ownerServer;
+        /// <summary>
+        /// 处理函数
+        /// </summary>
+        /// <param name="package"></param>
+        /// <param name="act"></param>
         protected abstract void Handle(Package package, Action act = null);
 
         /// <summary>
@@ -14,11 +23,12 @@ namespace ResetCore.NetPost
         /// </summary>
         /// <param name="package"></param>
         /// <param name="act"></param>
-        public static void HandlePackage(Package package, Action act = null)
+        public static void HandlePackage(BaseServer server, Package package, Action act = null)
         {
             HandlerConst.HandlerId id = EnumEx.GetValue<HandlerConst.HandlerId>(package.eventId);
             if (HandlerConst.handlerDict.ContainsKey(id))
             {
+                HandlerConst.handlerDict[id].ownerServer = server;
                 HandlerConst.handlerDict[id].Handle(package, act);
             }
             else

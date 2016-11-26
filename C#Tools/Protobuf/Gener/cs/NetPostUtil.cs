@@ -14,10 +14,10 @@
 // Generated from: NetPostUtil.proto
 namespace NetPostUtil
 {
-  [global::ProtoBuf.ProtoContract(Name=@"Regist")]
-  public partial class Regist : global::ProtoBuf.IExtensible
+  [global::ProtoBuf.ProtoContract(Name=@"RegistData")]
+  public partial class RegistData : global::ProtoBuf.IExtensible
   {
-    public Regist() {}
+    public RegistData() {}
     
     private string _loginChannel;
     [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"loginChannel", DataFormat = global::ProtoBuf.DataFormat.Default)]

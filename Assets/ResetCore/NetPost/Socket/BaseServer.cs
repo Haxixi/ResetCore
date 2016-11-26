@@ -3,6 +3,8 @@ using System.Collections;
 using System;
 using ResetCore.Event;
 using ResetCore.Util;
+using System.Collections.Generic;
+using NetPostUtil;
 
 namespace ResetCore.NetPost
 {
@@ -35,9 +37,9 @@ namespace ResetCore.NetPost
         private UdpSocket udpSocket = new UdpSocket();
 
         //Tcp包接收器
-        private PackageReciver tcpReciver = new PackageReciver();
+        private PackageReciver tcpReciver;
         //Udp包接收器
-        private PackageReciver udpReciver = new PackageReciver();
+        private PackageReciver udpReciver;
 
         //tcp同步锁
         private object tcpLockObject = new object();
@@ -50,9 +52,18 @@ namespace ResetCore.NetPost
         //是否已经连接
         public bool isConnect { get; private set; }
 
+        CoroutineTaskManager.CoroutineTask tcpReciverTask;
+        CoroutineTaskManager.CoroutineTask udpReciverTask;
+
+        public List<int> currentChannel { get; private set; }
+
         public BaseServer()
         {
+            
             isConnect = false;
+
+            tcpReciver = new PackageReciver(this);
+            udpReciver = new PackageReciver(this);
 
             tcpSocket.onCloseSocket += new TcpSocketCloseSocketDelegate(TcpOnCloseSocket);
             tcpSocket.onConnect += new TcpSocketConnectDelegate(TcpOnConnect);
@@ -66,8 +77,14 @@ namespace ResetCore.NetPost
             udpSocket.onListen += new UdpSocketListenDelegate(UdpOnListen);
             udpSocket.onReceive += new UdpSocketReceiveDelegate(UdpOnReceive);
 
-            CoroutineTaskManager.Instance.LoopTodoByWhile(tcpReciver.HandlePackageInQueue, Time.deltaTime, () => { return isConnect; });
-            CoroutineTaskManager.Instance.LoopTodoByWhile(udpReciver.HandlePackageInQueue, Time.deltaTime, () => { return isConnect; });
+            currentChannel = new List<int>();
+
+            tcpReciverTask =
+                CoroutineTaskManager.Instance.LoopTodoByWhile(tcpReciver.HandlePackageInQueue, Time.deltaTime, () => { return isConnect; });
+            udpReciverTask =
+                CoroutineTaskManager.Instance.LoopTodoByWhile(udpReciver.HandlePackageInQueue, Time.deltaTime, () => { return isConnect; });
+
+
         }
 
         #region 服务器公开行为
@@ -118,29 +135,48 @@ namespace ResetCore.NetPost
                 udpSocket.Send(pkg.totalData, pkg.totalLength);
             }
         }
+        public void Send<T>(HandlerConst.HandlerId eventId, int channelId, T value, SendType sendType)
+        {
+            Send<T>((int)eventId, channelId, value, sendType);
+        }
 
         /// <summary>
         /// 服务器断开连接
         /// </summary>
         public void Disconnect()
         {
+            tcpReciverTask.Stop();
+            udpReciverTask.Stop();
+
             isConnect = false;
             tcpSocket.Disconnect();
             udpSocket.Stop();
 
             tcpReciver.Reset();
             udpReciver.Reset();
+
         }
 
-        private void Update()
+        /// <summary>
+        /// 注册频道
+        /// </summary>
+        /// <param name="loginChannelList">要登入的频道</param>
+        /// <param name="logoutChannelList">要登出的频道</param>
+        public void Regist(List<int> loginChannelList, List<int> logoutChannelList)
         {
+            string loginListStr = loginChannelList.ConverToString();
+            string logoutListStr = loginChannelList.ConverToString();
+            RegistData data = new RegistData();
+            data.LoginChannel = loginListStr;
+            data.LogoutChannel = logoutListStr;
 
+            Send<RegistData>(HandlerConst.HandlerId.RegistChannelHandler, -1, data, SendType.TCP);
         }
 
         #endregion
 
         #region Tcp回调行为
-        
+
         private void TcpOnCloseSocket(CloseType type, SocketState state, Exception e = null)
         {
             EventDispatcher.TriggerEvent<CloseType, SocketState, Exception>
