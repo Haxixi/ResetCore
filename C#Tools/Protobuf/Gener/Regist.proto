@@ -1,4 +1,4 @@
-message Vector3DData {
+message Regist {
 	optional string loginChannel = 1;
 	optional string logoutChannel = 2;
 }
