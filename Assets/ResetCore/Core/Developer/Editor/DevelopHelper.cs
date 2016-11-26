@@ -5,6 +5,7 @@ using UnityEditor;
 using System.Collections;
 using System.IO;
 using ResetCore.Asset;
+using ResetCore.ModuleControl;
 
 public static class DevelopHelper {
 
@@ -36,6 +37,15 @@ public static class DevelopHelper {
     public static void OpenTodoList()
     {
         EditorUtility.OpenWithDefaultApp(PathConfig.ResetCorePath + "TodoList.txt");
+    }
+
+    [MenuItem("Tools/DeveloperTools/Decompress SDK And Tools")]
+    public static void DecompressSDKAndTools()
+    {
+        //将额外工具移至工程目录
+        ModuleControl.MoveToolsToProject();
+        //将SDK移至工程目录备份
+        ModuleControl.MoveSDKToTemp();
     }
 }
 

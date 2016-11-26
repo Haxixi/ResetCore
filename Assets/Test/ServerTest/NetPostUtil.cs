@@ -11,13 +11,13 @@
     
 // Option: light framework (CF/Silverlight) enabled
     
-// Generated from: Regist.proto
-namespace Regist
+// Generated from: NetPostUtil.proto
+namespace NetPostUtil
 {
-  [global::ProtoBuf.ProtoContract(Name=@"Vector3DData")]
-  public partial class Vector3DData : global::ProtoBuf.IExtensible
+  [global::ProtoBuf.ProtoContract(Name=@"Regist")]
+  public partial class Regist : global::ProtoBuf.IExtensible
   {
-    public Vector3DData() {}
+    public Regist() {}
     
     private string _loginChannel;
     [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"loginChannel", DataFormat = global::ProtoBuf.DataFormat.Default)]

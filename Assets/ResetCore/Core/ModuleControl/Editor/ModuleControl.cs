@@ -408,7 +408,7 @@ namespace ResetCore.ModuleControl
         }
 
         //将额外工具解压到工程目录下
-        private static void MoveToolsToProject()
+        public static void MoveToolsToProject()
         {
             if (File.Exists(PathConfig.ExtraToolPathInPackage))
             {
@@ -422,7 +422,7 @@ namespace ResetCore.ModuleControl
         }
 
         //将额外工具解压到工程目录下
-        private static void MoveSDKToTemp()
+        public static void MoveSDKToTemp()
         {
             if (File.Exists(PathConfig.SDKPathInPackage))
             {
