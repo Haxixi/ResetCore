@@ -1,0 +1,4 @@
+message Vector3DData {
+	optional string loginChannel = 1;
+	optional string logoutChannel = 2;
+}
