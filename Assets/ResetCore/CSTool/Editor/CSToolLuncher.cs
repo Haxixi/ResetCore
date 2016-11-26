@@ -4,12 +4,20 @@ using System.Diagnostics;
 
 public class CSToolLuncher {
 
+    //执行CSTool
     public static void LaunchCsToolExe(string command)
     {
+        Launch(PathConfig.csToolPath, command);
+    }
 
+    /// <summary>
+    /// 运行指定可执行文件
+    /// </summary>
+    /// <param name="fileName"></param>
+    /// <param name="command"></param>
+    public static void Launch(string fileName, string command)
+    {
         Process myProcess = new Process();
-
-        string fileName = PathConfig.csToolPath;
 
         UnityEngine.Debug.logger.Log(command);
 
@@ -18,6 +26,5 @@ public class CSToolLuncher {
         myProcess.StartInfo = myProcessStartInfo;
 
         myProcess.Start();
-
     }
 }

@@ -138,7 +138,7 @@ namespace ResetCore.ResObject
 #if DATA_GENER
             if (isLocalization)
             {
-                if (LanguageManager.ContainWord(clipName))
+                if (LanguageManager.ContainKey(clipName))
                 {
                     clipName = LanguageManager.GetWord(clipName);
                 }

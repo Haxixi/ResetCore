@@ -11,6 +11,7 @@ namespace ResetCore.NetPost
     /// -----------------------------
     /// 包头（长度信息）：4字节
     /// 包Id（HandlerId）：4字节
+    /// 频道Id（ChannelId）：4字节
     /// 包内容（Protobuf）：剩余长度
     /// -----------------------------
     /// </summary>
@@ -22,11 +23,17 @@ namespace ResetCore.NetPost
         //实际数据长度
         public int dataLength { get; private  set; }
 
+        //频道Id
+        public int channelId { get; private set; }
+
         //抱头长度
         public static readonly int headLength = sizeof(int);
 
         //处理Id
         public static readonly int idLength = sizeof(int);
+
+        //频道Id
+        public static readonly int channelIdLength = sizeof(int);
 
         //实际数据
         public byte[] data { get; private set; }
@@ -44,24 +51,29 @@ namespace ResetCore.NetPost
         /// <param name="id"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static Package MakePakage<T>(int id, T value)
+        public static Package MakePakage<T>(int id, int channelId, T value, SendType sendType)
         {
             Package pkg = new Package();
             pkg.eventId = id;
+            pkg.channelId = channelId;
+
             pkg.data = ProtoEx.Serialize<T>(value);
 
             pkg.dataLength = pkg.data.Length;
-            pkg.totalLength = pkg.dataLength + idLength + headLength;
+            pkg.totalLength = 
+                pkg.dataLength + idLength + headLength + channelIdLength;
 
             byte[] lengthData = BitConverter.GetBytes(pkg.totalLength);
 
-            if (BitConverter.IsLittleEndian)
+            if (BitConverter.IsLittleEndian && sendType == SendType.TCP)
             {
                 Array.Reverse(lengthData);
             }
-            byte[] eventIdData = BitConverter.GetBytes(pkg.eventId);
 
-            pkg.totalData = lengthData.Concat(eventIdData).Concat(pkg.data);
+            byte[] eventIdData = BitConverter.GetBytes(pkg.eventId);
+            byte[] channelIdData = BitConverter.GetBytes(pkg.channelId);
+
+            pkg.totalData = lengthData.Concat(eventIdData).Concat(channelIdData).Concat(pkg.data);
             return pkg;
         }
 
@@ -83,7 +95,8 @@ namespace ResetCore.NetPost
             pkg.totalData = data;
             pkg.dataLength = BitConverter.ToInt32(data.SubArray(0, headLength), 0);
             pkg.eventId = BitConverter.ToInt32(data.SubArray(headLength, idLength), 0);
-            pkg.data = data.SubArray(8, data.Length - idLength - headLength);
+            pkg.channelId = BitConverter.ToInt32(data.SubArray(headLength + idLength, channelIdLength), 0);
+            pkg.data = data.SubArray(idLength + headLength + channelIdLength, data.Length - idLength - headLength - channelIdLength);
 
             return pkg;
         }

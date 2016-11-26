@@ -16,6 +16,7 @@ namespace ResetCore.NetPost
         public void AsynDownloadJsonData(string url, JsonData jsonData, Action<JsonData> callback, Action<float> progressAct)
         {
             string json = jsonData.ToJson();
+            PrintJson(json);
 
             WWWForm form = new WWWForm();
 
@@ -25,8 +26,6 @@ namespace ResetCore.NetPost
             byte[] bytes = Encoding.UTF8.GetBytes(json);
             WWW www = new WWW(url, bytes, headers);
             StartCoroutine(WaitForRequest(www, callback, progressAct));
-
-            PrintJson(json);
         }
 
         #region 私有函数
@@ -49,6 +48,7 @@ namespace ResetCore.NetPost
                 Debug.logger.Log("下载中");
                 if (IsTimeout(starttime, timeout))
                 {
+                    Debug.LogError("超时！");
                     HandleTimeout(finishAct);
                     www.Dispose();
                     yield break;
@@ -58,14 +58,15 @@ namespace ResetCore.NetPost
                 yield return www;
 
             }
-
+            Debug.Log(www.text);
             if (www.isDone)
             {
+                
                 if (!string.IsNullOrEmpty(www.error))
                 {
                     HandleError(www, finishAct);
                 }
-                else if (www.error == null)
+                else
                 {
                     HandleFinalWWW(www, finishAct);
                 }
@@ -87,12 +88,12 @@ namespace ResetCore.NetPost
         }
         private static void HandleFinalWWW(WWW www, Action<JsonData> action)
         {
+            Debug.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Debug.Log("GetPackageTask !!! is:  " + www.text);
+            Debug.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
             if (action != null)
             {
-                Debug.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                Debug.Log("GetPackageTask !!! is:  " + www.text);
-                Debug.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-
                 JsonReader reader = new JsonReader(www.text);
                 JsonData data = JsonMapper.ToObject(reader);
                 action(data);

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using ResetCore.Xml;
 using ResetCore.Event;
+using System.Xml.Linq;
 
 namespace ResetCore.Data
 {
@@ -38,7 +39,7 @@ namespace ResetCore.Data
         public static string GetWord(string key, LanguageConst.LanguageType type)
         {
             
-            if (!ContainWord(key, type))
+            if (!ContainKey(key, type))
             {
                 return string.Empty;
             }
@@ -51,14 +52,12 @@ namespace ResetCore.Data
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static bool ContainWord(string key)
+        public static bool ContainKey(string key)
         {
-            return ContainWord(key, currentLanguage);
+            return ContainKey(key, currentLanguage);
         }
-        public static bool ContainWord(string key, LanguageConst.LanguageType type)
+        public static bool ContainKey(string key, LanguageConst.LanguageType type)
         {
-            if (!allLanguageDict.ContainsKey((int)type))
-                return false;
 
             if (!allLanguageDict[(int)type].ContainsKey(key))
             {
@@ -66,6 +65,69 @@ namespace ResetCore.Data
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// 尝试获取单词的键值
+        /// </summary>
+        /// <param name="word"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool TryGetKey(string word, out string key, LanguageConst.LanguageType type = LanguageConst.defaultLanguage)
+        {
+            key = null;
+            foreach (KeyValuePair<string, string> kvp in allLanguageDict[(int)type])
+            {
+                if(word.Trim().Equals(kvp.Value.Trim()))
+                {
+                    key = kvp.Key;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 添加新的字段
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="word"></param>
+        public static void AddNewWord(string key, string word)
+        {
+            XDocument xDoc = XDocument.Load(PathConfig.LanguageDataPath);
+            var lanEles = xDoc.Root.Elements();
+            int i = 1;
+            foreach(XElement lanEle in lanEles)
+            {
+                lanEle.Add(new XElement(key, word));
+                i++;
+            }
+            xDoc.Save(PathConfig.LanguageDataPath);
+
+        }
+
+        /// <summary>
+        /// 获取可用Key
+        /// </summary>
+        /// <returns></returns>
+        public static string GetAvalibleKey()
+        {
+            int key = 1;
+            string keyName;
+            do
+            {
+                keyName = "_" + key;
+                key++;
+            } while (ContainKey(keyName));
+            return keyName;
+        }
+
+        /// <summary>
+        /// 刷新库
+        /// </summary>
+        public static void Refresh()
+        {
+            _allLanguageDict = instance.GetLanguageDict();
         }
 
         /// <summary>
@@ -88,7 +150,6 @@ namespace ResetCore.Data
             }
             return result;
         }
-
 
     }
 

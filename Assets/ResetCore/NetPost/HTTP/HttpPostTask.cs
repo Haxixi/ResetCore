@@ -57,7 +57,7 @@ namespace ResetCore.NetPost
         {
             OnStart();
             this.afterAct = afterAct;
-            HttpProxy.Instance.AsynDownloadJsonData(PathConfig.HttpNetPostURL, postJsonData, finishCall, progressCall);
+            HttpProxy.Instance.AsynDownloadJsonData(ServerConst.HttpNetPostURL, postJsonData, finishCall, progressCall);
         }
 
         protected virtual void OnStart()
@@ -80,10 +80,12 @@ namespace ResetCore.NetPost
             
             if (backJsonData.ToJson() == "time")
             {
+                Debug.LogError("超时");
                 return;
             }
             if (backJsonData.ToJson() == "erro")
             {
+                Debug.LogError("错误");
                 return;
             }
         }

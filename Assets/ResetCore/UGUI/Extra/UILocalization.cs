@@ -18,14 +18,9 @@ namespace ResetCore.UGUI
         private string textToShow;
         public string val
         {
-            get
-            {
-                return textToShow;
-            }
             set
             {
 #if DATA_GENER
-                if (string.IsNullOrEmpty(value)) return;
 
                 key = value;
                 textToShow = LanguageManager.GetWord(key);
@@ -39,7 +34,11 @@ namespace ResetCore.UGUI
                 {
                    //命名要求为： 包名-sprite名
                     if (string.IsNullOrEmpty(textToShow)) return;
-                   image.sprite = SpriteHelper.GetSpriteByFullName(textToShow);
+                    Sprite spr = SpriteHelper.GetSpriteByFullName(textToShow);
+                    if(spr != null)
+                    {
+                        image.sprite = spr;
+                    }
                 }
 #else
                 key = value;
