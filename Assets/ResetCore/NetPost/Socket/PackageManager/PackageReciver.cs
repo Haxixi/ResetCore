@@ -47,7 +47,6 @@ namespace ResetCore.NetPost
                 {
                     break;
                 }
-
                 hasCompletePacket = packetBuffer.Length >= packSize;
                 
                 if (hasCompletePacket)
@@ -62,7 +61,6 @@ namespace ResetCore.NetPost
 
         public void HandlePackageInQueue()
         {
-
             if (packageList.Count > 0)
             {
                 for(int i = 0; i < packageList.Count; i ++)

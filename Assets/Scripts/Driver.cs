@@ -12,7 +12,6 @@ using ResetCore.Data.GameDatas.Obj;
 using ResetCore.UGUI;
 using ResetCore.Data.GameDatas.Xml;
 using ResetCore.Event;
-using ResetCore.MySQL;
 using ResetCore.NetPost;
 using ResetCore.Protobuf;
 using System;
@@ -28,20 +27,20 @@ public class Driver : MonoSingleton<Driver> {
     {
         server = new BaseServer();
         server.Connect(ServerConst.ServerAddress, ServerConst.TcpRemotePort, ServerConst.UdpRemotePort, ServerConst.UdpLocalPort, true);
-        
-        int i = 0;
-        CoroutineTaskManager.Instance.LoopTodoByTime(() =>
-        {
-            Vector3DData data = new Vector3DData();
-            data.X = i;
-            data.Y = i;
-            data.Z = i;
-            Debug.Log("发送");
-            server.Send<Vector3DData>((int)HandlerConst.HandlerId.TestHandler, -1, data, SendType.UDP);
+        server.Regist(new List<int> { 1 }, new List<int>());
+        //int i = 0;
+        //CoroutineTaskManager.Instance.LoopTodoByTime(() =>
+        //{
+        //    Vector3DData data = new Vector3DData();
+        //    data.X = i;
+        //    data.Y = i;
+        //    data.Z = i;
+        //    Debug.Log("发送");
+        //    server.Send<Vector3DData>((int)HandlerConst.HandlerId.TestHandler, 1, data, SendType.TCP);
 
-            i++;
+        //    i++;
 
-        }, 1, -1);
+        //}, 1, -1);
 
         //HttpTaskDispatcher.AddNetPostTask(new ExampleNetTask(new Dictionary<string, object>()
         //{

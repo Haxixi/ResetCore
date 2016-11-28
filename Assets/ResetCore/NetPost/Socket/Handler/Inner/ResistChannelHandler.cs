@@ -16,20 +16,29 @@ namespace ResetCore.NetPost
             var loginChannel = data.LoginChannel.GetValue<List<int>>();
             var logoutChannel = data.LogoutChannel.GetValue<List<int>>();
 
-            loginChannel.ForEach((channelId) => {
-                if (!ownerServer.currentChannel.Contains(channelId))
+            if (loginChannel != null)
+            {
+                loginChannel.ForEach((channelId) =>
                 {
-                    ownerServer.currentChannel.Add(channelId);
-                }
-            });
+                    if (!ownerServer.currentChannel.Contains(channelId))
+                    {
+                        ownerServer.currentChannel.Add(channelId);
+                    }
+                });
+            }
 
-            logoutChannel.ForEach((channelId) => {
-                if (ownerServer.currentChannel.Contains(channelId))
+            if(logoutChannel != null)
+            {
+                logoutChannel.ForEach((channelId) =>
                 {
-                    ownerServer.currentChannel.Remove(channelId);
-                }
-            });
-
+                    if (ownerServer.currentChannel.Contains(channelId))
+                    {
+                        ownerServer.currentChannel.Remove(channelId);
+                    }
+                });
+            }
+            
+            Debug.logger.Log("频道注册成功");
         }
     }
 }

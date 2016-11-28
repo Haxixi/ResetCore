@@ -35,7 +35,9 @@ namespace ResetCore.NetPost
             {
                 Debug.logger.LogError("NetPost", "不存在id：" + id.ToString());
             }
-            
+			if (act != null) {
+				act ();
+			}
         }
 
     }

@@ -16,7 +16,8 @@ namespace ResetCore.NetPost
 
         public static Dictionary<HandlerId, Handler> handlerDict = new Dictionary<HandlerId, Handler>()
         {
-            {HandlerId.TestHandler, new TestHandler()}
+            {HandlerId.TestHandler, new TestHandler()},
+            {HandlerId.RegistChannelHandler, new ResistChannelHandler()},
         };
     }
 
