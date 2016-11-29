@@ -8,10 +8,11 @@ namespace ResetCore.NetPost
 {
     public class NetBehavior : MonoBehaviour
     {
+        public int instanceId { get; private set; }
 
         public virtual void Awake()
         {
-
+            instanceId = gameObject.GetInstanceID();
         }
 
         public virtual void Start()
