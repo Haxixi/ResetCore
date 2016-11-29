@@ -165,7 +165,7 @@ namespace ResetCore.NetPost
         public void Regist(List<int> loginChannelList, List<int> logoutChannelList)
         {
             string loginListStr = loginChannelList.ConverToString();
-            string logoutListStr = loginChannelList.ConverToString();
+            string logoutListStr = logoutChannelList.ConverToString();
             RegistData data = new RegistData();
             data.LoginChannel = loginListStr;
             data.LogoutChannel = logoutListStr;

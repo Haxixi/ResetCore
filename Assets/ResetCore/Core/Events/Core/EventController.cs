@@ -8,6 +8,9 @@ namespace ResetCore.Event
 {
     public class EventController
     {
+        /// <summary>
+        /// 不变事件不会被清除
+        /// </summary>
         private List<string> m_permanentEvents = new List<string>();
         private Dictionary<string, Delegate> m_theRouter = new Dictionary<string, Delegate>();
 

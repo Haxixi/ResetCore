@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Data;
-using MySql.Data;
 using System.Collections.Generic;
 using ResetCore.Util;
 

@@ -3,9 +3,9 @@ using System.Collections;
 using ResetCore.Util;
 using MySql.Data.MySqlClient;
 using MySql.Data;
-using System.Data;
 using System.Collections.Generic;
 using System;
+using System.Data;
 
 namespace ResetCore.MySQL
 {
