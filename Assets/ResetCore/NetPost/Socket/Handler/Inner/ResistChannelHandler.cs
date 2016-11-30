@@ -37,8 +37,6 @@ namespace ResetCore.NetPost
                     }
                 });
             }
-            
-            Debug.logger.Log("频道注册成功");
         }
     }
 }

@@ -25,6 +25,7 @@ namespace ResetCore.NetPost
         /// <param name="act"></param>
         public static void HandlePackage(BaseServer server, Package package, Action act = null)
         {
+            //触发响应事件（针对有响应的请求）
             HandlerConst.RequestId id = EnumEx.GetValue<HandlerConst.RequestId>(package.eventId);
             if (HandlerConst.handlerDict.ContainsKey(id))
             {
@@ -33,9 +34,10 @@ namespace ResetCore.NetPost
             }
             else
             {
-                Debug.logger.LogError("NetPost", "不存在id：" + id.ToString());
+                Debug.logger.Log("不存在id：" + id.ToString());
             }
-			if (act != null) {
+            EventDispatcher.TriggerEvent<Package>(ServerEvent.GetResponseEvent(package.requestId), package, server);
+            if (act != null) {
 				act ();
 			}
         }

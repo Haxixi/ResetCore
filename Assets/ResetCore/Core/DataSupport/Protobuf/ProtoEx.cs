@@ -84,7 +84,8 @@ namespace ResetCore.Protobuf
             }
             catch (Exception ex)
             {
-                Debug.Log("反序列化失败: " + ex.ToString());
+                Debug.logger.LogException(ex);
+                Debug.logger.LogError("Protobuf", "反序列化失败: " + ex.ToString());
                 return default(T);
             }
         }

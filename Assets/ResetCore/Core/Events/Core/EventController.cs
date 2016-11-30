@@ -211,7 +211,7 @@ namespace ResetCore.Event
                     }
                     catch (Exception exception)
                     {
-                        Debug.logger.LogError(exception.Source, exception.Message);
+                        Debug.logger.LogException(exception);
                     }
                 }
             }
@@ -236,7 +236,7 @@ namespace ResetCore.Event
                     }
                     catch (Exception exception)
                     {
-                        Debug.logger.LogError(exception.Source, exception.Message);
+                        Debug.logger.LogException(exception);
                     }
                 }
             }
@@ -261,7 +261,7 @@ namespace ResetCore.Event
                     }
                     catch (Exception exception)
                     {
-                        Debug.logger.LogError(exception.Source, exception.Message);
+                        Debug.logger.LogException(exception);
                     }
                 }
             }
@@ -286,7 +286,7 @@ namespace ResetCore.Event
                     }
                     catch (Exception exception)
                     {
-                        Debug.logger.LogError(exception.Source, exception.Message);
+                        Debug.logger.LogException(exception);
                     }
                 }
             }
@@ -311,7 +311,7 @@ namespace ResetCore.Event
                     }
                     catch (Exception exception)
                     {
-                        Debug.logger.LogError(exception.Source, exception.Message);
+                        Debug.logger.LogException(exception);
                     }
                 }
             }

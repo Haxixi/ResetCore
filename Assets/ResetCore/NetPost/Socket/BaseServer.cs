@@ -14,7 +14,7 @@ namespace ResetCore.NetPost
         UDP
     }
 
-    public class ServerEvent
+    public static class ServerEvent
     {
         public static readonly string TcpOnCloseSocket = "ServerEvent.TcpOnCloseSocket";
         public static readonly string TcpOnConnect = "ServerEvent.TcpOnConnect";
@@ -27,6 +27,12 @@ namespace ResetCore.NetPost
         public static readonly string UdpOnError = "ServerEvent.UdpOnError";
         public static readonly string UdpOnListen = "ServerEvent.UdpOnListen";
         public static readonly string UdpOnReceive = "ServerEvent.UdpOnReceive";
+
+        //针对回调的请求
+        public static string GetResponseEvent(int requestId)
+        {
+            return "Response" + requestId;
+        }
     }
 
     public class BaseServer
@@ -56,6 +62,9 @@ namespace ResetCore.NetPost
         CoroutineTaskManager.CoroutineTask udpReciverTask;
 
         public List<int> currentChannel { get; private set; }
+
+        //请求回调池
+        public static Dictionary<int, Action<Package>> responseHandlerPool = new Dictionary<int, Action<Package>>();
 
         public BaseServer()
         {
@@ -125,6 +134,11 @@ namespace ResetCore.NetPost
         /// <param name="sendType"></param>
         public void Send<T>(int eventId, int channelId, T value, SendType sendType)
         {
+            if(isConnect == false)
+            {
+                Debug.logger.LogError("NetPost", "服务器未连接");
+                return;
+            }
             Package pkg = Package.MakePakage<T>(eventId, channelId, value, sendType);
             if (sendType == SendType.TCP)
             {
@@ -162,7 +176,7 @@ namespace ResetCore.NetPost
         /// </summary>
         /// <param name="loginChannelList">要登入的频道</param>
         /// <param name="logoutChannelList">要登出的频道</param>
-        public void Regist(List<int> loginChannelList, List<int> logoutChannelList)
+        public void Regist(List<int> loginChannelList, List<int> logoutChannelList, Action<Package> callback = null)
         {
             string loginListStr = loginChannelList.ConverToString();
             string logoutListStr = logoutChannelList.ConverToString();
@@ -170,8 +184,64 @@ namespace ResetCore.NetPost
             data.LoginChannel = loginListStr;
             data.LogoutChannel = logoutListStr;
 
-            Send<RegistData>(HandlerConst.RequestId.RegistChannelHandler, -1, data, SendType.TCP);
+            Request<RegistData>(HandlerConst.RequestId.RegistChannelHandler, -1, data, SendType.TCP, callback);
         }
+
+
+        /// <summary>
+        /// 发送消息并且等待回调
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="eventId"></param>
+        /// <param name="channelId"></param>
+        /// <param name="value"></param>
+        /// <param name="sendType"></param>
+        /// <param name="callBack"></param>
+        public void Request<T>(HandlerConst.RequestId eventId, int channelId, T value, SendType sendType, 
+            Action<Package> callBack, float timeout = 2)
+        {
+            if (isConnect == false)
+            {
+                Debug.logger.LogError("NetPost", "服务器未连接");
+                return;
+            }
+            Package pkg = Package.MakePakage<T>((int)eventId, channelId, value, sendType);
+            if (sendType == SendType.TCP)
+            {
+                tcpSocket.Send(pkg.totalData);
+            }
+            else
+            {
+                udpSocket.Send(pkg.totalData, pkg.totalLength);
+            }
+
+            //如果没有回调函数则直接返回
+            if (callBack == null)
+                return;
+
+            EventDispatcher.AddEventListener<Package>(ServerEvent.GetResponseEvent(pkg.requestId), HandleRequeset, this);
+            responseHandlerPool.Add(pkg.requestId, callBack);
+            //超时检查
+            CoroutineTaskManager.Instance.WaitSecondTodo(() =>
+            {
+                if (responseHandlerPool.ContainsKey(pkg.requestId))
+                {
+                    EventDispatcher.RemoveEventListener<Package>(ServerEvent.GetResponseEvent(pkg.requestId), HandleRequeset, this);
+                    responseHandlerPool.Remove(pkg.requestId);
+                    Debug.logger.LogError("NetPost", "请求超时，请求Id为" + pkg.requestId + " 处理Id为" + EnumEx.GetValue<HandlerConst.RequestId>(pkg.eventId));
+                }
+            }, timeout);
+;        }
+
+        //回调
+        private void HandleRequeset(Package pkg)
+        {
+            EventDispatcher.RemoveEventListener<Package>(ServerEvent.GetResponseEvent(pkg.requestId), HandleRequeset, this);
+            responseHandlerPool[pkg.requestId](pkg);
+            responseHandlerPool.Remove(pkg.requestId);
+        }
+
+       
 
         #endregion
 

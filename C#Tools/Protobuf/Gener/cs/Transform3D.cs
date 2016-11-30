@@ -8,20 +8,37 @@
 //------------------------------------------------------------------------------
 
 // Option: missing-value detection (*Specified/ShouldSerialize*/Reset*) enabled
-
+    
 // Option: light framework (CF/Silverlight) enabled
-
-// Generated from: NetTransform.proto
+    
+// Generated from: Transform3D.proto
 // Note: requires additional types generated from: Vector3D.proto
 namespace Protobuf.Data
 {
-  [global::ProtoBuf.ProtoContract(Name=@"NetTransformData")]
-  public partial class NetTransformData : global::ProtoBuf.IExtensible
+  [global::ProtoBuf.ProtoContract(Name=@"Transform3DData")]
+  public partial class Transform3DData : global::ProtoBuf.IExtensible
   {
-    public NetTransformData() {}
+    public Transform3DData() {}
+    
+    private int? _instanceId;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"instanceId", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int InstanceId
+    {
+      get { return _instanceId?? default(int); }
+      set { _instanceId = value; }
+    }
+    [global::System.Xml.Serialization.XmlIgnore]
+    
+    public bool InstanceIdSpecified
+    {
+      get { return this._instanceId != null; }
+      set { if (value == (this._instanceId== null)) this._instanceId = value ? this.InstanceId : (int?)null; }
+    }
+    private bool ShouldSerializeInstanceId() { return InstanceIdSpecified; }
+    private void ResetInstanceId() { InstanceIdSpecified = false; }
     
     private Vector3DData _localPosition = null;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"localPosition", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"localPosition", DataFormat = global::ProtoBuf.DataFormat.Default)]
     [global::System.ComponentModel.DefaultValue(null)]
     public Vector3DData LocalPosition
     {
@@ -29,7 +46,7 @@ namespace Protobuf.Data
       set { _localPosition = value; }
     }
     private Vector3DData _localEulerAngle = null;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"localEulerAngle", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"localEulerAngle", DataFormat = global::ProtoBuf.DataFormat.Default)]
     [global::System.ComponentModel.DefaultValue(null)]
     public Vector3DData LocalEulerAngle
     {
@@ -37,7 +54,7 @@ namespace Protobuf.Data
       set { _localEulerAngle = value; }
     }
     private Vector3DData _localScale = null;
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"localScale", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"localScale", DataFormat = global::ProtoBuf.DataFormat.Default)]
     [global::System.ComponentModel.DefaultValue(null)]
     public Vector3DData LocalScale
     {

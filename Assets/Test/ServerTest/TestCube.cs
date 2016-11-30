@@ -3,8 +3,17 @@ using System.Collections;
 using ResetCore.Event;
 using ResetCore.NetPost;
 using Protobuf.Data;
+using System;
 
 public class TestCube : NetBehavior<Vector3DData> {
+
+    public override HandlerConst.RequestId handlerId
+    {
+        get
+        {
+            throw new NotImplementedException();
+        }
+    }
 
     public override void Awake()
     {

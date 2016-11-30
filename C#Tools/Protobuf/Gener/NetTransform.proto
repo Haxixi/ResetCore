@@ -1,6 +1,0 @@
-import "Vector3D.proto";
-message NetTransformData {
-	optional Vector3DData localPosition = 1;
-	optional Vector3DData localEulerAngle = 2;
-	optional Vector3DData localScale = 3;
-}
