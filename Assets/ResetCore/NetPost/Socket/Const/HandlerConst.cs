@@ -8,16 +8,17 @@ namespace ResetCore.NetPost
     public static class HandlerConst
     {
 
-        public enum HandlerId
+        public enum RequestId
         {
             TestHandler = 1,
-            RegistChannelHandler = 2
+            RegistChannelHandler = 2,
+            NetObjectJoinUpHandler = 3,
         }
 
-        public static Dictionary<HandlerId, Handler> handlerDict = new Dictionary<HandlerId, Handler>()
+        public static Dictionary<RequestId, Handler> handlerDict = new Dictionary<RequestId, Handler>()
         {
-            {HandlerId.TestHandler, new TestHandler()},
-            {HandlerId.RegistChannelHandler, new ResistChannelHandler()},
+            {RequestId.TestHandler, new TestHandler()},
+            {RequestId.RegistChannelHandler, new ResistChannelHandler()},
         };
     }
 

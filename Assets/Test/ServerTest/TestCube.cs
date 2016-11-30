@@ -2,21 +2,23 @@
 using System.Collections;
 using ResetCore.Event;
 using ResetCore.NetPost;
+using Protobuf.Data;
 
-public class TestCube : MonoBehaviour {
+public class TestCube : NetBehavior<Vector3DData> {
 
-    void Awake()
+    public override void Awake()
     {
-        EventDispatcher.AddEventListener<Vector3D.Vector3DData>("TestHandler", HandlePosition);
+        base.Awake();
+        EventDispatcher.AddEventListener<Vector3DData>("TestHandler", HandlePosition);
     }
 
-	// Use this for initialization
-	void Start () {
-	
+    // Use this for initialization
+    public override void Start () {
+        base.Start();
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    public override void Update () {
         Control();
 
     }
@@ -28,57 +30,57 @@ public class TestCube : MonoBehaviour {
             //transform.position = transform.position + new Vector3(-0.1f, 0, 0);
 
             Vector3 newPos = transform.position + new Vector3(-0.1f, 0, 0);
-            Vector3D.Vector3DData vector = new Vector3D.Vector3DData();
+            Vector3DData vector = new Vector3DData();
             vector.X = newPos.x;
             vector.Y = newPos.y;
             vector.Z = newPos.z;
-            Driver.Instance.server.Send<Vector3D.Vector3DData>
-                ((int)HandlerConst.HandlerId.TestHandler, 1, vector, SendType.TCP);
+            NetSceneManager.Instance.currentServer.Send<Vector3DData>
+                ((int)HandlerConst.RequestId.TestHandler, 1, vector, SendType.TCP);
         }
         else if (Input.GetKey(KeyCode.D))
         {
             //transform.position = transform.position + new Vector3(0.1f, 0, 0);
 
             Vector3 newPos = transform.position + new Vector3(0.1f, 0, 0);
-            Vector3D.Vector3DData vector = new Vector3D.Vector3DData();
+            Vector3DData vector = new Vector3DData();
             vector.X = newPos.x;
             vector.Y = newPos.y;
             vector.Z = newPos.z;
-            Driver.Instance.server.Send<Vector3D.Vector3DData>
-                ((int)HandlerConst.HandlerId.TestHandler, 1, vector, SendType.TCP);
+            NetSceneManager.Instance.currentServer.Send<Vector3DData>
+                ((int)HandlerConst.RequestId.TestHandler, 1, vector, SendType.TCP);
         }
         else if (Input.GetKey(KeyCode.W))
         {
             //transform.position = transform.position + new Vector3(0, 0.1f, 0);
 
             Vector3 newPos = transform.position + new Vector3(0, 0.1f, 0);
-            Vector3D.Vector3DData vector = new Vector3D.Vector3DData();
+            Vector3DData vector = new Vector3DData();
             vector.X = newPos.x;
             vector.Y = newPos.y;
             vector.Z = newPos.z;
-            Driver.Instance.server.Send<Vector3D.Vector3DData>
-                ((int)HandlerConst.HandlerId.TestHandler, 1, vector, SendType.TCP);
+            NetSceneManager.Instance.currentServer.Send<Vector3DData>
+                ((int)HandlerConst.RequestId.TestHandler, 1, vector, SendType.TCP);
         }
         else if (Input.GetKey(KeyCode.S))
         {
             //transform.position = transform.position + new Vector3(0, -0.1f, 0);
 
             Vector3 newPos = transform.position + new Vector3(0, -0.1f, 0);
-            Vector3D.Vector3DData vector = new Vector3D.Vector3DData();
+            Vector3DData vector = new Vector3DData();
             vector.X = newPos.x;
             vector.Y = newPos.y;
             vector.Z = newPos.z;
-            Driver.Instance.server.Send<Vector3D.Vector3DData>
-                ((int)HandlerConst.HandlerId.TestHandler, 1, vector, SendType.TCP);
+            NetSceneManager.Instance.currentServer.Send<Vector3DData>
+                ((int)HandlerConst.RequestId.TestHandler, 1, vector, SendType.TCP);
         }
     }
 
-    void OnDestroy()
+    public override void OnDestroy()
     {
-        EventDispatcher.RemoveEventListener<Vector3D.Vector3DData>("TestHandler", HandlePosition);
+        EventDispatcher.RemoveEventListener<Vector3DData>("TestHandler", HandlePosition);
     }
 
-    void HandlePosition(Vector3D.Vector3DData vector)
+    void HandlePosition(Vector3DData vector)
     {
         Vector3 res = new Vector3(vector.X, vector.Y, vector.Z);
         if (transform.position != res)

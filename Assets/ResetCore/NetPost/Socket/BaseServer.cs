@@ -4,7 +4,7 @@ using System;
 using ResetCore.Event;
 using ResetCore.Util;
 using System.Collections.Generic;
-using NetPostUtil;
+using Protobuf.Data;
 
 namespace ResetCore.NetPost
 {
@@ -135,7 +135,7 @@ namespace ResetCore.NetPost
                 udpSocket.Send(pkg.totalData, pkg.totalLength);
             }
         }
-        public void Send<T>(HandlerConst.HandlerId eventId, int channelId, T value, SendType sendType)
+        public void Send<T>(HandlerConst.RequestId eventId, int channelId, T value, SendType sendType)
         {
             Send<T>((int)eventId, channelId, value, sendType);
         }
@@ -170,7 +170,7 @@ namespace ResetCore.NetPost
             data.LoginChannel = loginListStr;
             data.LogoutChannel = logoutListStr;
 
-            Send<RegistData>(HandlerConst.HandlerId.RegistChannelHandler, -1, data, SendType.TCP);
+            Send<RegistData>(HandlerConst.RequestId.RegistChannelHandler, -1, data, SendType.TCP);
         }
 
         #endregion

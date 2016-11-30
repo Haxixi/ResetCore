@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
-using NetPostUtil;
 using ResetCore.Util;
 using System.Collections.Generic;
+using Protobuf.Data;
 
 namespace ResetCore.NetPost
 {

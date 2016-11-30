@@ -8,11 +8,11 @@
 //------------------------------------------------------------------------------
 
 // Option: missing-value detection (*Specified/ShouldSerialize*/Reset*) enabled
-    
+
 // Option: light framework (CF/Silverlight) enabled
-    
+
 // Generated from: NetPostUtil.proto
-namespace NetPostUtil
+namespace Protobuf.Data
 {
   [global::ProtoBuf.ProtoContract(Name=@"RegistData")]
   public partial class RegistData : global::ProtoBuf.IExtensible

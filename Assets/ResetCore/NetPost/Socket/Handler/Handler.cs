@@ -25,7 +25,7 @@ namespace ResetCore.NetPost
         /// <param name="act"></param>
         public static void HandlePackage(BaseServer server, Package package, Action act = null)
         {
-            HandlerConst.HandlerId id = EnumEx.GetValue<HandlerConst.HandlerId>(package.eventId);
+            HandlerConst.RequestId id = EnumEx.GetValue<HandlerConst.RequestId>(package.eventId);
             if (HandlerConst.handlerDict.ContainsKey(id))
             {
                 HandlerConst.handlerDict[id].ownerServer = server;

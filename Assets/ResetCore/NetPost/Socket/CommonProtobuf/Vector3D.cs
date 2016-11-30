@@ -8,11 +8,11 @@
 //------------------------------------------------------------------------------
 
 // Option: missing-value detection (*Specified/ShouldSerialize*/Reset*) enabled
-    
+
 // Option: light framework (CF/Silverlight) enabled
-    
+
 // Generated from: Vector3D.proto
-namespace Vector3D
+namespace Protobuf.Data
 {
   [global::ProtoBuf.ProtoContract(Name=@"Vector3DData")]
   public partial class Vector3DData : global::ProtoBuf.IExtensible
@@ -23,7 +23,7 @@ namespace Vector3D
     [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"x", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
     public float X
     {
-      get { return _x?? default(float); }
+      get { return _x?? (float)0; }
       set { _x = value; }
     }
     [global::System.Xml.Serialization.XmlIgnore]
@@ -40,7 +40,7 @@ namespace Vector3D
     [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"y", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
     public float Y
     {
-      get { return _y?? default(float); }
+      get { return _y?? (float)0; }
       set { _y = value; }
     }
     [global::System.Xml.Serialization.XmlIgnore]
@@ -57,7 +57,7 @@ namespace Vector3D
     [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"z", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
     public float Z
     {
-      get { return _z?? default(float); }
+      get { return _z?? (float)0; }
       set { _z = value; }
     }
     [global::System.Xml.Serialization.XmlIgnore]
