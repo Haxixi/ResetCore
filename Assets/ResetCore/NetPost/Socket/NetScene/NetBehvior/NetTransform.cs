@@ -41,6 +41,10 @@ namespace ResetCore.NetPost
         {
             base.OnNetUpdate(serverPkg);
             Transform3DData serverData = serverPkg.GetValue<Transform3DData>();
+
+            if(serverData.InstanceId != this.instanceId)
+                return;
+
             gameObject.transform.localPosition = new Vector3(serverData.LocalPosition.X, serverData.LocalPosition.Y, serverData.LocalPosition.Z);
             gameObject.transform.localScale = new Vector3(serverData.LocalScale.X, serverData.LocalScale.Y, serverData.LocalScale.Z);
             gameObject.transform.localEulerAngles = new Vector3(serverData.LocalEulerAngle.X, serverData.LocalEulerAngle.Y, serverData.LocalEulerAngle.Z);
