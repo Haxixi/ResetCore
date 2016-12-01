@@ -36,13 +36,17 @@ namespace ResetCore.NetPost
 
         public virtual void Awake()
         {
-            //instanceId = gameObject.GetInstanceID();
             EventDispatcher.AddEventListener<Package>(NetSceneEvent.GetNetBehaviorEventName(handlerId), OnNetUpdate);
             //如果是由客户端创建则自动销毁
             if (isClientCreate)
             {
                 EventDispatcher.AddEventListener(NetSceneEvent.NetSceneDisconnect, RequestDestroy);
             }
+        }
+
+        void Reset()
+        {
+            _instanceId = GetHashCode();
         }
 
         public virtual void Start()
