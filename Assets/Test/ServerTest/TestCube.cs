@@ -5,31 +5,25 @@ using ResetCore.NetPost;
 using Protobuf.Data;
 using System;
 
-public class TestCube : NetBehavior<Vector3DData> {
+public class TestCube : MonoBehaviour {
 
-    public override HandlerConst.RequestId handlerId
-    {
-        get
-        {
-            throw new NotImplementedException();
-        }
-    }
+    public NetTransform tran;
 
-    public override void Awake()
+    void Awake()
     {
-        base.Awake();
-        EventDispatcher.AddEventListener<Vector3DData>("TestHandler", HandlePosition);
+        tran = GetComponent<NetTransform>();
     }
 
     // Use this for initialization
-    public override void Start () {
-        base.Start();
+    void Start ()
+    {
+        
 	}
 
     // Update is called once per frame
-    public override void Update () {
+    void Update ()
+    {
         Control();
-
     }
 
     private void Control()
@@ -39,62 +33,29 @@ public class TestCube : NetBehavior<Vector3DData> {
             //transform.position = transform.position + new Vector3(-0.1f, 0, 0);
 
             Vector3 newPos = transform.position + new Vector3(-0.1f, 0, 0);
-            Vector3DData vector = new Vector3DData();
-            vector.X = newPos.x;
-            vector.Y = newPos.y;
-            vector.Z = newPos.z;
-            NetSceneManager.Instance.currentServer.Send<Vector3DData>
-                ((int)HandlerConst.RequestId.TestHandler, 1, vector, SendType.TCP);
+            tran.SetLocalPosition(newPos);
         }
         else if (Input.GetKey(KeyCode.D))
         {
             //transform.position = transform.position + new Vector3(0.1f, 0, 0);
 
             Vector3 newPos = transform.position + new Vector3(0.1f, 0, 0);
-            Vector3DData vector = new Vector3DData();
-            vector.X = newPos.x;
-            vector.Y = newPos.y;
-            vector.Z = newPos.z;
-            NetSceneManager.Instance.currentServer.Send<Vector3DData>
-                ((int)HandlerConst.RequestId.TestHandler, 1, vector, SendType.TCP);
+            tran.SetLocalPosition(newPos);
         }
         else if (Input.GetKey(KeyCode.W))
         {
             //transform.position = transform.position + new Vector3(0, 0.1f, 0);
 
             Vector3 newPos = transform.position + new Vector3(0, 0.1f, 0);
-            Vector3DData vector = new Vector3DData();
-            vector.X = newPos.x;
-            vector.Y = newPos.y;
-            vector.Z = newPos.z;
-            NetSceneManager.Instance.currentServer.Send<Vector3DData>
-                ((int)HandlerConst.RequestId.TestHandler, 1, vector, SendType.TCP);
+            tran.SetLocalPosition(newPos);
         }
         else if (Input.GetKey(KeyCode.S))
         {
             //transform.position = transform.position + new Vector3(0, -0.1f, 0);
 
             Vector3 newPos = transform.position + new Vector3(0, -0.1f, 0);
-            Vector3DData vector = new Vector3DData();
-            vector.X = newPos.x;
-            vector.Y = newPos.y;
-            vector.Z = newPos.z;
-            NetSceneManager.Instance.currentServer.Send<Vector3DData>
-                ((int)HandlerConst.RequestId.TestHandler, 1, vector, SendType.TCP);
+            tran.SetLocalPosition(newPos);
         }
     }
 
-    public override void OnDestroy()
-    {
-        EventDispatcher.RemoveEventListener<Vector3DData>("TestHandler", HandlePosition);
-    }
-
-    void HandlePosition(Vector3DData vector)
-    {
-        Vector3 res = new Vector3(vector.X, vector.Y, vector.Z);
-        if (transform.position != res)
-        {
-            transform.position = res;
-        }
-    }
 }

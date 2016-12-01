@@ -26,11 +26,17 @@ namespace ResetCore.NetPost
         /// <summary>
         /// 物体的InstanceId
         /// </summary>
-        public int instanceId { get; protected set; }
+        [SerializeField]
+        private int _instanceId;
+        public int instanceId
+        {
+            get { return _instanceId; }
+            protected set { _instanceId = value; }
+        }
 
         public virtual void Awake()
         {
-            instanceId = gameObject.GetInstanceID();
+            //instanceId = gameObject.GetInstanceID();
             EventDispatcher.AddEventListener<Package>(NetSceneEvent.GetNetBehaviorEventName(handlerId), OnNetUpdate);
             //如果是由客户端创建则自动销毁
             if (isClientCreate)
@@ -56,6 +62,7 @@ namespace ResetCore.NetPost
 
         public virtual void OnDestroy()
         {
+            EventDispatcher.TriggerEvent<NetBehavior>(NetSceneEvent.NetBehaviorRemoveFromScene, this);
             EventDispatcher.RemoveEventListener<Package>(NetSceneEvent.GetNetBehaviorEventName(handlerId), OnNetUpdate);
             RequestDestroy();
         }
@@ -147,7 +154,7 @@ namespace ResetCore.NetPost
         /// 用于修改当前的NetBehavior属性并且同步到服务器
         /// </summary>
         /// <param name="data"></param>
-        public void SetData(T data)
+        public virtual void SetData(T data)
         {
             if (NetSceneManager.Instance.sceneConnected == false)
                 return;

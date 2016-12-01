@@ -10,6 +10,7 @@ namespace ResetCore.NetPost
         public static readonly string NetSceneDisconnect = "NetSceneEvent.NetSceneDisconnect";
 
         public static readonly string NetBehaviorAddToScene = "NetSceneEvent.NetBehaviorAddToScene";
+        public static readonly string NetBehaviorRemoveFromScene = "NetSceneEvent.NetBehaviorRemoveFromScene";
         /// <summary>
         /// 获取处理事件的名字
         /// </summary>

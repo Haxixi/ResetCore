@@ -64,6 +64,7 @@ namespace ResetCore.NetPost
                     {
                         Debug.logger.Log("频道注册成功");
                         EventDispatcher.AddEventListener<NetBehavior>(NetSceneEvent.NetBehaviorAddToScene, AddNetBehavior);
+                        EventDispatcher.AddEventListener<NetBehavior>(NetSceneEvent.NetBehaviorRemoveFromScene, RemoveNetBehavior);
                         sceneConnected = true;
                     });
                 }
@@ -80,11 +81,25 @@ namespace ResetCore.NetPost
             clientNetBehaviorDict.Add(behavior.instanceId, behavior);
         }
 
+        private void RemoveNetBehavior(NetBehavior behavior)
+        {
+            clientNetBehaviorDict.Remove(behavior.instanceId);
+        }
+
+        void Awake() { }
+
+        void Start() { }
+
         void OnDestroy()
         {
-            sceneConnected = false;
-            currentServer.Disconnect();
-            currentServer = null;
+            EventDispatcher.RemoveEventListener<NetBehavior>(NetSceneEvent.NetBehaviorAddToScene, AddNetBehavior);
+            EventDispatcher.RemoveEventListener<NetBehavior>(NetSceneEvent.NetBehaviorRemoveFromScene, RemoveNetBehavior);
+            if (sceneConnected)
+            {
+                sceneConnected = false;
+                currentServer.Disconnect();
+                currentServer = null;
+            }
         }
     }
 }
