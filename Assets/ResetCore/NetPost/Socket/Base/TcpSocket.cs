@@ -156,7 +156,7 @@ namespace ResetCore.NetPost
         /// <summary>
         /// 连接等待成功连接的回调
         /// </summary>
-        public void Connect(string address, int port)
+        public bool Connect(string address, int port)
         {
             currentState = SocketState.BEGIN_CONNECT;
             isCloseSelf = false;
@@ -173,7 +173,9 @@ namespace ResetCore.NetPost
             catch(Exception e)
             {
                 CallError(e);
+                return false;
             }
+            return true;
         }
 
         /// <summary>

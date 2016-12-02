@@ -33,6 +33,9 @@ namespace ResetCore.NetPost
         {
             return "Response" + requestId;
         }
+
+        //获取到服务器Id
+        public static readonly string GetChannelId = "ServerEvent.GetChannelId";
     }
 
     public class BaseServer
@@ -57,6 +60,9 @@ namespace ResetCore.NetPost
 
         //是否已经连接
         public bool isConnect { get; private set; }
+
+        //频道Id
+        public string channelId { get; private set; }
 
         CoroutineTaskManager.CoroutineTask tcpReciverTask;
         CoroutineTaskManager.CoroutineTask udpReciverTask;
@@ -93,7 +99,15 @@ namespace ResetCore.NetPost
             udpReciverTask =
                 CoroutineTaskManager.Instance.LoopTodoByWhile(udpReciver.HandlePackageInQueue, Time.deltaTime, () => { return isConnect; });
 
+            EventDispatcher.AddEventListener<string>(ServerEvent.GetChannelId, GetChannelId, this);
+        }
 
+        //设置频道Id
+        private void GetChannelId(string channelId)
+        {
+            this.channelId = channelId;
+            Debug.Log("频道id为" + channelId);
+            EventDispatcher.RemoveEventListener<string>(ServerEvent.GetChannelId, GetChannelId, this);
         }
 
         #region 服务器公开行为
@@ -105,24 +119,28 @@ namespace ResetCore.NetPost
         /// <param name="remoteUdpPort"></param>
         /// <param name="localUdpPort"></param>
         /// <param name="autoRebind"></param>
-        public void Connect(string remoteAddress, int remoteTcpPort
+        public bool Connect(string remoteAddress, int remoteTcpPort
             , int remoteUdpPort, int localUdpPort, bool autoRebind = true)
         {
             isConnect = true;
-            bool bindSuccess = 
+            bool udpBindSuccess = 
                 udpSocket.BindRemoteEndPoint(remoteAddress, remoteUdpPort, localUdpPort, autoRebind);
-            bool beginReceive = udpSocket.BeginReceive();
+            bool udpBeginReceive = udpSocket.BeginReceive();
 
-            if(bindSuccess && beginReceive)
-            {
-                tcpSocket.Connect(remoteAddress, remoteTcpPort);
-                
-            }
-            else
+            if(!udpBindSuccess || !udpBeginReceive)
             {
                 Debug.LogError("Udp连接失败！");
+                return false;
             }
-            
+
+            bool tcpConnect = tcpSocket.Connect(remoteAddress, remoteTcpPort);
+            if (!tcpConnect)
+            {
+                Debug.LogError("Tcp连接失败！");
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -191,6 +209,20 @@ namespace ResetCore.NetPost
         /// <summary>
         /// 发送消息并且等待回调
         /// </summary>
+        /// <param name="eventId"></param>
+        /// <param name="channelId"></param>
+        /// <param name="sendType"></param>
+        /// <param name="callBack"></param>
+        /// <param name="timeout"></param>
+        public void Request(HandlerConst.RequestId eventId, int channelId, SendType sendType,
+            Action<Package> callBack, Action timeoutAct = null, float timeout = 2)
+        {
+            Request<System.Object>(eventId, channelId, null, sendType, callBack, timeout);
+        }
+
+        /// <summary>
+        /// 发送消息并且等待回调
+        /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="eventId"></param>
         /// <param name="channelId"></param>
@@ -198,7 +230,7 @@ namespace ResetCore.NetPost
         /// <param name="sendType"></param>
         /// <param name="callBack"></param>
         public void Request<T>(HandlerConst.RequestId eventId, int channelId, T value, SendType sendType, 
-            Action<Package> callBack, float timeout = 2)
+            Action<Package> callBack,Action timeoutAct = null, float timeout = 2)
         {
             if (isConnect == false)
             {
@@ -229,6 +261,10 @@ namespace ResetCore.NetPost
                     EventDispatcher.RemoveEventListener<Package>(ServerEvent.GetResponseEvent(pkg.requestId), HandleRequeset, this);
                     responseHandlerPool.Remove(pkg.requestId);
                     Debug.logger.LogError("NetPost", "请求超时，请求Id为" + pkg.requestId + " 处理Id为" + EnumEx.GetValue<HandlerConst.RequestId>(pkg.eventId));
+                    if(timeoutAct != null)
+                    {
+                        timeoutAct();
+                    }
                 }
             }, timeout);
 ;        }
@@ -256,10 +292,11 @@ namespace ResetCore.NetPost
 
         private void TcpOnConnect(Exception e = null)
         {
-            EventDispatcher.TriggerEvent<Exception>(ServerEvent.TcpOnConnect, e);
-            //Todo
             tcpSocket.BeginReceive();
+            EventDispatcher.TriggerEvent<Exception>(ServerEvent.TcpOnConnect, e);
             Debug.logger.Log("Tcp Socket已连接");
+
+            
         }
 
         private void TcpOnError(SocketState state, Exception e = null)

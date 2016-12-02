@@ -12,6 +12,7 @@ namespace ResetCore.NetPost
     /// 包头（长度信息）：4字节
     /// 包Id（HandlerId）：4字节
     /// 频道Id（ChannelId）：4字节
+    /// 请求编号（RequestId）：4字节
     /// 包内容（Protobuf）：剩余长度
     /// -----------------------------
     /// </summary>
@@ -70,7 +71,14 @@ namespace ResetCore.NetPost
             pkg.channelId = channelId;
             pkg.requestId = _currentRequestId;
 
-            pkg.data = ProtoEx.Serialize<T>(value);
+            if(value != null)
+            {
+                pkg.data = ProtoEx.Serialize<T>(value);
+            }
+            else
+            {
+                pkg.data = new byte[0];
+            }
 
             pkg.dataLength = pkg.data.Length;
             pkg.totalLength = 
