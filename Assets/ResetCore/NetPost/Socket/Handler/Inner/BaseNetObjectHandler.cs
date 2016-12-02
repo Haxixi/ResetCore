@@ -6,7 +6,7 @@ using ResetCore.Event;
 
 namespace ResetCore.NetPost
 {
-    public class BaseNetObjectHandler : Handler
+    public class BaseNetObjectHandler : NetPackageHandler
     {
 
         protected override void Handle(Package package, Action act = null)

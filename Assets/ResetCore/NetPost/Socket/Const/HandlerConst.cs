@@ -21,7 +21,7 @@ namespace ResetCore.NetPost
             NetTransform = 101,//Transform
         }
 
-        public static Dictionary<RequestId, Handler> handlerDict = new Dictionary<RequestId, Handler>()
+        public static Dictionary<RequestId, NetPackageHandler> handlerDict = new Dictionary<RequestId, NetPackageHandler>()
         {
             {RequestId.TestHandler, new TestHandler()},
             {RequestId.RegistChannelHandler, new ResistChannelHandler()},

@@ -66,7 +66,7 @@ namespace ResetCore.NetPost
                 for(int i = 0; i < packageList.Count; i ++)
                 {
                     handleQueue.AddAction((act) => {
-                        Handler.HandlePackage(server, packageList[i], act);
+                        NetPackageHandler.HandlePackage(server, packageList[i], act);
                     });
                 }
                 packageList.Clear();

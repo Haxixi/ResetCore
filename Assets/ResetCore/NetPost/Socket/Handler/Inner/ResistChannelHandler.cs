@@ -7,7 +7,7 @@ using Protobuf.Data;
 
 namespace ResetCore.NetPost
 {
-    public class ResistChannelHandler : Handler
+    public class ResistChannelHandler : NetPackageHandler
     {
         protected override void Handle(Package package, Action act = null)
         {

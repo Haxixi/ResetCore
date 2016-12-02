@@ -7,7 +7,7 @@ using Protobuf.Data;
 
 namespace ResetCore.NetPost
 {
-    public class TestHandler : Handler
+    public class TestHandler : NetPackageHandler
     {
         protected override void Handle(Package package, Action act = null)
         {

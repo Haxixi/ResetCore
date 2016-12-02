@@ -5,7 +5,7 @@ using ResetCore.Event;
 
 namespace ResetCore.NetPost
 {
-    public abstract class Handler
+    public abstract class NetPackageHandler
     {
         /// <summary>
         /// 处理服务器
