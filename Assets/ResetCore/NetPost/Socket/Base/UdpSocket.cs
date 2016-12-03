@@ -37,6 +37,8 @@ namespace ResetCore.NetPost
         /// </summary>
         public SocketState currentState { get; private set; }
 
+        private bool isClose = true;
+
         public UdpSocket()
         {
             receiveCallback = new AsyncCallback(OnReceive);
@@ -75,6 +77,7 @@ namespace ResetCore.NetPost
         //绑定到本地接口
         public bool BindLocalEndPoint(int localPt)
         {
+            isClose = false;
             currentState = SocketState.BIND;
             try
             {
@@ -106,6 +109,7 @@ namespace ResetCore.NetPost
         public bool BindRemoteEndPoint(string remoteAddr, int remotePt, 
             int localPt, bool autoRebind = true)
         {
+            isClose = false;
             currentState = SocketState.BIND;
             //保存地址
             SaveRemoteAddress(remoteAddr, remotePt);
@@ -124,6 +128,7 @@ namespace ResetCore.NetPost
                     {
                         //绑定本地端口
                         socket.Bind(new IPEndPoint(IPAddress.Any, localPt));
+                        
                     }
 
                     //读取本地地址和端口
@@ -155,6 +160,8 @@ namespace ResetCore.NetPost
             {
                 //关闭套接字
                 socket.Close();
+                isClose = true;
+                Debug.Log("断开UDP成功！");
             }
             catch (Exception exp)
             {
@@ -166,6 +173,9 @@ namespace ResetCore.NetPost
         //开始接收
         public bool BeginReceive()
         {
+            if (isClose)
+                return false;
+
             currentState = SocketState.BEGIN_RECEIVE;
             try
             {
@@ -187,6 +197,8 @@ namespace ResetCore.NetPost
         //向远端发送消息
         public void Send(byte[] data, int len)
         {
+            if (isClose)
+                return;
             currentState = SocketState.BEGIN_SEND;
             try
             {
@@ -203,6 +215,9 @@ namespace ResetCore.NetPost
         //向远端发送消息
         public void Send(byte[] data, int len, string remoteAddr, int remotePt)
         {
+            if (isClose)
+                return;
+
             currentState = SocketState.BEGIN_SEND;
 
             //保存远端地址
@@ -239,6 +254,9 @@ namespace ResetCore.NetPost
 
         private void OnReceive(IAsyncResult iar)
         {
+            if (isClose)
+                return;
+
             currentState = SocketState.END_RECEIVE ;
 
             //发来数据的远端地址
@@ -267,6 +285,9 @@ namespace ResetCore.NetPost
 
         private void OnSend(IAsyncResult iar)
         {
+            if (isClose)
+                return;
+
             currentState = SocketState.END_SEND;
             try
             {

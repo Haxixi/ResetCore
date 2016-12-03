@@ -20,7 +20,7 @@ namespace ResetCore.Data
             {
                 if(_allLanguageDict == null)
                 {
-                    _allLanguageDict = instance.GetLanguageDict();
+                    _allLanguageDict = Instance.GetLanguageDict();
                 }
                 return _allLanguageDict;
             }
@@ -127,7 +127,7 @@ namespace ResetCore.Data
         /// </summary>
         public static void Refresh()
         {
-            _allLanguageDict = instance.GetLanguageDict();
+            _allLanguageDict = Instance.GetLanguageDict();
         }
 
         /// <summary>

@@ -64,13 +64,13 @@ namespace ResetCore.Util
         /// <param name="www"></param>
         public void LoadXmlPropertyByWWW(string name, string www)
         {
-            string xml = DownloadManager.instance.DownLoadText(www);
+            string xml = DownloadManager.Instance.DownLoadText(www);
             LoadXmlProperty(name, xml);
         }
 
         public void LoadJsonPropertyByWWW(string name, string www)
         {
-            string json = DownloadManager.instance.DownLoadText(www);
+            string json = DownloadManager.Instance.DownLoadText(www);
             LoadJsonProperty(name, json);
         }
 

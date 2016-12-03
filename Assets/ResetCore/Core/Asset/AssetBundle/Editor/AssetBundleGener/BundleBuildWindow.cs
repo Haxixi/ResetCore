@@ -45,11 +45,11 @@ namespace ResetCore.Asset
         {
             get
             {
-                return VersionManager.instance.versionData.resVersion;
+                return VersionManager.Instance.versionData.resVersion;
             }
             set
             {
-                VersionManager.instance.versionData.resVersion = value;
+                VersionManager.Instance.versionData.resVersion = value;
             }
         }
 
@@ -57,11 +57,11 @@ namespace ResetCore.Asset
         {
             get
             {
-                return VersionManager.instance.versionData.appVersion;
+                return VersionManager.Instance.versionData.appVersion;
             }
             set
             {
-                VersionManager.instance.versionData.appVersion = value;
+                VersionManager.Instance.versionData.appVersion = value;
             }
         }
 
@@ -288,12 +288,12 @@ namespace ResetCore.Asset
         private static void GenVersionInfo(string MD5)
         {
             //TODO　设置应用版本
-            VersionManager.instance.versionData.appVersion = appVersion;
-            VersionManager.instance.versionData.resVersion = resVersion;
-            VersionManager.instance.versionData.MD5 = MD5;
+            VersionManager.Instance.versionData.appVersion = appVersion;
+            VersionManager.Instance.versionData.resVersion = resVersion;
+            VersionManager.Instance.versionData.MD5 = MD5;
             AssetDatabase.SaveAssets();
             string versionDataFilePath = PathConfig.GetExportPathByVersion(resVersion) + PathConfig.VersionDataName + ".xml";
-            VersionManager.instance.versionData.GenXml(versionDataFilePath);
+            VersionManager.Instance.versionData.GenXml(versionDataFilePath);
         }
 
         #endregion

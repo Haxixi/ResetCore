@@ -19,6 +19,7 @@ namespace ResetCore.NetPost
             RequsetSceneHandler = 4,//请求场景
             NetObjectRemoveHandler = 5,//从场景中移除物体
             GetChannelIdHandler = 6,//得到当前频道id
+            DisconnectSceneHandler = 7,
 
             //NetBehavior消息Id为1XX
             NetTransform = 101,//Transform

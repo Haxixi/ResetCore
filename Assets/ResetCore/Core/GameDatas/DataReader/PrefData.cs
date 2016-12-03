@@ -22,7 +22,7 @@ namespace ResetCore.Data.GameDatas.Xml
             if (field != null)
             {
                 string fileName = field.GetValue(null) as string;
-                instance = (T)(PrefDataController.instance.FormatXMLData(fileName, type));
+                instance = (T)(PrefDataController.Instance.FormatXMLData(fileName, type));
             }
             else
             {

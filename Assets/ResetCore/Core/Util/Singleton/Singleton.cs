@@ -9,17 +9,17 @@ namespace ResetCore.Util
     public abstract class Singleton<T> where T : Singleton<T>, new()
     {
 
-        private static T Instance = null;
-        public static T instance
+        private static T _Instance = null;
+        public static T Instance
         {
             get
             {
-                if (Instance == null)
+                if (_Instance == null)
                 {
-                    Instance = typeof(T).GetConstructor(new Type[] { }).Invoke(new object[] { }) as T;
-                    Instance.Init();
+                    _Instance = typeof(T).GetConstructor(new Type[] { }).Invoke(new object[] { }) as T;
+                    _Instance.Init();
                 }
-                return Instance;
+                return _Instance;
             }
         }
 

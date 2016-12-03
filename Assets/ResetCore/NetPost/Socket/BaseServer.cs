@@ -59,7 +59,12 @@ namespace ResetCore.NetPost
         private ActionQueue handleQueue = new ActionQueue();
 
         //是否已经连接
-        public bool isConnect { get; private set; }
+        private bool _isConnect = false;
+        public bool isConnect
+        {
+            get { return _isConnect; }
+            set {  _isConnect = value; }
+        }
 
         //频道Id
         public string channelId { get; private set; }
@@ -94,10 +99,7 @@ namespace ResetCore.NetPost
 
             currentChannel = new List<int>();
 
-            tcpReciverTask =
-                CoroutineTaskManager.Instance.LoopTodoByWhile(tcpReciver.HandlePackageInQueue, Time.deltaTime, () => { return isConnect; });
-            udpReciverTask =
-                CoroutineTaskManager.Instance.LoopTodoByWhile(udpReciver.HandlePackageInQueue, Time.deltaTime, () => { return isConnect; });
+            
 
             EventDispatcher.AddEventListener<string>(ServerEvent.GetChannelId, GetChannelId, this);
         }
@@ -120,7 +122,7 @@ namespace ResetCore.NetPost
         /// <param name="localUdpPort"></param>
         /// <param name="autoRebind"></param>
         public bool Connect(string remoteAddress, int remoteTcpPort
-            , int remoteUdpPort, int localUdpPort, bool autoRebind = true)
+            , int remoteUdpPort, int localUdpPort, bool autoRebind = true, Action afterAct = null)
         {
             isConnect = true;
             bool udpBindSuccess = 
@@ -139,6 +141,14 @@ namespace ResetCore.NetPost
                 Debug.LogError("Tcp连接失败！");
                 return false;
             }
+
+            MonoActionPool.AddAction(() =>
+            {
+                tcpReciverTask =
+                    CoroutineTaskManager.Instance.LoopTodoByWhile(tcpReciver.HandlePackageInQueue, Time.deltaTime, () => { return isConnect; });
+                udpReciverTask =
+                    CoroutineTaskManager.Instance.LoopTodoByWhile(udpReciver.HandlePackageInQueue, Time.deltaTime, () => { return isConnect; });
+            });
 
             return true;
         }
@@ -181,7 +191,9 @@ namespace ResetCore.NetPost
             udpReciverTask.Stop();
 
             isConnect = false;
+            Debug.Log("断开TCP");
             tcpSocket.Disconnect();
+            Debug.Log("断开UDP");
             udpSocket.Stop();
 
             tcpReciver.Reset();

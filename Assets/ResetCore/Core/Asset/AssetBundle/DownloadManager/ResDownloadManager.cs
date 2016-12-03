@@ -66,7 +66,7 @@ namespace ResetCore.Asset
         private string DownloadVersionInfo()
         {
             infoAct("Downloading VersionInfo");
-            string info = DownloadManager.instance.DownLoadText(PathConfig.versionInfoUrl, errorAct);
+            string info = DownloadManager.Instance.DownLoadText(PathConfig.versionInfoUrl, errorAct);
             if (string.IsNullOrEmpty(info))
             {
                 infoAct("Download VersionInfo Fail");
@@ -79,7 +79,7 @@ namespace ResetCore.Asset
         //获取更新列表
         private List<Version> GetNewVersionList(string info)
         {
-            Version resVersion = VersionManager.instance.versionData.resVersion;
+            Version resVersion = VersionManager.Instance.versionData.resVersion;
             List<Version> verionToDownloadList = new List<Version>();
 
             XDocument xDoc = XDocument.Parse(info);
@@ -123,7 +123,7 @@ namespace ResetCore.Asset
             infoAct("Download VersionInfo " + version.ToString());
             string versionDataPath = 
                 Path.Combine(PathConfig.GetBundleResourcesFolderByVersion(version), PathConfig.VersionDataName + ".xml");
-            string versionData = DownloadManager.instance.DownLoadText(versionDataPath, errorAct);
+            string versionData = DownloadManager.Instance.DownLoadText(versionDataPath, errorAct);
 
             if (versionData == null)
             {
@@ -146,7 +146,7 @@ namespace ResetCore.Asset
         //检查应用版本
         private bool CheckAppVersion(VersionData data)
         {
-            return Version.Compare(VersionManager.instance.versionData.appVersion, data.appVersion) >= 0;
+            return Version.Compare(VersionManager.Instance.versionData.appVersion, data.appVersion) >= 0;
         }
 
         private void AddDownloadTask(List<VersionData> resToDownload)
@@ -164,7 +164,7 @@ namespace ResetCore.Asset
                     Debug.logger.Log("filePath：" + filePath);
                     PathEx.MakeDirectoryExist(filePath);
 
-                    DownloadManager.instance.AddNewDownloadTask(url, filePath, 
+                    DownloadManager.Instance.AddNewDownloadTask(url, filePath, 
                         data.MD5, progressAct, 
                         (comp)=> 
                         {
@@ -174,7 +174,7 @@ namespace ResetCore.Asset
                         });
                 }
                 infoAct("Begin Download");
-                DownloadManager.instance.CheckDownLoadList(
+                DownloadManager.Instance.CheckDownLoadList(
                     () =>
                     {
                         infoAct("Download Finish");

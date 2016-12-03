@@ -24,7 +24,7 @@ public class Driver : MonoSingleton<Driver> {
     BaseServer server;
     void Awake()
     {
-        NetSceneManager.Instance.StartScene(1);
+
     }
     // Use this for initialization
     void Start()

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using ResetCore.Util;
 using Protobuf.Data;
 using ResetCore.Event;
+using System;
 
 namespace ResetCore.NetPost
 {
@@ -34,13 +35,20 @@ namespace ResetCore.NetPost
             protected set { _instanceId = value; }
         }
 
+        /// <summary>
+        /// 是否正与服务端通信
+        /// </summary>
+        private bool isConnectNetScene = false;
+
+        //用于处理销毁事件的队列
+        private static ActionQueue destroyQueue = new ActionQueue();
+
         public virtual void Awake()
         {
             EventDispatcher.AddEventListener<Package>(NetSceneEvent.GetNetBehaviorEventName(handlerId), OnNetUpdate);
-            //如果是由客户端创建则自动销毁
             if (isClientCreate)
             {
-                EventDispatcher.AddEventListener(NetSceneEvent.NetSceneDisconnect, RequestDestroy);
+                EventDispatcher.AddEventListener(NetSceneEvent.NetSceneReady, RequestObjectJoin);
             }
         }
 
@@ -66,8 +74,12 @@ namespace ResetCore.NetPost
 
         public virtual void OnDestroy()
         {
-            EventDispatcher.TriggerEvent<NetBehavior>(NetSceneEvent.NetBehaviorRemoveFromScene, this);
+            if (isClientCreate)
+            {
+                EventDispatcher.RemoveEventListener(NetSceneEvent.NetSceneReady, RequestObjectJoin);
+            }
             EventDispatcher.RemoveEventListener<Package>(NetSceneEvent.GetNetBehaviorEventName(handlerId), OnNetUpdate);
+            if(NetSceneManager.Instance.sceneConnected)
             RequestDestroy();
         }
 
@@ -82,63 +94,71 @@ namespace ResetCore.NetPost
         /// </summary>
         private void RequestObjectJoin()
         {
-            if (NetSceneManager.Instance.sceneConnected == false)
-            {
-                EventDispatcher.AddEventListener(NetSceneEvent.NetSceneReady, RequestObjectJoin);
-            }
-            else
-            {
-                NetObjectJoinUpData data = new NetObjectJoinUpData();
-                data.InstanceId = instanceId;
-                data.TypeName = GetType().Name;
-                int chnId = NetSceneManager.Instance.currentSceneId;
+            NetObjectJoinUpData data = new NetObjectJoinUpData();
+            data.InstanceId = instanceId;
+            data.TypeName = GetType().Name;
+            int chnId = NetSceneManager.Instance.currentSceneId;
 
-                if(NetSceneManager.Instance.currentServer != null)
+            if (NetSceneManager.Instance.currentServer != null)
+            {
+                NetSceneManager.Instance.currentServer
+                .Request(HandlerConst.RequestId.NetObjectJoinUpHandler, chnId, data, SendType.TCP, (res) =>
                 {
-                    NetSceneManager.Instance.currentServer
-                    .Request(HandlerConst.RequestId.NetObjectJoinUpHandler, chnId, data, SendType.TCP, (res) =>
+
+                    BoolData isSucc = res.GetValue<BoolData>();
+                    if (isSucc.Value == true)
                     {
-                        EventDispatcher.RemoveEventListener(NetSceneEvent.NetSceneReady, RequestObjectJoin);
-                        BoolData isSucc = res.GetValue<BoolData>();
-                        if (isSucc.Value == true)
-                        {
-                            Debug.logger.Log("成功将NetBehavior加入到场景" + chnId);
-                            EventDispatcher.TriggerEvent<NetBehavior>(NetSceneEvent.NetBehaviorAddToScene, this);
-                        }
-                        else
-                        {
-                            Debug.logger.LogError("NetPost", "NetBehavior加入到场景失败" + chnId);
-                        }
-                    });
-                }
-                else
-                {
-                    Debug.logger.LogError("NetPost", "服务器被提前销毁" + chnId);
-                }
-                
+                        Debug.logger.Log("成功将NetBehavior加入到场景" + chnId);
+                        isConnectNetScene = true;
+                        EventDispatcher.TriggerEvent<NetBehavior>(NetSceneEvent.NetBehaviorAddToScene, this);
+                    }
+                    else
+                    {
+                        Debug.logger.LogError("NetPost", "NetBehavior加入到场景失败" + chnId);
+                    }
+                });
             }
         }
 
         /// <summary>
-        /// 销毁
+        /// 将远端对应的物体销毁，脱离服务端,使用内部销毁队列销毁
         /// </summary>
         public void RequestDestroy()
         {
+            destroyQueue.AddAction((act)=>RequestDestroy(act));
+        }
+
+        /// <summary>
+        /// 将远端对应的物体销毁，脱离服务端,使用外部销毁队列销毁
+        /// </summary>
+        public void RequestDestroy(Action act)
+        {
+            //如果未处于连接状态则直接返回
+            if (!isConnectNetScene)
+            {
+                return;
+            }
+
+            EventDispatcher.TriggerEvent<NetBehavior>(NetSceneEvent.NetBehaviorRemoveFromScene, this);
+
             Int32Data instanceId = new Int32Data();
             instanceId.Value = this.instanceId;
             int chnId = NetSceneManager.Instance.currentSceneId;
+            Debug.Log("请求销毁:" + gameObject.name);
             NetSceneManager.Instance.currentServer
                 .Request(HandlerConst.RequestId.NetObjectRemoveHandler, chnId, instanceId, SendType.TCP, (res) =>
                 {
                     BoolData isSucc = res.GetValue<BoolData>();
                     if (isSucc.Value)
                     {
-                        Debug.logger.Log("成功将NetBehavior移除场景" + chnId);
+                        Debug.logger.Log("成功将NetBehavior:" + gameObject.name + "移除场景 " + chnId);
                     }
                     else
                     {
-                        Debug.logger.LogError("NetPost", "将NetBehavior移除场景失败" + chnId);
+                        Debug.logger.LogError("NetPost", "将NetBehavior:" + gameObject.name + "移除场景失败 " + chnId);
                     }
+                    isConnectNetScene = false;
+                    act();
                 });
         }
 

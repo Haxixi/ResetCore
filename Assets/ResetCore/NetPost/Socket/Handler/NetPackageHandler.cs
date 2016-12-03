@@ -27,6 +27,7 @@ namespace ResetCore.NetPost
         {
             //触发响应事件（针对有响应的请求）
             HandlerConst.RequestId id = EnumEx.GetValue<HandlerConst.RequestId>(package.eventId);
+            Debug.logger.Log("收到请求！" + id.ToString());
             if (HandlerConst.handlerDict.ContainsKey(id))
             {
                 HandlerConst.handlerDict[id].ownerServer = server;

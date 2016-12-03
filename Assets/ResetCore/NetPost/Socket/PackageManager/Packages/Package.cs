@@ -64,7 +64,8 @@ namespace ResetCore.NetPost
         /// <returns></returns>
         public static Package MakePakage<T>(int id, int channelId, T value, SendType sendType)
         {
-            _currentRequestId++;
+            //防止Id溢出
+            _currentRequestId = (_currentRequestId+1) % int.MaxValue;
 
             Package pkg = new Package();
             pkg.eventId = id;

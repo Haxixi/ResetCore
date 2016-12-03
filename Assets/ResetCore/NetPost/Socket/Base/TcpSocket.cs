@@ -40,6 +40,9 @@ namespace ResetCore.NetPost
         /// </summary>
         private byte[] receiveBuffer = new byte[1024 * 5];
 
+        //Socket锁
+        private readonly object locker = new object();
+
         /// <summary>
         /// 是否连接
         /// </summary>
@@ -114,9 +117,12 @@ namespace ResetCore.NetPost
 
             try
             {
-                socket.Bind(new IPEndPoint(IPAddress.Any, localPort));
-                socket.Listen(queueSize);
-                socket.BeginAccept(acceptCallback, null);
+                lock (locker)
+                {
+                    socket.Bind(new IPEndPoint(IPAddress.Any, localPort));
+                    socket.Listen(queueSize);
+                    socket.BeginAccept(acceptCallback, null);
+                }
             }
             catch (Exception exp)
             {
@@ -144,7 +150,12 @@ namespace ResetCore.NetPost
             {
                 //停止监听
                 if (socket != null)
-                    socket.Close();
+                {
+                    lock (locker)
+                    {
+                        socket.Close();
+                    }
+                }
             }
             catch (Exception exp)
             {
@@ -168,7 +179,10 @@ namespace ResetCore.NetPost
             try
             {
                 //尝试连接
-                socket.BeginConnect(remoteAddress, remotePort, connectCallback, null);
+                lock(locker)
+                {
+                    socket.BeginConnect(remoteAddress, remotePort, connectCallback, null);
+                }
             }
             catch(Exception e)
             {
@@ -185,7 +199,10 @@ namespace ResetCore.NetPost
         {
             //判断是否已连接
             if (!isConneted)
+            {
+                Debug.logger.LogError("NetPost", "TCP已经断开！");
                 return;
+            }
 
             currentState = SocketState.BEGIN_DISCONNECT;
             //设置主动关闭位
@@ -194,7 +211,10 @@ namespace ResetCore.NetPost
             try
             {
                 //开始断开连接
-                socket.BeginDisconnect(false, disconnectCallback, null);
+                lock (locker)
+                {
+                    socket.BeginDisconnect(false, disconnectCallback, null);
+                }
             }
             catch (Exception exp)
             {
@@ -212,7 +232,10 @@ namespace ResetCore.NetPost
             try
             {
                 //开始接收数据
-                socket.BeginReceive(receiveBuffer, 0, receiveBuffer.Length, 0, receiveCallback, null);
+                lock (locker)
+                {
+                    socket.BeginReceive(receiveBuffer, 0, receiveBuffer.Length, 0, receiveCallback, null);
+                }
             }
             catch (Exception exp)
             {
@@ -230,7 +253,10 @@ namespace ResetCore.NetPost
             try
             {
                 //开始接收数据
-                socket.BeginSend(data, 0, data.Length, 0, sendCallback, null);
+                lock (locker)
+                {
+                    socket.BeginSend(data, 0, data.Length, 0, sendCallback, null);
+                }
             }
             catch (Exception exp)
             {
@@ -308,7 +334,6 @@ namespace ResetCore.NetPost
             {
                 //结束断开连接
                 socket.EndDisconnect(iar);
-
             }
             catch (Exception exp)
             {
@@ -411,6 +436,7 @@ namespace ResetCore.NetPost
         {
             //关闭套接字
             socket.Close();
+            Debug.Log("断开TCP成功！");
             //引发断线事件
             if (onCloseSocket != null)
                 onCloseSocket(type, currentState, e);

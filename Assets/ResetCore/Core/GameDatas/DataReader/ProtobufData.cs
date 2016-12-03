@@ -29,7 +29,7 @@ namespace ResetCore.Data.GameDatas.Protobuf
             if (field != null)
             {
                 string fileName = field.GetValue(null) as string;
-                dictionary = (ProtobufDataController<T>.instance.FormatData(fileName));
+                dictionary = (ProtobufDataController<T>.Instance.FormatData(fileName));
             }
             else
             {
