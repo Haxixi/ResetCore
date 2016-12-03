@@ -217,7 +217,7 @@ namespace ResetCore.NetPost
         public void Request(HandlerConst.RequestId eventId, int channelId, SendType sendType,
             Action<Package> callBack, Action timeoutAct = null, float timeout = 2)
         {
-            Request<System.Object>(eventId, channelId, null, sendType, callBack, timeout);
+            Request<System.Object>(eventId, channelId, null, sendType, callBack, timeoutAct, timeout);
         }
 
         /// <summary>
