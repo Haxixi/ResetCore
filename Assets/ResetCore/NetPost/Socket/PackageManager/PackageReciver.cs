@@ -52,25 +52,14 @@ namespace ResetCore.NetPost
                 if (hasCompletePacket)
                 {
                     byte[] packBytes = ArrayEx.CutHeadByLength(ref packetBuffer, packSize);
-                    packageList.Add(Package.PrasePackage(packBytes));
+                    handleQueue.AddAction((act) =>
+                    {
+                        NetPackageHandler.HandlePackage(server, Package.PrasePackage(packBytes), act);
+                    });
                 }
 
             } while (hasCompletePacket);
 
-        }
-
-        public void HandlePackageInQueue()
-        {
-            if (packageList.Count > 0)
-            {
-                for(int i = 0; i < packageList.Count; i ++)
-                {
-                    handleQueue.AddAction((act) => {
-                        NetPackageHandler.HandlePackage(server, packageList[i], act);
-                    });
-                }
-                packageList.Clear();
-            }
         }
 
         /// <summary>

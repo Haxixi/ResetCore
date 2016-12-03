@@ -30,28 +30,28 @@ public class TestCube : MonoBehaviour {
     {
         if (Input.GetKey(KeyCode.A))
         {
-            //transform.position = transform.position + new Vector3(-0.1f, 0, 0);
+            transform.position = transform.position + new Vector3(-0.1f, 0, 0);
 
             Vector3 newPos = transform.position + new Vector3(-0.1f, 0, 0);
             tran.SetLocalPosition(newPos);
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            //transform.position = transform.position + new Vector3(0.1f, 0, 0);
+            transform.position = transform.position + new Vector3(0.1f, 0, 0);
 
             Vector3 newPos = transform.position + new Vector3(0.1f, 0, 0);
             tran.SetLocalPosition(newPos);
         }
         else if (Input.GetKey(KeyCode.W))
         {
-            //transform.position = transform.position + new Vector3(0, 0.1f, 0);
+            transform.position = transform.position + new Vector3(0, 0.1f, 0);
 
             Vector3 newPos = transform.position + new Vector3(0, 0.1f, 0);
             tran.SetLocalPosition(newPos);
         }
         else if (Input.GetKey(KeyCode.S))
         {
-            //transform.position = transform.position + new Vector3(0, -0.1f, 0);
+            transform.position = transform.position + new Vector3(0, -0.1f, 0);
 
             Vector3 newPos = transform.position + new Vector3(0, -0.1f, 0);
             tran.SetLocalPosition(newPos);

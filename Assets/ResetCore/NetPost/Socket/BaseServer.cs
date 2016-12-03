@@ -69,9 +69,6 @@ namespace ResetCore.NetPost
         //频道Id
         public string channelId { get; private set; }
 
-        CoroutineTaskManager.CoroutineTask tcpReciverTask;
-        CoroutineTaskManager.CoroutineTask udpReciverTask;
-
         public List<int> currentChannel { get; private set; }
 
         //请求回调池
@@ -142,14 +139,6 @@ namespace ResetCore.NetPost
                 return false;
             }
 
-            MonoActionPool.AddAction(() =>
-            {
-                tcpReciverTask =
-                    CoroutineTaskManager.Instance.LoopTodoByWhile(tcpReciver.HandlePackageInQueue, Time.deltaTime, () => { return isConnect; });
-                udpReciverTask =
-                    CoroutineTaskManager.Instance.LoopTodoByWhile(udpReciver.HandlePackageInQueue, Time.deltaTime, () => { return isConnect; });
-            });
-
             return true;
         }
 
@@ -187,8 +176,6 @@ namespace ResetCore.NetPost
         /// </summary>
         public void Disconnect()
         {
-            tcpReciverTask.Stop();
-            udpReciverTask.Stop();
 
             isConnect = false;
             Debug.Log("断开TCP");
@@ -297,86 +284,114 @@ namespace ResetCore.NetPost
 
         private void TcpOnCloseSocket(CloseType type, SocketState state, Exception e = null)
         {
-            EventDispatcher.TriggerEvent<CloseType, SocketState, Exception>
+            MonoActionPool.AddAction(() =>
+            {
+                EventDispatcher.TriggerEvent<CloseType, SocketState, Exception>
                 (ServerEvent.TcpOnCloseSocket, type, state, e);
-            //Todo
+                //Todo
+            });
         }
 
         private void TcpOnConnect(Exception e = null)
         {
-            tcpSocket.BeginReceive();
-            EventDispatcher.TriggerEvent<Exception>(ServerEvent.TcpOnConnect, e);
-            Debug.logger.Log("Tcp Socket已连接");
-
-            
+            MonoActionPool.AddAction(() =>
+            {
+                tcpSocket.BeginReceive();
+                EventDispatcher.TriggerEvent<Exception>(ServerEvent.TcpOnConnect, e);
+                Debug.logger.Log("Tcp Socket已连接");
+            });
         }
 
         private void TcpOnError(SocketState state, Exception e = null)
         {
-            Debug.logger.LogError("ServerError", "在" + state.ToString() + "下报错");
-            Debug.LogException(e);
-            EventDispatcher.TriggerEvent<SocketState, Exception>(ServerEvent.TcpOnError, state, e);
-            //Todo
-            Disconnect();
+            MonoActionPool.AddAction(() =>
+            {
+                Debug.logger.LogError("ServerError", "在" + state.ToString() + "下报错");
+                Debug.LogException(e);
+                EventDispatcher.TriggerEvent<SocketState, Exception>(ServerEvent.TcpOnError, state, e);
+                //Todo
+                Disconnect();
+            });
         }
 
         private void TcpOnListen(Exception e = null)
         {
-            EventDispatcher.TriggerEvent<Exception>(ServerEvent.TcpOnListen, e);
-            //Todo
+            MonoActionPool.AddAction(() =>
+            {
+                EventDispatcher.TriggerEvent<Exception>(ServerEvent.TcpOnListen, e);
+                //Todo
+            });
         }
 
         private void TcpOnReceive(int len, byte[] data)
         {
-            EventDispatcher.TriggerEvent<int, byte[]>(ServerEvent.TcpOnReceive, len, data);
-            //Todo
-            lock (tcpLockObject)
+            MonoActionPool.AddAction(() =>
             {
-                Debug.logger.Log("Tcp Socket接收包，长度为：" + len);
-                tcpReciver.ReceivePackage(len, data);
-            }
+                EventDispatcher.TriggerEvent<int, byte[]>(ServerEvent.TcpOnReceive, len, data);
+                //Todo
+                lock (tcpLockObject)
+                {
+                    Debug.logger.Log("Tcp Socket接收包，长度为：" + len);
+                    tcpReciver.ReceivePackage(len, data);
+                }
+            });
         }
 
         private void TcpOnSend(int len)
         {
-            EventDispatcher.TriggerEvent<int>(ServerEvent.TcpOnSend, len);
-            //Todo
+            MonoActionPool.AddAction(() =>
+            {
+                EventDispatcher.TriggerEvent<int>(ServerEvent.TcpOnSend, len);
+                //Todo
+            });
         }
         #endregion Tcp回调行为
 
         #region Udp回调行为
         private void UdpOnBind(Exception e = null)
         {
-            EventDispatcher.TriggerEvent<Exception>(ServerEvent.UdpOnBind, e);
-            //Todo
-            Debug.logger.Log("Udp Socket已经绑定");
+            MonoActionPool.AddAction(() =>
+            {
+                EventDispatcher.TriggerEvent<Exception>(ServerEvent.UdpOnBind, e);
+                //Todo
+                Debug.logger.Log("Udp Socket已经绑定");
+            });
         }
 
         private void UdpOnError(SocketState state, Exception e = null)
         {
-            Debug.logger.LogError("ServerError", "在" + state.ToString() + "下报错");
-            Debug.LogException(e);
-            EventDispatcher.TriggerEvent<SocketState, Exception>(ServerEvent.UdpOnError, state, e);
-            //Todo
-            Disconnect();
+            MonoActionPool.AddAction(() =>
+            {
+                Debug.logger.LogError("ServerError", "在" + state.ToString() + "下报错");
+                Debug.LogException(e);
+                EventDispatcher.TriggerEvent<SocketState, Exception>(ServerEvent.UdpOnError, state, e);
+                //Todo
+                Disconnect();
+            });
         }
 
         private void UdpOnListen(Exception e = null)
         {
-            EventDispatcher.TriggerEvent<Exception>(ServerEvent.UdpOnListen, e);
-            //Todo
+            MonoActionPool.AddAction(() =>
+            {
+                EventDispatcher.TriggerEvent<Exception>(ServerEvent.UdpOnListen, e);
+                //Todo
+            });
         }
 
         private void UdpOnReceive(int len, byte[] data, string remoteAddress, int remotePort)
         {
-            EventDispatcher.TriggerEvent<int, byte[], string, int>
-                (ServerEvent.UdpOnReceive, len, data, remoteAddress, remotePort);
-            //Todo
-            lock (tcpLockObject)
+            MonoActionPool.AddAction(() =>
             {
-                Debug.logger.Log("Udp Socket接收包，长度为：" + len);
-                udpReciver.ReceivePackage(len, data);
-            }
+                EventDispatcher.TriggerEvent<int, byte[], string, int>
+               (ServerEvent.UdpOnReceive, len, data, remoteAddress, remotePort);
+                //Todo
+                lock (tcpLockObject)
+                {
+                    Debug.logger.Log("Udp Socket接收包，长度为：" + len);
+                    udpReciver.ReceivePackage(len, data);
+                }
+            });
         }
 
         #endregion Udp回调行为
