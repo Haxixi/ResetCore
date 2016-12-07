@@ -91,11 +91,20 @@ namespace ResetCore.ReAssembly
             return t;
         }
 
+        /// <summary>
+        /// 获取默认的程序集
+        /// </summary>
+        /// <param name="typeName"></param>
+        /// <returns></returns>
         public static Type GetDefaultAssemblyType(string typeName)
         {
             Type t = AssemblyManager.DefaultCSharpAssembly.GetType(typeName);
             return t;
         }
-    }
 
+        public static Type[] GetTypeList(string assemblyName)
+        {
+            return GetAssembly(assemblyName).GetTypes();
+        }
+    }
 }
