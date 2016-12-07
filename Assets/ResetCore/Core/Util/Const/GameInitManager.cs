@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
-using ResetCore.Util;
-using ResetCore.Asset;
+using ResetCore.Event;
 
 namespace ResetCore.Util
 {
@@ -11,6 +9,7 @@ namespace ResetCore.Util
         [RuntimeInitializeOnLoadMethod]
         static void Initialize()
         {
+            EventDispatcher.TriggerEvent(InnerEvents.GameEvents.OnGameInit);
         }
     }
 

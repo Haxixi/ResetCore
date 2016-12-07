@@ -5,6 +5,11 @@ using System;
 
 public class StreamingDataLoader {
 
+    /// <summary>
+    /// 同步加载流媒体文件
+    /// </summary>
+    /// <param name="path"></param>
+    /// <returns></returns>
 	public static AssetBundle LoadAsset(string path)
     {
         if(Application.platform == RuntimePlatform.Android){

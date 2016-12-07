@@ -10,6 +10,11 @@ namespace ResetCore.Event
         {
             public static readonly string OnLocalize = "UGUIEvents.OnLocalize";
         }
+
+        public class GameEvents
+        {
+            public static readonly string OnGameInit = "GameEvents.OnGameInit";
+        }
     }
 
 }
