@@ -13,7 +13,6 @@ namespace ResetCore.NetPost
         public enum RequestId
         {
             //通常消息Id为 1~100
-            TestHandler = 1,
             RegistChannelHandler = 2,//将用户连接到频道中
             NetObjectJoinUpHandler = 3,//场景物体注册到场景中
             RequsetSceneHandler = 4,//请求场景
@@ -30,7 +29,6 @@ namespace ResetCore.NetPost
         /// </summary>
         public static Dictionary<RequestId, NetPackageHandler> handlerDict = new Dictionary<RequestId, NetPackageHandler>()
         {
-            {RequestId.TestHandler, new TestHandler()},
             {RequestId.RegistChannelHandler, new ResistChannelHandler()},
             {RequestId.GetChannelIdHandler, new GetChannelIdHandler()},
 
