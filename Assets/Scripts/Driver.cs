@@ -16,6 +16,8 @@ using ResetCore.NetPost;
 using ResetCore.Protobuf;
 using System;
 using Protobuf.Data;
+using ResetCore.ReAssembly;
+using System.Diagnostics;
 
 //using ResetCore.Data.GameDatas;
 
@@ -24,7 +26,10 @@ public class Driver : MonoSingleton<Driver> {
     BaseServer server;
     void Awake()
     {
-
+        var watch = Stopwatch.StartNew();
+        UnityEngine.Debug.Log(AssemblyManager.GetTypeList("Assembly-CSharp").ConverToString());
+        watch.Stop();
+        UnityEngine.Debug.Log(watch.ElapsedMilliseconds);
     }
     // Use this for initialization
     void Start()
