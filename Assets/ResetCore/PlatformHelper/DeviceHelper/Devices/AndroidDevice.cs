@@ -14,7 +14,7 @@ namespace ResetCore.PlatformHelper
         /// <param name="json"></param>
         public override void SendMessage(string eventName, string json)
         {
-            JavaManager.mainActivityObject.Call("ReceiveMessageFromUnity", eventName, json);
+            JavaManager.mainActivityObject.Call("OnReceiveUnityMessage", eventName, json);
         }
 
 

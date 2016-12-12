@@ -43,6 +43,7 @@ namespace ResetCore.PlatformHelper
             {
                 LoadAllSdk(sdkList);
             }
+            DontDestroyOnLoad(gameObject);
         }
 
         /// <summary>
