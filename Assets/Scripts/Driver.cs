@@ -23,13 +23,9 @@ using System.Diagnostics;
 
 public class Driver : MonoSingleton<Driver> {
 
-    BaseServer server;
     void Awake()
     {
-        var watch = Stopwatch.StartNew();
-        UnityEngine.Debug.Log(AssemblyManager.GetTypeList("Assembly-CSharp").ConverToString());
-        watch.Stop();
-        UnityEngine.Debug.Log(watch.ElapsedMilliseconds);
+        
     }
     // Use this for initialization
     void Start()

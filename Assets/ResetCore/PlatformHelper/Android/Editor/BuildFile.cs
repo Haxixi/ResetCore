@@ -66,7 +66,7 @@ namespace ResetCore.PlatformHelper
         /// <summary>
         /// 配置数据
         /// </summary>
-        public List<string> metaDatas { get; private set; }
+        public Dictionary<string, string> metaDatas { get; private set; }
     }
 
 }
