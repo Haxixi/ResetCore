@@ -44,32 +44,6 @@ namespace ResetCore.PlatformHelper
             Debug.Log(menifestDoc);
             var manifestRoot = menifestDoc.XPathSelectElement("manifest");
             Debug.Log(manifestRoot);
-            manifestRoot.SetAttributeValue("android:versionCode", buildFile.versionCode);
-            manifestRoot.SetAttributeValue("android:versionName", buildFile.versionName);
-            manifestRoot.SetAttributeValue("package", buildFile.packageName);
-
-            //var metaDataEles = menifestDoc.XPathSelectElements("manifest/application/meta-data");
-            //var applicationEle = menifestDoc.XPathSelectElement("manifest/application");
-
-            //foreach (var kvp in buildFile.metaDatas)
-            //{
-            //    bool exist = false;
-            //    foreach (var metaDataEle in metaDataEles)
-            //    {
-            //        if (metaDataEle.Attribute("android:name").Value == kvp.Key)
-            //        {
-            //            exist = true;
-            //            break;
-            //        }
-            //    }
-            //    if (!exist)
-            //    {
-            //        var metaDataEle = new XElement("meta-data");
-            //        metaDataEle.SetAttributeValue("android:name", kvp.Key);
-            //        metaDataEle.SetAttributeValue("android:value", kvp.Value);
-            //        applicationEle.Add(metaDataEle);
-            //    }
-            //}
 
 
             menifestDoc.Save(PlatformConst.androidMenifestPath);

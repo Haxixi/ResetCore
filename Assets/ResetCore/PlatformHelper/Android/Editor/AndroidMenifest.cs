@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Xml.Linq;
 using System.Collections.Generic;
-using System.Xml.XPath;
+using System;
 
 namespace ResetCore.PlatformHelper
 {
@@ -14,11 +13,19 @@ namespace ResetCore.PlatformHelper
         };
 
         XDocument xdoc;
+        public bool valid { get; private set; }
         private AndroidMenifest() { }
         public static AndroidMenifest Load(string path)
         {
             AndroidMenifest menifest = new AndroidMenifest();
-            menifest.xdoc = XDocument.Load(path);
+            try
+            {
+                menifest.xdoc = XDocument.Load(path);
+            }catch(Exception e)
+            {
+                Debug.Log("加载失败");
+                menifest.valid = false;
+            }
             return menifest;
         }
 
@@ -27,9 +34,10 @@ namespace ResetCore.PlatformHelper
         //permission
         public List<string> permissionList { get; private set; }
 
-        //
+        //最低版本号
         public int minSdk { get; private set; }
 
+        //目标版本号
         public int maxSdk { get; private set; }
 
 
