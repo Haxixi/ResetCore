@@ -12,13 +12,11 @@ public class TestNetUI : MonoBehaviour {
     }
 	public void OnConnect()
     {
-        //sever.Connect(ServerConst.ServerAddress, ServerConst.TcpRemotePort, ServerConst.UdpRemotePort, ServerConst.UdpLocalPort, true);
-        NetSceneManager.Instance.StartScene(1);
+        NetSceneManager.Instance.StartScene(1, "DefaultScene");
     }
 
     public void OnDisconnect()
     {
-        //sever.Disconnect();
         NetSceneManager.Instance.Disconnect();
     }
 }

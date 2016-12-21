@@ -52,7 +52,7 @@ namespace ResetCore.NetPost
         /// 开启场景
         /// </summary>
         /// <param name="sceneId"></param>
-        public void StartScene(int sceneId)
+        public void StartScene(int sceneId, string sceneType)
         {
             if (sceneConnected)
             {
@@ -68,9 +68,10 @@ namespace ResetCore.NetPost
 
             CoroutineTaskManager.Instance.WaitSecondTodo(() =>
             {
-                Int32Data sceneIdData = new Int32Data();
-                sceneIdData.Value = sceneId;
-                currentServer.Request(HandlerConst.RequestId.RequsetSceneHandler, -1, sceneIdData, SendType.TCP, (reqSceneRes) =>
+                RequestSceneData reqData = new RequestSceneData();
+                reqData.Id = sceneId;
+                reqData.SceneType = sceneType;
+                currentServer.Request(HandlerConst.RequestId.RequsetSceneHandler, -1, reqData, SendType.TCP, (reqSceneRes) =>
                 {
                     if (reqSceneRes.GetValue<BoolData>().Value == true)
                     {
