@@ -42,17 +42,16 @@ public class TestNetScene : NetScene<Transform3DData>
         data.LocalScale.X = transform.localScale.x;
         data.LocalScale.Y = transform.localScale.y;
         data.LocalScale.Z = transform.localScale.z;
-
+        
         return data;
     }
 
     public override void HandleSnapshot(Package pkg)
     {
+        Debug.Log("处理快照");
         var trans = pkg.GetValue<Transform3DData>();
         NetTransform netTran = cube.GetComponent<NetTransform>();
-        cube.transform.localPosition = netTran.localPosition;
-        cube.transform.localEulerAngles = netTran.localEulerAngle;
-        cube.transform.localScale = netTran.localScale;
+        netTran.SetData(trans);
     }
 
 }

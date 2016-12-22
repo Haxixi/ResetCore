@@ -77,10 +77,10 @@ namespace ResetCore.NetPost
             if (isClientCreate)
             {
                 EventDispatcher.RemoveEventListener(NetSceneEvent.NetSceneReady, RequestObjectJoin);
+                if (NetSceneManager.Instance.sceneConnected)
+                    RequestDestroy();
             }
             EventDispatcher.RemoveEventListener<Package>(NetSceneEvent.GetNetBehaviorEventName(handlerId), OnNetUpdate);
-            if(NetSceneManager.Instance.sceneConnected)
-            RequestDestroy();
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace ResetCore.NetPost
         /// 用于修改当前的NetBehavior属性并且同步到服务器
         /// </summary>
         /// <param name="data"></param>
-        public virtual void SetData(T data, bool sendToSerer = true)
+        public virtual void SetData(T data)
         {
             if (NetSceneManager.Instance.sceneConnected == false)
                 return;

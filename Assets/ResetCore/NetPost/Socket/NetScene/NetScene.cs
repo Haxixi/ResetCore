@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using ResetCore.Util;
+using System;
 
 namespace ResetCore.NetPost
 {
@@ -53,18 +54,20 @@ namespace ResetCore.NetPost
         public override void OnAfterConnect(bool result)
         {
             base.OnAfterConnect(result);
-
             if (!result)
                 return;
 
-            //循环发送快照
-            CoroutineTaskManager.Instance.LoopTodoByWhile(() =>
-            {
-                if (NetSceneManager.Instance.sceneConnected)
-                {
-                    SendSnapshot(CreateSnapshotData());
-                }
-            }, 1/fps, () => isRunning);
+            isRunning = true;
+            ////循环发送快照
+            //CoroutineTaskManager.Instance.LoopTodoByWhile(() =>
+            //{
+            //    if (NetSceneManager.Instance.sceneConnected)
+            //    {
+            //        T data = CreateSnapshotData();
+            //        NetSceneManager.Instance.currentServer.Send
+            //            (HandlerConst.RequestId.SceneSnapshotHandlerId, NetSceneManager.Instance.currentSceneId, data, SendType.UDP);
+            //    }
+            //}, 1 / fps, () => isRunning);
         }
 
         public override void OnBeforeDisconnect()
@@ -85,10 +88,10 @@ namespace ResetCore.NetPost
         /// <typeparam name="T"></typeparam>
         /// <param name="value"></param>
         /// <param name="sendType"></param>
-        public void SendSnapshot<T>(T value, SendType sendType = SendType.UDP)
+        public void SendSceneSnapshot(T value, SendType sendType = SendType.UDP)
         {
             NetSceneManager.Instance.currentServer.Send
-                (HandlerConst.RequestId.SceneSnapshotHandlerId, NetSceneManager.Instance.currentSceneId, value, sendType);
+                         (HandlerConst.RequestId.SceneSnapshotHandlerId, NetSceneManager.Instance.currentSceneId, value, sendType);
         }
     }
 }
