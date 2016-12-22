@@ -32,7 +32,7 @@ namespace ResetCore.NetPost
         public int instanceId
         {
             get { return _instanceId; }
-            protected set { _instanceId = value; }
+            set { _instanceId = value; }
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace ResetCore.NetPost
         /// 用于修改当前的NetBehavior属性并且同步到服务器
         /// </summary>
         /// <param name="data"></param>
-        public virtual void SetData(T data)
+        public virtual void SetData(T data, bool sendToSerer = true)
         {
             if (NetSceneManager.Instance.sceneConnected == false)
                 return;

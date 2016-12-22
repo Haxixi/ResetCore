@@ -122,6 +122,7 @@ namespace ResetCore.PlatformHelper
         {
             EventDispatcher.TriggerEvent<string>(eventName, json);
         }
+
     }
 
 }

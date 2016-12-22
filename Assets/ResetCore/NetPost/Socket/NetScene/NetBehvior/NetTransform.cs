@@ -15,6 +15,38 @@ namespace ResetCore.NetPost
             }
         }
 
+        /// <summary>
+        /// 获取局部坐标
+        /// </summary>
+        public Vector3 localPosition
+        {
+            get
+            {
+                return new Vector3(behaviorData.LocalPosition.X, behaviorData.LocalPosition.Y, behaviorData.LocalPosition.Z);
+            }
+        }
+
+        /// <summary>
+        /// 获取局部欧拉角
+        /// </summary>
+        public Vector3 localEulerAngle
+        {
+            get
+            {
+                return new Vector3(behaviorData.LocalEulerAngle.X, behaviorData.LocalEulerAngle.Y, behaviorData.LocalEulerAngle.Z);
+            }
+        }
+
+        /// <summary>
+        /// 获取局部缩放
+        /// </summary>
+        public Vector3 localScale
+        {
+            get
+            {
+                return new Vector3(behaviorData.LocalScale.X, behaviorData.LocalScale.Y, behaviorData.LocalScale.Z);
+            }
+        }
 
         public override void Awake()
         {

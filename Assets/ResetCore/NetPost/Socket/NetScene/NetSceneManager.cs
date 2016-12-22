@@ -44,6 +44,11 @@ namespace ResetCore.NetPost
         public int currentSceneId { get; private set; }
 
         /// <summary>
+        /// 当前场景
+        /// </summary>
+        public NetScene currentScene { get; private set; }
+
+        /// <summary>
         /// 客户端创建的Net
         /// </summary>
         private Dictionary<int, NetBehavior> clientNetBehaviorDict = new Dictionary<int, NetPost.NetBehavior>();  
@@ -52,13 +57,21 @@ namespace ResetCore.NetPost
         /// 开启场景
         /// </summary>
         /// <param name="sceneId"></param>
-        public void StartScene(int sceneId, string sceneType)
+        public void StartScene(int sceneId, string sceneType, System.Action onSuccess = null, System.Action onError = null)
         {
             if (sceneConnected)
             {
                 Debug.logger.LogError("NetPost", "在连接前请断开连接，当前连接Id为" + currentSceneId);
                 return;
             }
+            currentScene = GameObject.FindObjectOfType<NetScene>();
+            if (currentScene == null)
+            {
+                Debug.logger.LogError("NetPost", "未找到网络场景对象" + currentSceneId);
+                return;
+            }
+            currentScene.OnBeforeConnect();
+
             currentSceneId = sceneId;
             if(currentServer == null)
             {
@@ -73,20 +86,30 @@ namespace ResetCore.NetPost
                 reqData.SceneType = sceneType;
                 currentServer.Request(HandlerConst.RequestId.RequsetSceneHandler, -1, reqData, SendType.TCP, (reqSceneRes) =>
                 {
-                    if (reqSceneRes.GetValue<BoolData>().Value == true)
+                    bool result = reqSceneRes.GetValue<BoolData>().Value;
+                    if (result == true)
                     {
                         Debug.logger.Log("请求场景成功并且注册至频道");
                         EventDispatcher.AddEventListener<NetBehavior>(NetSceneEvent.NetBehaviorAddToScene, AddNetBehavior);
                         EventDispatcher.AddEventListener<NetBehavior>(NetSceneEvent.NetBehaviorRemoveFromScene, RemoveNetBehavior);
                         sceneConnected = true;
+
+                        if(onSuccess != null)
+                            onSuccess();
+
                     }
                     else
                     {
                         Debug.logger.LogError("NetPost", "请求场景失败");
+                        if (onError != null)
+                            onError();
                     }
+                    currentScene.OnAfterConnect(result);
                 }, () =>
                 {
                     Debug.logger.LogError("NetPost", "请求场景超时");
+                    if (onError != null)
+                        onError();
                 });
             }, 0.5f);
 
@@ -95,13 +118,15 @@ namespace ResetCore.NetPost
         /// <summary>
         /// 断开场景
         /// </summary>
-        public void Disconnect()
+        public void Disconnect(System.Action onDisconnect = null)
         {
             if(sceneConnected == false)
             {
                 Debug.logger.LogError("NetPost", "当前不存在连接");
                 return;
             }
+            currentScene.OnBeforeDisconnect();
+
             sceneConnected = false;
             Int32Data sceneIdData = new Int32Data();
             sceneIdData.Value = currentSceneId;
@@ -118,7 +143,8 @@ namespace ResetCore.NetPost
             {
                 currentServer.Request(HandlerConst.RequestId.DisconnectSceneHandler, -1, sceneIdData, SendType.TCP, (pkg) =>
                 {
-                    if (pkg.GetValue<BoolData>().Value == true)
+                    bool result = pkg.GetValue<BoolData>().Value;
+                    if (result == true)
                     {
                         Debug.logger.Log("成功断开场景");
                     }
@@ -126,6 +152,7 @@ namespace ResetCore.NetPost
                     {
                         Debug.logger.Log("断开场景失败");
                     }
+                    currentScene.OnAfterDisconnect(result);
                     act();
                 }, () =>
                 {
@@ -133,6 +160,9 @@ namespace ResetCore.NetPost
                 });
             });
             destroyQueue.AddAction(OnDestroy);
+
+            if(onDisconnect != null)
+                destroyQueue.AddAction(onDisconnect);
         }
 
         private void AddNetBehavior(NetBehavior behavior)
