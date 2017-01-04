@@ -33,7 +33,7 @@ namespace ResetCore.UGUI
             if (onClick != null)
             {
                 onClick(gameObject);
-                if (string.IsNullOrEmpty(pointerClickEventName))
+                if (!string.IsNullOrEmpty(pointerClickEventName))
                 {
                     EventDispatcher.TriggerEvent(pointerClickEventName);
                 }
@@ -46,7 +46,7 @@ namespace ResetCore.UGUI
             if (onDown != null)
             {
                 onDown(gameObject);
-                if (string.IsNullOrEmpty(pointDownEventName))
+                if (!string.IsNullOrEmpty(pointDownEventName))
                 {
                     EventDispatcher.TriggerEvent(pointDownEventName);
                 }
@@ -58,7 +58,7 @@ namespace ResetCore.UGUI
             if (onEnter != null)
             {
                 onEnter(gameObject);
-                if (string.IsNullOrEmpty(pointEnterEventName))
+                if (!string.IsNullOrEmpty(pointEnterEventName))
                 {
                     EventDispatcher.TriggerEvent(pointEnterEventName);
                 }
@@ -70,7 +70,7 @@ namespace ResetCore.UGUI
             if (onExit != null)
             {
                 onExit(gameObject);
-                if (string.IsNullOrEmpty(pointExitEventName))
+                if (!string.IsNullOrEmpty(pointExitEventName))
                 {
                     EventDispatcher.TriggerEvent(pointExitEventName);
                 }
@@ -82,7 +82,7 @@ namespace ResetCore.UGUI
             if (onUp != null)
             {
                 onUp(gameObject);
-                if (string.IsNullOrEmpty(pointUpEventName))
+                if (!string.IsNullOrEmpty(pointUpEventName))
                 {
                     EventDispatcher.TriggerEvent(pointUpEventName);
                 }
@@ -94,7 +94,7 @@ namespace ResetCore.UGUI
             if (onSelect != null)
             {
                 onSelect(gameObject);
-                if (string.IsNullOrEmpty(selectEventName))
+                if (!string.IsNullOrEmpty(selectEventName))
                 {
                     EventDispatcher.TriggerEvent(selectEventName);
                 }
@@ -107,7 +107,7 @@ namespace ResetCore.UGUI
             if (onUpdateSelect != null)
             {
                 onUpdateSelect(gameObject);
-                if (string.IsNullOrEmpty(updateSelectedEventName))
+                if (!string.IsNullOrEmpty(updateSelectedEventName))
                 {
                     EventDispatcher.TriggerEvent(updateSelectedEventName);
                 }
@@ -142,7 +142,6 @@ namespace ResetCore.UGUI
                 onExit(gameObject);
             }
         }
-        public string pointUpEventName;
         public override void OnPointerUp(PointerEventData eventData)
         {
             if (onUp != null)

@@ -103,7 +103,7 @@ namespace ResetCore.UGUI
             root.gameObject.transform.DoToSelfAndAllChildren((tran) =>
             {
                 GameObject go = tran.gameObject;
-                if (go.name.StartsWith(genableSign))
+                if (!go.name.StartsWith(genableSign))
                 {
                     return;
                 }
@@ -140,6 +140,10 @@ namespace ResetCore.UGUI
                                 {
                                     method.Invoke(rootComponent, new object[0]);
                                 };
+                            }
+                            else
+                            {
+                                Debug.logger.Log("未发现函数");
                             }
                         }
 
