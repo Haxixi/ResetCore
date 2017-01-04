@@ -184,6 +184,7 @@ public class DownloadManager : Singleton<DownloadManager> {
     }
 
     #region 私有函数
+    //从断点开始继续下载
     private static void CheckIfHasDownloadedFile(string fileName, long contentLength, ref long leftSize, ref long position)
     {
         if (File.Exists(fileName))

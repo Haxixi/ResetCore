@@ -7,10 +7,6 @@ namespace ResetCore.PlatformHelper
 {
     public class AndroidMenifest
     {
-        private static readonly Dictionary<string, string> propertyPath = new Dictionary<string, string>()
-        {
-            
-        };
 
         XDocument xdoc;
         public bool valid { get; private set; }
@@ -23,7 +19,8 @@ namespace ResetCore.PlatformHelper
                 menifest.xdoc = XDocument.Load(path);
             }catch(Exception e)
             {
-                Debug.Log("加载失败");
+                Debug.logger.LogError("PlatformHelper", e);
+                Debug.logger.LogError("PlatformHelper", "加载失败");
                 menifest.valid = false;
             }
             return menifest;

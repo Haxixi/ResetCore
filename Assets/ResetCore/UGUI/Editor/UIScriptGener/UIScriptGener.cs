@@ -32,6 +32,8 @@ namespace ResetCore.UGUI
                 if (!go.name.StartsWith(UIView.genableSign)) return;
 
                 string goName = go.name.Replace(UIView.genableSign, string.Empty);
+
+                gener.AddMemberProperty(typeof(GameObject), UIView.goName + goName);
                 var coms = go.GetComponents<Component>();
                 foreach(var com in coms)
                 {

@@ -33,6 +33,7 @@ namespace ResetCore.UGUI
             typeof(Text),
         };
 
+        public static readonly string goName = "go";
         public static readonly Dictionary<Type, string> comNameDict = new Dictionary<Type, string>()
         {
             { typeof(Image), "img" },
@@ -102,14 +103,19 @@ namespace ResetCore.UGUI
             root.gameObject.transform.DoToSelfAndAllChildren((tran) =>
             {
                 GameObject go = tran.gameObject;
+                if (go.name.StartsWith(genableSign))
+                {
+                    return;
+                }
                 var coms = go.GetComponents<Component>();
+                string comGoName = go.name.Replace(genableSign, string.Empty);
                 //遍历所有组件
                 foreach (var com in coms)
                 {
                     Type comType = com.GetType();
                     if (uiCompTypeList.Contains(comType) && com.gameObject.name.StartsWith(genableSign))
                     {
-                        string comGoName = com.gameObject.name.Replace(genableSign, string.Empty);
+                        
 
                         //加入键值
                         StringBuilder builder = new StringBuilder();
@@ -144,6 +150,13 @@ namespace ResetCore.UGUI
                             prop.SetValue(this, com, Const.EmptyArg);
                         }
                     }
+                }
+                //添加GameObject变量
+                string goVarName = goName + comGoName;
+                PropertyInfo goProp = uiViewType.GetProperty(goVarName);
+                if (goProp != null)
+                {
+                    goProp.SetValue(this, go, Const.EmptyArg);
                 }
             });
         }
