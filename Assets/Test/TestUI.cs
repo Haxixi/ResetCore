@@ -12,12 +12,13 @@ public class TestUI : BaseNormalUI {
     protected override void Awake()
     {
         base.Awake();
+        Debug.logger.Log("asd");
         v.Init(this);
     }
 
    public void OnTestButton()
     {
-        v.txtText.text = "HAHAHAH";
+        v.txtText.text = v.goTestButton.name;
     }
 
 }

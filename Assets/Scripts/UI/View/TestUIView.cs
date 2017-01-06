@@ -16,11 +16,27 @@ namespace ResetCore.UGUI.Class
     public class TestUIView : UIView
     {
         
+        private UnityEngine.GameObject _goTestButton;
+        
         private UnityEngine.UI.Image _imgTestButton;
         
         private UnityEngine.UI.Button _btnTestButton;
         
+        private UnityEngine.GameObject _goText;
+        
         private UnityEngine.UI.Text _txtText;
+        
+        public virtual UnityEngine.GameObject goTestButton
+        {
+            get
+            {
+                return this._goTestButton;
+            }
+            set
+            {
+                this._goTestButton = value;
+            }
+        }
         
         public virtual UnityEngine.UI.Image imgTestButton
         {
@@ -43,6 +59,18 @@ namespace ResetCore.UGUI.Class
             set
             {
                 this._btnTestButton = value;
+            }
+        }
+        
+        public virtual UnityEngine.GameObject goText
+        {
+            get
+            {
+                return this._goText;
+            }
+            set
+            {
+                this._goText = value;
             }
         }
         
