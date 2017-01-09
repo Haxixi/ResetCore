@@ -7,7 +7,7 @@ namespace ResetCore.Event
     {
         void OnDestroy()
         {
-            EventDispatcher.Cleanup(this);
+            MonoEventDispatcher.RemoveMonoController(gameObject);
         }
     }
 

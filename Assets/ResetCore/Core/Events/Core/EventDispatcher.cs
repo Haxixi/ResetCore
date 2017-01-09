@@ -32,7 +32,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).AddEventListener(eventType, handler);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if(controller != null)
+                    controller.AddEventListener(eventType, handler);
             }
 
         }
@@ -50,7 +52,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).AddEventListener<T>(eventType, handler);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.AddEventListener<T>(eventType, handler);
             }
             
         }
@@ -68,7 +72,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).AddEventListener<T, U>(eventType, handler);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.AddEventListener<T, U>(eventType, handler);
             }
             
         }
@@ -86,7 +92,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).AddEventListener<T, U, V>(eventType, handler);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.AddEventListener<T, U, V>(eventType, handler);
             }
             
         }
@@ -104,7 +112,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).AddEventListener<T, U, V, W>(eventType, handler);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.AddEventListener<T, U, V, W>(eventType, handler);
             }
         }
 
@@ -123,7 +133,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).AddSingleProvider<Res>(provideType, provider);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.AddSingleProvider<Res>(provideType, provider);
             }
         }
         /// <summary>
@@ -141,7 +153,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).AddSingleProvider<A1, Res>(provideType, provider);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.AddSingleProvider<A1, Res>(provideType, provider);
             }
         }
         /// <summary>
@@ -159,7 +173,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).AddSingleProvider<A1, A2, Res>(provideType, provider);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.AddSingleProvider<A1, A2, Res>(provideType, provider);
             }
         }
         /// <summary>
@@ -177,7 +193,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).AddSingleProvider<A1, A2, A3, Res>(provideType, provider);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.AddSingleProvider<A1, A2, A3, Res>(provideType, provider);
             }
         }
         /// <summary>
@@ -195,7 +213,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).AddSingleProvider<A1, A2, A3, A4, Res>(provideType, provider);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.AddSingleProvider<A1, A2, A3, A4, Res>(provideType, provider);
             }
         }
 
@@ -214,7 +234,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).AddMultProvider<Res>(provideType, provider);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.AddMultProvider<Res>(provideType, provider);
             }
         }
         /// <summary>
@@ -232,7 +254,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).AddMultProvider<A1, Res>(provideType, provider);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.AddMultProvider<A1, Res>(provideType, provider);
             }
         }
         /// <summary>
@@ -250,7 +274,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).AddMultProvider<A1, A2, Res>(provideType, provider);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.AddMultProvider<A1, A2, Res>(provideType, provider);
             }
         }
         /// <summary>
@@ -268,7 +294,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).AddMultProvider<A1, A2, A3, Res>(provideType, provider);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.AddMultProvider<A1, A2, A3, Res>(provideType, provider);
             }
         }
         /// <summary>
@@ -286,7 +314,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).AddMultProvider<A1, A2, A3, A4, Res>(provideType, provider);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.AddMultProvider<A1, A2, A3, A4, Res>(provideType, provider);
             }
         }
         #endregion //添加监听器
@@ -304,12 +334,18 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).CleanUp();
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.CleanUp();
             }
             
         }
 
-
+        /// <summary>
+        /// 设置为持久
+        /// </summary>
+        /// <param name="eventType"></param>
+        /// <param name="bindObject"></param>
         public static void MarkAsPermanent(string eventType, object bindObject = null)
         {
             if (bindObject == null)
@@ -318,7 +354,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).MarkAsPermanent(eventType);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.MarkAsPermanent(eventType);
             }
             
         }
@@ -339,7 +377,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).RemoveEvent(eventType);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.RemoveEvent(eventType);
             }
         }
 
@@ -357,7 +397,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).RemoveEventListener(eventType, handler);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.RemoveEventListener(eventType, handler);
             }
         }
         /// <summary>
@@ -374,7 +416,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).RemoveEventListener<T>(eventType, handler);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.RemoveEventListener<T>(eventType, handler);
             }
                 
         }
@@ -392,7 +436,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).RemoveEventListener<T, U>(eventType, handler);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.RemoveEventListener<T, U>(eventType, handler);
             }
                
         }
@@ -410,7 +456,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).RemoveEventListener<T, U, V>(eventType, handler);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.RemoveEventListener<T, U, V>(eventType, handler);
             }
         }
         /// <summary>
@@ -427,7 +475,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).RemoveEventListener<T, U, V, W>(eventType, handler);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.RemoveEventListener<T, U, V, W>(eventType, handler);
             }
         }
 
@@ -443,7 +493,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).RemoveSingleProvider(provider);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.RemoveSingleProvider(provider);
             }
         }
 
@@ -462,7 +514,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).RemoveMultProvider<Res>(eventType, provider);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.RemoveMultProvider<Res>(eventType, provider);
             }
         }
         /// <summary>
@@ -480,7 +534,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).RemoveMultProvider<A1, Res>(eventType, provider);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.RemoveMultProvider<A1, Res>(eventType, provider);
             }
         }
         /// <summary>
@@ -498,7 +554,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).RemoveMultProvider<A1, A2, Res>(eventType, provider);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.RemoveMultProvider<A1, A2, Res>(eventType, provider);
             }
         }
         /// <summary>
@@ -516,7 +574,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).RemoveMultProvider<A1, A2, A3, Res>(eventType, provider);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.RemoveMultProvider<A1, A2, A3, Res>(eventType, provider);
             }
         }
         /// <summary>
@@ -534,7 +594,9 @@ namespace ResetCore.Event
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(bindObject).RemoveMultProvider<A1, A2, A3, A4, Res>(eventType, provider);
+                EventController controller = MonoEventDispatcher.GetMonoController(bindObject);
+                if (controller != null)
+                    controller.RemoveMultProvider<A1, A2, A3, A4, Res>(eventType, provider);
             }
         }
 
@@ -551,16 +613,16 @@ namespace ResetCore.Event
             if (triggerObject == null)
             {
                 m_eventController.TriggerEvent(eventType);
-                List<EventController> temp = new List<EventController>(MonoEventDispatcher.monoEventControllerDict.Values);
-                for (int i = 0; i < temp.Count; i++)
+                MonoEventDispatcher.DoToAllMonoContorller((con) =>
                 {
-                    if (temp[i].Equals(null)) continue;
-                    temp[i].TriggerEvent(eventType);
-                }
+                    con.TriggerEvent(eventType);
+                });
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(triggerObject).TriggerEvent(eventType);
+                EventController controller = MonoEventDispatcher.GetMonoController(triggerObject);
+                if (controller != null)
+                    controller.TriggerEvent(eventType);
             }
             
         }
@@ -574,16 +636,16 @@ namespace ResetCore.Event
             if (triggerObject == null)
             {
                 m_eventController.TriggerEvent<T>(eventType, arg1);
-                List<EventController> temp = new List<EventController>(MonoEventDispatcher.monoEventControllerDict.Values);
-                for (int i = 0; i < temp.Count; i++)
+                MonoEventDispatcher.DoToAllMonoContorller((con) =>
                 {
-                    if (temp[i].Equals(null)) continue;
-                    temp[i].TriggerEvent<T>(eventType, arg1);
-                }
+                    con.TriggerEvent<T>(eventType, arg1);
+                });
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(triggerObject).TriggerEvent<T>(eventType, arg1);
+                EventController controller = MonoEventDispatcher.GetMonoController(triggerObject);
+                if (controller != null)
+                    controller.TriggerEvent<T>(eventType, arg1);
             }
             
         }
@@ -597,16 +659,16 @@ namespace ResetCore.Event
             if (triggerObject == null)
             {
                 m_eventController.TriggerEvent<T, U>(eventType, arg1, arg2);
-                List<EventController> temp = new List<EventController>(MonoEventDispatcher.monoEventControllerDict.Values);
-                for (int i = 0; i < temp.Count; i++)
+                MonoEventDispatcher.DoToAllMonoContorller((con) =>
                 {
-                    if (temp[i].Equals(null)) continue;
-                    temp[i].TriggerEvent<T, U>(eventType, arg1, arg2);
-                }
+                    con.TriggerEvent<T, U>(eventType, arg1, arg2);
+                });
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(triggerObject).TriggerEvent<T, U>(eventType, arg1, arg2);
+                EventController controller = MonoEventDispatcher.GetMonoController(triggerObject);
+                if (controller != null)
+                    controller.TriggerEvent<T, U>(eventType, arg1, arg2);
             }
             
         }
@@ -620,16 +682,16 @@ namespace ResetCore.Event
             if (triggerObject == null)
             {
                 m_eventController.TriggerEvent<T, U, V>(eventType, arg1, arg2, arg3);
-                List<EventController> temp = new List<EventController>(MonoEventDispatcher.monoEventControllerDict.Values);
-                for (int i = 0; i < temp.Count; i++)
+                MonoEventDispatcher.DoToAllMonoContorller((con) =>
                 {
-                    if (temp[i].Equals(null)) continue;
-                    temp[i].TriggerEvent<T, U, V>(eventType, arg1, arg2, arg3);
-                }
+                    con.TriggerEvent<T, U, V>(eventType, arg1, arg2, arg3);
+                });
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(triggerObject).TriggerEvent<T, U, V>(eventType, arg1, arg2, arg3);
+                EventController controller = MonoEventDispatcher.GetMonoController(triggerObject);
+                if (controller != null)
+                    controller.TriggerEvent<T, U, V>(eventType, arg1, arg2, arg3);
             }
             
         }
@@ -643,16 +705,16 @@ namespace ResetCore.Event
             if (triggerObject == null)
             {
                 m_eventController.TriggerEvent<T, U, V, W>(eventType, arg1, arg2, arg3, arg4);
-                List<EventController> temp = new List<EventController>(MonoEventDispatcher.monoEventControllerDict.Values);
-                for (int i = 0; i < temp.Count; i++)
+                MonoEventDispatcher.DoToAllMonoContorller((con) =>
                 {
-                    if (temp[i].Equals(null)) continue;
-                    temp[i].TriggerEvent<T, U, V, W>(eventType, arg1, arg2, arg3, arg4);
-                }
+                    con.TriggerEvent<T, U, V, W>(eventType, arg1, arg2, arg3, arg4);
+                });
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(triggerObject).TriggerEvent<T, U, V, W>(eventType, arg1, arg2, arg3, arg4);
+                EventController controller = MonoEventDispatcher.GetMonoController(triggerObject);
+                if (controller != null)
+                    controller.TriggerEvent<T, U, V, W>(eventType, arg1, arg2, arg3, arg4);
             }
 
         }
@@ -671,7 +733,11 @@ namespace ResetCore.Event
             }
             else
             {
-                return MonoEventDispatcher.GetMonoController(triggerObject).RequestSingleProvider<Res>(providerType);
+                EventController controller = MonoEventDispatcher.GetMonoController(triggerObject);
+                if (controller != null)
+                    return controller.RequestSingleProvider<Res>(providerType);
+                else
+                    return default(Res);
             }
         }
         /// <summary>
@@ -688,7 +754,11 @@ namespace ResetCore.Event
             }
             else
             {
-                return MonoEventDispatcher.GetMonoController(triggerObject).RequestSingleProvider<A1, Res>(providerType, arg1);
+                EventController controller = MonoEventDispatcher.GetMonoController(triggerObject);
+                if (controller != null)
+                    return controller.RequestSingleProvider<A1, Res>(providerType, arg1);
+                else
+                    return default(Res);
             }
         }
         /// <summary>
@@ -705,7 +775,11 @@ namespace ResetCore.Event
             }
             else
             {
-                return MonoEventDispatcher.GetMonoController(triggerObject).RequestSingleProvider<A1, A2, Res>(providerType, arg1, arg2);
+                EventController controller = MonoEventDispatcher.GetMonoController(triggerObject);
+                if (controller != null)
+                    return controller.RequestSingleProvider<A1, A2, Res>(providerType, arg1, arg2);
+                else
+                    return default(Res);
             }
         }
         /// <summary>
@@ -722,7 +796,11 @@ namespace ResetCore.Event
             }
             else
             {
-                return MonoEventDispatcher.GetMonoController(triggerObject).RequestSingleProvider<A1, A2, A3, Res>(providerType, arg1, arg2, arg3);
+                EventController controller = MonoEventDispatcher.GetMonoController(triggerObject);
+                if (controller != null)
+                    return controller.RequestSingleProvider<A1, A2, A3, Res>(providerType, arg1, arg2, arg3);
+                else
+                    return default(Res);
             }
         }
         /// <summary>
@@ -739,7 +817,11 @@ namespace ResetCore.Event
             }
             else
             {
-                return MonoEventDispatcher.GetMonoController(triggerObject).RequestSingleProvider<A1, A2, A3, A4, Res>(providerType, arg1, arg2, arg3, arg4);
+                EventController controller = MonoEventDispatcher.GetMonoController(triggerObject);
+                if (controller != null)
+                    return controller.RequestSingleProvider<A1, A2, A3, A4, Res>(providerType, arg1, arg2, arg3, arg4);
+                else
+                    return default(Res);
             }
         }
 
@@ -756,16 +838,16 @@ namespace ResetCore.Event
             if (triggerObject == null)
             {
                 m_eventController.RequestMultProvider<Res>(providerType, handler);
-                List<EventController> temp = new List<EventController>(MonoEventDispatcher.monoEventControllerDict.Values);
-                for (int i = 0; i < temp.Count; i++)
+                MonoEventDispatcher.DoToAllMonoContorller((con) =>
                 {
-                    if (temp[i].Equals(null)) continue;
-                    temp[i].RequestMultProvider<Res>(providerType, handler);
-                }
+                    con.RequestMultProvider<Res>(providerType, handler);
+                });
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(triggerObject).RequestMultProvider<Res>(providerType, handler);
+                EventController controller = MonoEventDispatcher.GetMonoController(triggerObject);
+                if (controller != null)
+                    controller.RequestMultProvider<Res>(providerType, handler);
             }
 
         }
@@ -781,16 +863,16 @@ namespace ResetCore.Event
             if (triggerObject == null)
             {
                 m_eventController.RequestMultProvider<A1, Res>(providerType, handler, arg1);
-                List<EventController> temp = new List<EventController>(MonoEventDispatcher.monoEventControllerDict.Values);
-                for (int i = 0; i < temp.Count; i++)
+                MonoEventDispatcher.DoToAllMonoContorller((con) =>
                 {
-                    if (temp[i].Equals(null)) continue;
-                    temp[i].RequestMultProvider<A1, Res>(providerType, handler, arg1);
-                }
+                    con.RequestMultProvider<A1, Res>(providerType, handler, arg1);
+                });
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(triggerObject).RequestMultProvider<A1, Res>(providerType, handler, arg1);
+                EventController controller = MonoEventDispatcher.GetMonoController(triggerObject);
+                if (controller != null)
+                    controller.RequestMultProvider<A1, Res>(providerType, handler, arg1);
             }
 
         }
@@ -806,16 +888,16 @@ namespace ResetCore.Event
             if (triggerObject == null)
             {
                 m_eventController.RequestMultProvider<A1, A2, Res>(providerType, handler, arg1, arg2);
-                List<EventController> temp = new List<EventController>(MonoEventDispatcher.monoEventControllerDict.Values);
-                for (int i = 0; i < temp.Count; i++)
+                MonoEventDispatcher.DoToAllMonoContorller((con) =>
                 {
-                    if (temp[i].Equals(null)) continue;
-                    temp[i].RequestMultProvider<A1, A2, Res>(providerType, handler, arg1, arg2);
-                }
+                    con.RequestMultProvider<A1, A2, Res>(providerType, handler, arg1, arg2);
+                });
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(triggerObject).RequestMultProvider<A1, A2, Res>(providerType, handler, arg1, arg2);
+                EventController controller = MonoEventDispatcher.GetMonoController(triggerObject);
+                if (controller != null)
+                    controller.RequestMultProvider<A1, A2, Res>(providerType, handler, arg1, arg2);
             }
 
         }
@@ -831,16 +913,16 @@ namespace ResetCore.Event
             if (triggerObject == null)
             {
                 m_eventController.RequestMultProvider<A1, A2, A3, Res>(providerType, handler, arg1, arg2, arg3);
-                List<EventController> temp = new List<EventController>(MonoEventDispatcher.monoEventControllerDict.Values);
-                for (int i = 0; i < temp.Count; i++)
+                MonoEventDispatcher.DoToAllMonoContorller((con) =>
                 {
-                    if (temp[i].Equals(null)) continue;
-                    temp[i].RequestMultProvider<A1, A2, A3, Res>(providerType, handler, arg1, arg2, arg3);
-                }
+                    con.RequestMultProvider<A1, A2, A3, Res>(providerType, handler, arg1, arg2, arg3);
+                });
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(triggerObject).RequestMultProvider<A1, A2, A3, Res>(providerType, handler, arg1, arg2, arg3);
+                EventController controller = MonoEventDispatcher.GetMonoController(triggerObject);
+                if (controller != null)
+                    controller.RequestMultProvider<A1, A2, A3, Res>(providerType, handler, arg1, arg2, arg3);
             }
 
         }
@@ -856,20 +938,23 @@ namespace ResetCore.Event
             if (triggerObject == null)
             {
                 m_eventController.RequestMultProvider<A1, A2, A3, A4, Res>(providerType, handler, arg1, arg2, arg3, arg4);
-                List<EventController> temp = new List<EventController>(MonoEventDispatcher.monoEventControllerDict.Values);
-                for (int i = 0; i < temp.Count; i++)
+                MonoEventDispatcher.DoToAllMonoContorller((con) =>
                 {
-                    if (temp[i].Equals(null)) continue;
-                    temp[i].RequestMultProvider<A1, A2, A3, A4, Res>(providerType, handler, arg1, arg2, arg3, arg4);
-                }
+                    con.RequestMultProvider<A1, A2, A3, A4, Res>(providerType, handler, arg1, arg2, arg3, arg4);
+                });
             }
             else
             {
-                MonoEventDispatcher.GetMonoController(triggerObject).RequestMultProvider<A1, A2, A3, A4, Res>(providerType, handler, arg1, arg2, arg3, arg4);
+                EventController controller = MonoEventDispatcher.GetMonoController(triggerObject);
+                if (controller != null)
+                    controller.RequestMultProvider<A1, A2, A3, A4, Res>(providerType, handler, arg1, arg2, arg3, arg4);
             }
 
         }
         #endregion //触发事件
+
+
+
     }
 
 }
