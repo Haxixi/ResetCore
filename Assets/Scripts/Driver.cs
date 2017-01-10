@@ -23,18 +23,18 @@ public class Driver : MonoSingleton<Driver> {
 
     void Awake()
     {
-        EventDispatcher.AddMultProvider("Test", () =>
+        gameObject.AddEventListener<ArrayList>("Request", (array) =>
         {
-            return 100;
+            CoroutineTaskManager.Instance.WaitSecondTodo(() =>
+            {
+                SyncRequester.Response("Response", new ArrayList() { array.Count.ToString() });
+            }, 5);
         });
-        EventDispatcher.AddMultProvider("Test", () =>
+
+        SyncRequester.Request("Request", new ArrayList() { "TestData" }, "Response", (array) =>
         {
-            return 2;
-        });
-        EventDispatcher.RequestMultProvider<int>("Test", (res) =>
-        {
-            Debug.logger.Log(res);
-        });
+            Debug.Log(array[0] as string);
+        }, 1000);
     }
     // Use this for initialization
     void Start()

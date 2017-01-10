@@ -12,7 +12,6 @@ public class TestUI : BaseNormalUI {
     protected override void Awake()
     {
         base.Awake();
-        Debug.logger.Log("asd");
         v.Init(this);
     }
 
