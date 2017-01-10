@@ -5,6 +5,21 @@ using ResetCore.Util;
 
 namespace ResetCore.Event
 {
+    //使用范例：
+    //gameObject.AddEventListener<ArrayList>("Request", (array) =>
+    //{
+    //    CoroutineTaskManager.Instance.WaitSecondTodo(() =>
+    //    {
+    //        SyncRequester.Response("Response", new ArrayList() { array.Count.ToString() });
+    //    }, 5);
+    //});
+
+    //SyncRequester.Request("Request", new ArrayList() { "TestData" }, "Response", (array) =>
+    //{
+    //    Debug.Log(array[0] as string);
+    //}, 1000);
+
+
     public class SyncRequester
     {
         /// <summary>
