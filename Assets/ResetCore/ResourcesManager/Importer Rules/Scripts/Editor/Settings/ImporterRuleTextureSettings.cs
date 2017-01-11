@@ -41,7 +41,7 @@ namespace InfinityCode.ImporterRules
         };
 
         public TextureImporterSettings settings;
-        public TextureImporterType textureType = TextureImporterType.Image;
+        public TextureImporterType textureType = TextureImporterType.Default;
 
         private static readonly GUIContent[] textureTypeOptions =
         {
@@ -192,10 +192,10 @@ namespace InfinityCode.ImporterRules
 
             switch (textureType)
             {
-                case TextureImporterType.Image:
+                case TextureImporterType.Default:
                     OnImageGUI();
                     break;
-                case TextureImporterType.Bump:
+                case TextureImporterType.NormalMap:
                     OnBumpGUI();
                     break;
                 case TextureImporterType.Sprite:
@@ -252,7 +252,7 @@ namespace InfinityCode.ImporterRules
                 EditorGUILayout.IntPopup("Format", 0, new[] {"8 bit Alpha"}, new[] {0});
                 EditorGUI.EndDisabledGroup();
             }
-            else if (textureType == TextureImporterType.Advanced)
+            else if (textureType == TextureImporterType.Default)
             {
                 if (!texFormatValues.Contains((int) settings.textureFormat)) settings.textureFormat = TextureImporterFormat.AutomaticCompressed;
                 settings.textureFormat = (TextureImporterFormat) EditorGUILayout.IntPopup("Format", (int) settings.textureFormat, BuildTextureStrings(texFormatValues), texFormatValues);
@@ -358,9 +358,9 @@ namespace InfinityCode.ImporterRules
 #endif
             };
 
-            settings.mipmapEnabled = textureType == TextureImporterType.Image || textureType == TextureImporterType.Advanced || textureType == reflectionType;
+            settings.mipmapEnabled = textureType == TextureImporterType.Default || textureType == TextureImporterType.Default || textureType == reflectionType;
 
-            settings.linearTexture = textureType == TextureImporterType.Bump || textureType == TextureImporterType.GUI;
+            settings.linearTexture = textureType == TextureImporterType.NormalMap || textureType == TextureImporterType.GUI;
             settings.npotScale = (textureType == TextureImporterType.GUI || textureType == TextureImporterType.Sprite) ? TextureImporterNPOTScale.None: TextureImporterNPOTScale.ToNearest;
             settings.spriteMode = (textureType == TextureImporterType.Sprite) ? 1 : 0;
             settings.readable = textureType == TextureImporterType.Cursor;
@@ -581,7 +581,7 @@ namespace InfinityCode.ImporterRules
 
         private void OnSpriteGUI()
         {
-            if (textureType == TextureImporterType.Advanced)
+            if (textureType == TextureImporterType.Default)
             {
                 int[] optionValues =
                 {
@@ -637,7 +637,7 @@ namespace InfinityCode.ImporterRules
                 settings.spritePixelsPerUnit = EditorGUILayout.FloatField("Pixels to Units", settings.spritePixelsPerUnit);
 #endif
 
-                if (textureType == TextureImporterType.Advanced)
+                if (textureType == TextureImporterType.Default)
                 {
                     settings.spriteMeshType = (SpriteMeshType)EditorGUILayout.EnumPopup("Mesh Type", settings.spriteMeshType);
                     settings.spriteExtrude = (uint)EditorGUILayout.IntSlider("Extrude Edges", (int)settings.spriteExtrude, 0, 32);

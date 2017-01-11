@@ -21,20 +21,21 @@ using ResetCore.ReAssembly;
 
 public class Driver : MonoSingleton<Driver> {
 
+    public GameObject cube;
     void Awake()
     {
-        EventDispatcher.AddMultProvider("Test", () =>
+        cube = GameObject.Find("Cube");
+        EventDispatcher.AddEventListener("heihei", ()=> { Debug.LogError("Before Delete"); }, cube);
+        CoroutineTaskManager.Instance.WaitSecondTodo(() =>
         {
-            return 100;
-        });
-        EventDispatcher.AddMultProvider("Test", () =>
-        {
-            return 2;
-        });
-        EventDispatcher.RequestMultProvider<int>("Test", (res) =>
-        {
-            Debug.logger.Log(res);
-        });
+            EventDispatcher.TriggerEvent("heihei");
+            Destroy(cube);
+            CoroutineTaskManager.Instance.WaitSecondTodo(() =>
+            {
+                Debug.LogError("AfterDelete");
+                EventDispatcher.TriggerEvent("heihei");
+            }, 1f);
+        }, 1f);
     }
     // Use this for initialization
     void Start()

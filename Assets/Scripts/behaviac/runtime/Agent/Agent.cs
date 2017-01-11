@@ -1386,7 +1386,7 @@ namespace behaviac
         {
             if (this.m_bActive)
             {
-                Profiler.BeginSample("btexec");
+                UnityEngine.Profiling.Profiler.BeginSample("btexec");
 
 #if !BEHAVIAC_RELEASE
                 this.m_debug_count = 0;
@@ -1414,7 +1414,7 @@ namespace behaviac
                     this.LogVariables(false);
                 }
 
-                Profiler.EndSample();
+                UnityEngine.Profiling.Profiler.EndSample();
 
                 return s;
             }

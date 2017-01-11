@@ -287,7 +287,7 @@ public class RenderTextureWrap
 			}
 		}
 
-		LuaScriptMgr.Push(L, obj.generateMips);
+		LuaScriptMgr.Push(L, obj.autoGenerateMips);
 		return 1;
 	}
 
@@ -630,7 +630,7 @@ public class RenderTextureWrap
 			}
 		}
 
-		obj.generateMips = LuaScriptMgr.GetBoolean(L, 3);
+		obj.autoGenerateMips = LuaScriptMgr.GetBoolean(L, 3);
 		return 0;
 	}
 
