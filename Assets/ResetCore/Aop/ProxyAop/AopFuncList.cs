@@ -6,7 +6,7 @@ public class AopFuncList {
 
     public static List<AopFunc> aopFuncList = new List<AopFunc>()
     {
-        new TestAopFunc()
+        
     };
 
 

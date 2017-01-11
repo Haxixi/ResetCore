@@ -207,9 +207,11 @@ namespace InfinityCode.ImporterRules
                 case TextureImporterType.Cookie:
                     OnCookieGUI();
                     break;
+#if !UNITY_5_5
                 case TextureImporterType.Advanced:
                     OnAdvancedGUI();
                     break;
+#endif
             }
 
             EditorGUILayout.Space();
