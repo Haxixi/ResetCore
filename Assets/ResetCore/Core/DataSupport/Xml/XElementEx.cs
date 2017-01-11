@@ -27,6 +27,7 @@ namespace ResetCore.Xml
             return num;
         }
 
+
         /// <summary>
         /// 从节点中获取数据
         /// </summary>
@@ -129,6 +130,26 @@ namespace ResetCore.Xml
             }
             return list;
         }
+
+        /// <summary>
+        /// 找到所有名称匹配的节点
+        /// </summary>
+        /// <param name="element">父节点</param>
+        /// <param name="nameList">匹配列表</param>
+        /// <returns></returns>
+        public static List<XElement> FindIncludeElement(this XElement element, List<string> nameList)
+        {
+            List<XElement> result = new List<XElement>();
+            foreach(var child in element.Elements())
+            {
+                if (nameList.Contains(child.Name.LocalName))
+                {
+                    result.Add(child);
+                }
+            }
+            return result;
+        }
+
 
     }
 

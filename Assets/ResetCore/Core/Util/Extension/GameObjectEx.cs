@@ -52,15 +52,40 @@ namespace ResetCore.Util
         /// <param name="ancestorName">祖先节点对象</param>
         /// <param name="name">对象名称</param>
         /// <returns>对象</returns>
-        public static GameObject FindObjectInChild(Transform ancestorNode, string name)
+        public static GameObject FindObjectInChild(this GameObject node, string name)
         {
+            Transform ancestorNode = node.transform;
             for (int i = 0; i < ancestorNode.childCount; i++)
             {
                 GameObject tmp;
                 if (ancestorNode.GetChild(i).name == name)
                     return ancestorNode.GetChild(i).gameObject;
                 else
-                    tmp = FindObjectInChild(ancestorNode.GetChild(i), name);
+                    tmp = FindObjectInChild(ancestorNode.GetChild(i).gameObject, name);
+                if (tmp != null)
+                    return tmp;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 查找指定祖先节点下的组件
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="node"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static T GetComponentInChild<T>(this GameObject node) where T : Component
+        {
+            Transform ancestorNode = node.transform;
+            for (int i = 0; i < ancestorNode.childCount; i++)
+            {
+                T tmp;
+                tmp = ancestorNode.GetChild(i).gameObject.GetComponent<T>();
+                if (tmp != null)
+                    return tmp;
+                else
+                    tmp = GetComponentInChild<T>(ancestorNode.GetChild(i).gameObject);
                 if (tmp != null)
                     return tmp;
             }
