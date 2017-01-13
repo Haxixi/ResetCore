@@ -97,24 +97,22 @@ namespace ResetCore.NetPost
             NetObjectJoinUpData data = new NetObjectJoinUpData();
             data.InstanceId = instanceId;
             data.TypeName = GetType().Name;
-            int chnId = NetSceneManager.Instance.currentSceneId;
 
             if (NetSceneManager.Instance.currentServer != null)
             {
-                NetSceneManager.Instance.currentServer
-                .Request(HandlerConst.RequestId.NetObjectJoinUpHandler, chnId, data, SendType.TCP, (res) =>
+                NetSceneManager.Instance
+                .Request(HandlerConst.RequestId.NetObjectJoinUpHandler, data, (res) =>
                 {
 
                     BoolData isSucc = res.GetValue<BoolData>();
                     if (isSucc.Value == true)
                     {
-                        Debug.logger.Log("成功将NetBehavior加入到场景" + chnId);
                         isConnectNetScene = true;
                         EventDispatcher.TriggerEvent<NetBehavior>(NetSceneEvent.NetBehaviorAddToScene, this);
                     }
                     else
                     {
-                        Debug.logger.LogError("NetPost", "NetBehavior加入到场景失败" + chnId);
+                        Debug.logger.LogError("NetPost", "NetBehavior加入到场景失败" + NetSceneManager.Instance.currentSceneId);
                     }
                 });
             }
@@ -143,10 +141,9 @@ namespace ResetCore.NetPost
 
             Int32Data instanceId = new Int32Data();
             instanceId.Value = this.instanceId;
-            int chnId = NetSceneManager.Instance.currentSceneId;
             Debug.Log("请求销毁:" + gameObject.name);
-            NetSceneManager.Instance.currentServer
-                .Request(HandlerConst.RequestId.NetObjectRemoveHandler, chnId, instanceId, SendType.TCP, (res) =>
+            NetSceneManager.Instance
+                .Request(HandlerConst.RequestId.NetObjectRemoveHandler, instanceId, (res) =>
                 {
                     BoolData isSucc = res.GetValue<BoolData>();
                     if (isSucc.Value)
@@ -184,7 +181,7 @@ namespace ResetCore.NetPost
                 return;
 
             int sceneId = NetSceneManager.Instance.currentSceneId;
-            NetSceneManager.Instance.currentServer.Send(handlerId, sceneId, data, SendType.UDP);
+            NetSceneManager.Instance.SendData(handlerId, data, SendType.UDP);
             behaviorData = data;
         }
     }

@@ -93,5 +93,7 @@ namespace ResetCore.NetPost
             NetSceneManager.Instance.currentServer.Send
                          (HandlerConst.RequestId.SceneSnapshotHandlerId, NetSceneManager.Instance.currentSceneId, value, sendType);
         }
+
+        
     }
 }

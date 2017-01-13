@@ -4,6 +4,7 @@ using ResetCore.Util;
 using System.Collections.Generic;
 using Protobuf.Data;
 using ResetCore.Event;
+using System;
 
 namespace ResetCore.NetPost
 {
@@ -186,6 +187,34 @@ namespace ResetCore.NetPost
             EventDispatcher.RemoveEventListener<NetBehavior>(NetSceneEvent.NetBehaviorAddToScene, AddNetBehavior);
             EventDispatcher.RemoveEventListener<NetBehavior>(NetSceneEvent.NetBehaviorRemoveFromScene, RemoveNetBehavior);
             currentServer.Disconnect();
+        }
+
+        /// <summary>
+        /// 向场景服务端发送消息
+        /// </summary>
+        /// <param name="eventId"></param>
+        /// <param name="value"></param>
+        /// <param name="sendType"></param>
+        public void SendData<T>(HandlerConst.RequestId eventId, T value, SendType sendType = SendType.TCP)
+        {
+            currentServer.Send<T>(eventId, currentSceneId, value, sendType);
+        }
+
+        /// <summary>
+        /// 向服务端发送请求
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="eventId"></param>
+        /// <param name="channelId"></param>
+        /// <param name="value"></param>
+        /// <param name="sendType"></param>
+        /// <param name="callBack"></param>
+        /// <param name="timeoutAct"></param>
+        /// <param name="timeout"></param>
+        public void Request<T>(HandlerConst.RequestId eventId, T value, 
+            Action<Package> callBack, SendType sendType = SendType.TCP, Action timeoutAct = null, float timeout = 2)
+        {
+            currentServer.Request<T>(eventId, currentSceneId, value, sendType, callBack, timeoutAct, timeout);
         }
     }
 }

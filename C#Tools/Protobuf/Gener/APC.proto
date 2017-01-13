@@ -1,4 +1,4 @@
 message APCData {
 	required int32 id = 1;
-	optional bytes content = 2;
+	repeated bytes content = 2;
 }

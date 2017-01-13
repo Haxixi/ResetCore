@@ -146,10 +146,11 @@ namespace ResetCore.NetPost
         /// 服务器发送消息
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="eventId"></param>
-        /// <param name="value"></param>
-        /// <param name="sendType"></param>
-        public void Send<T>(int eventId, int channelId, T value, SendType sendType)
+        /// <param name="eventId">事件Id</param>
+        /// <param name="channelId">用户组Id</param>
+        /// <param name="value">发送值</param>
+        /// <param name="sendType">发送类型</param>
+        public void Send<T>(int eventId, int channelId, T value, SendType sendType = SendType.TCP)
         {
             if(isConnect == false)
             {
@@ -166,7 +167,16 @@ namespace ResetCore.NetPost
                 udpSocket.Send(pkg.totalData, pkg.totalLength);
             }
         }
-        public void Send<T>(HandlerConst.RequestId eventId, int channelId, T value, SendType sendType)
+
+        /// <summary>
+        /// 服务器发送消息
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="eventId">事件Id</param>
+        /// <param name="channelId">用户组Id</param>
+        /// <param name="value">发送值</param>
+        /// <param name="sendType">发送类型</param>
+        public void Send<T>(HandlerConst.RequestId eventId, int channelId, T value, SendType sendType = SendType.TCP)
         {
             Send<T>((int)eventId, channelId, value, sendType);
         }

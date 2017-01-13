@@ -26,23 +26,13 @@ namespace Protobuf.Data
       get { return _id; }
       set { _id = value; }
     }
-    private byte[] _content;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"content", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public byte[] Content
+    private readonly global::System.Collections.Generic.List<byte[]> _content = new global::System.Collections.Generic.List<byte[]>();
+    [global::ProtoBuf.ProtoMember(2, Name=@"content", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<byte[]> Content
     {
-      get { return _content?? null; }
-      set { _content = value; }
+      get { return _content; }
     }
-    [global::System.Xml.Serialization.XmlIgnore]
-    
-    public bool ContentSpecified
-    {
-      get { return this._content != null; }
-      set { if (value == (this._content== null)) this._content = value ? this.Content : (byte[])null; }
-    }
-    private bool ShouldSerializeContent() { return ContentSpecified; }
-    private void ResetContent() { ContentSpecified = false; }
-    
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
