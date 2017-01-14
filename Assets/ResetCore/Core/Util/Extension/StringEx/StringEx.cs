@@ -901,6 +901,32 @@ namespace ResetCore.Util
         {
             return input.Contains(" ");
         }
+
+        /// <summary>
+        /// 将一系列的对象转换为字符串并且以符号分割
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="sp"></param>
+        /// <returns></returns>
+        public static string Join<T>(this IEnumerable<T> source, string sp)
+        {
+            var result = new StringBuilder();
+            var first = true;
+            foreach (T item in source)
+            {
+                if (first)
+                {
+                    first = false;
+                    result.Append(item.ConverToString());
+                }
+                else
+                {
+                    result.Append(sp).Append(item.ConverToString());
+                }
+            }
+            return result.ToString();
+        }
     }
 
 }

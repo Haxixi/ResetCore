@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.IO;
+using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 namespace ResetCore.Util
 {
@@ -111,6 +113,36 @@ namespace ResetCore.Util
         public static string MakePathStandard(string path)
         {
             return path.Trim().Replace("\\", "/");
+        }
+
+        /// <summary>
+        /// 去除‘..’用路径替换
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static string Normalize(string path)
+        {
+            var normalized = path;
+            normalized = Regex.Replace(normalized, @"/\./", "/");
+            if (normalized.Contains(".."))
+            {
+                var list = new List<string>();
+                var paths = normalized.Split('/');
+                foreach (var name in paths)
+                {
+                    // 首位是".."无法处理的
+                    if (name.Equals("..") && list.Count > 0)
+                        list.RemoveAt(list.Count - 1);
+                    else
+                        list.Add(name);
+                }
+                normalized = list.Join("/");
+            }
+            if (path.Contains("\\"))
+            {
+                normalized = normalized.Replace("\\", "/");
+            }
+            return normalized;
         }
 
 
