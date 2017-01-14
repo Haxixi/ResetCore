@@ -148,11 +148,11 @@ namespace ResetCore.NetPost
                     BoolData isSucc = res.GetValue<BoolData>();
                     if (isSucc.Value)
                     {
-                        Debug.logger.Log("成功将NetBehavior:" + gameObject.name + "移除场景 " + chnId);
+                        Debug.logger.Log("成功将NetBehavior:" + gameObject.name + "移除场景 " + NetSceneManager.Instance.currentSceneId);
                     }
                     else
                     {
-                        Debug.logger.LogError("NetPost", "将NetBehavior:" + gameObject.name + "移除场景失败 " + chnId);
+                        Debug.logger.LogError("NetPost", "将NetBehavior:" + gameObject.name + "移除场景失败 " + NetSceneManager.Instance.currentSceneId);
                     }
                     isConnectNetScene = false;
                     act();
