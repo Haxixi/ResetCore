@@ -182,6 +182,26 @@ namespace ResetCore.Util
         {
             pool = new Dictionary<K, T>();
         }
+
+        /// <summary>
+        /// 是否包含值
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public bool ContainsValue(T value)
+        {
+            return pool.ContainsValue(value);
+        }
+
+        /// <summary>
+        /// 是否包含键
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public bool ContainsKey(K key)
+        {
+            return pool.ContainsKey(key);
+        }
     }
 
 }

@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-namespace ResetCore.NetPost
+namespace ResetCore.Util
 {
     public static class EnumEx
     {
