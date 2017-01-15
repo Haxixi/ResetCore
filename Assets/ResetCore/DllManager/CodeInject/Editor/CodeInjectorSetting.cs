@@ -103,7 +103,16 @@ namespace ResetCore.ReAssembly
                     {
                         if (!method.HasCustomAttribute<InjectAttribute>()) continue;
 
-                        //DoInjectMethod(assembly, method, type);
+                        foreach (string injectKey in injectList)
+                        {
+                            if (!injectorPool.ContainsKey(injectKey))
+                            {
+                                injectorPool.Put(injectKey,
+                                    Activator.CreateInstance(AssemblyManager.GetDefaultAssemblyType("ResetCore.ReAssembly." + injectKey)) as BaseInjector);
+                            }
+                            injectorPool.Get(injectKey).DoInjectMethod(assembly, method, type);
+                        }
+
                         modified = true;
                     }
                 }
