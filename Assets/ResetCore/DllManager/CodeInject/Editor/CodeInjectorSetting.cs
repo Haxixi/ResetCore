@@ -27,6 +27,17 @@ namespace ResetCore.ReAssembly
         }
 
         /// <summary>
+        /// 进行注入
+        /// </summary>
+        public void RunInject()
+        {
+            foreach(var dllPath in assemblys)
+            {
+
+            }
+        }
+
+        /// <summary>
         /// 添加程序集
         /// </summary>
         /// <param name="scriptPath"></param>
@@ -72,6 +83,12 @@ namespace ResetCore.ReAssembly
             assembly.Write(outPath, writerParameters);
         }
 
+        /// <summary>
+        /// 进行代码注入
+        /// </summary>
+        /// <param name="assembly"></param>
+        /// <param name="injectList"></param>
+        /// <returns></returns>
         private bool DoInjector(AssemblyDefinition assembly, List<string> injectList)
         {
             var modified = false;
