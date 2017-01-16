@@ -102,12 +102,7 @@ namespace ResetCore.ReAssembly
 
                         foreach (string injectKey in injectList)
                         {
-                            if (!injectorPool.ContainsKey(injectKey))
-                            {
-                                injectorPool.Put(injectKey, 
-                                    Activator.CreateInstance(AssemblyManager.GetDefaultAssemblyType("ResetCore.ReAssembly." + injectKey)) as BaseInjector);
-                            }
-                            injectorPool.Get(injectKey).DoInjectMethod(assembly, method, type);
+                            GetInject(injectKey).DoInjectMethod(assembly, method, type);
                         }
 
                         //DoInjectMethod(assembly, method, type);
@@ -122,12 +117,7 @@ namespace ResetCore.ReAssembly
 
                         foreach (string injectKey in injectList)
                         {
-                            if (!injectorPool.ContainsKey(injectKey))
-                            {
-                                injectorPool.Put(injectKey,
-                                    Activator.CreateInstance(AssemblyManager.GetDefaultAssemblyType("ResetCore.ReAssembly." + injectKey)) as BaseInjector);
-                            }
-                            injectorPool.Get(injectKey).DoInjectMethod(assembly, method, type);
+                            GetInject(injectKey).DoInjectMethod(assembly, method, type);
                         }
 
                         modified = true;
@@ -135,6 +125,21 @@ namespace ResetCore.ReAssembly
                 }
             }
             return modified;
+        }
+
+        /// <summary>
+        /// 获取注入器
+        /// </summary>
+        /// <param name="injectKey"></param>
+        /// <returns></returns>
+        private BaseInjector GetInject(string injectKey)
+        {
+            if (!injectorPool.ContainsKey(injectKey))
+            {
+                injectorPool.Put(injectKey,
+                    Activator.CreateInstance(AssemblyManager.GetDefaultAssemblyType("ResetCore.ReAssembly." + injectKey)) as BaseInjector);
+            }
+            return injectorPool.Get(injectKey);
         }
     }
 

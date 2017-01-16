@@ -54,18 +54,7 @@ namespace ResetCore.Util
         /// <returns>对象</returns>
         public static GameObject FindObjectInChild(this GameObject node, string name)
         {
-            Transform ancestorNode = node.transform;
-            for (int i = 0; i < ancestorNode.childCount; i++)
-            {
-                GameObject tmp;
-                if (ancestorNode.GetChild(i).name == name)
-                    return ancestorNode.GetChild(i).gameObject;
-                else
-                    tmp = FindObjectInChild(ancestorNode.GetChild(i).gameObject, name);
-                if (tmp != null)
-                    return tmp;
-            }
-            return null;
+            return node.transform.FindObjectInChild(name);
         }
 
         /// <summary>
@@ -92,6 +81,39 @@ namespace ResetCore.Util
             return null;
         }
 
+        /// <summary>
+        /// 查找指定节点的 任意子节点
+        /// </summary>
+        /// <typeparam name="T">脚本类型</typeparam>
+        /// <param name="parentName">祖先节点就可以</param>
+        /// <param name="name">对象名</param>
+        /// <returns>脚本</returns>
+        public static T FindComponentInChild<T>(this Transform ancestorNode, string name)
+        {
+            GameObject obj = FindObjectInChild(ancestorNode, name);
+            return obj != null ? obj.GetComponent<T>() : default(T);
+        }
+
+        /// <summary>
+        /// 查找指定祖先节点下的对象
+        /// </summary>
+        /// <param name="ancestorName">祖先节点对象</param>
+        /// <param name="name">对象名称</param>
+        /// <returns>对象</returns>
+        public static GameObject FindObjectInChild(this Transform ancestorNode, string name)
+        {
+            for (int i = 0; i < ancestorNode.childCount; i++)
+            {
+                GameObject tmp;
+                if (ancestorNode.GetChild(i).name == name)
+                    return ancestorNode.GetChild(i).gameObject;
+                else
+                    tmp = FindObjectInChild(ancestorNode.GetChild(i), name);
+                if (tmp != null)
+                    return tmp;
+            }
+            return null;
+        }
     }
 
 }
