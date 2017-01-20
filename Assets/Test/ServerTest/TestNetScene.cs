@@ -52,6 +52,7 @@ public class TestNetScene : NetScene<Transform3DData>
         var trans = pkg.GetValue<Transform3DData>();
         NetTransform netTran = cube.GetComponent<NetTransform>();
         netTran.SetData(trans);
+        cube.transform.localPosition = new Vector3(trans.LocalPosition.X, trans.LocalPosition.Y, trans.LocalPosition.Z);
     }
 
 }

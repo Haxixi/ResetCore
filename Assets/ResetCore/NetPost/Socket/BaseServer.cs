@@ -275,7 +275,7 @@ namespace ResetCore.NetPost
                         timeoutAct();
                     }
                 }
-            }, timeout);
+            }, 100000);
 ;        }
 
         //回调
@@ -341,7 +341,6 @@ namespace ResetCore.NetPost
                 //Todo
                 lock (tcpLockObject)
                 {
-                    Debug.logger.Log("Tcp Socket接收包，长度为：" + len);
                     tcpReciver.ReceivePackage(len, data);
                 }
             });

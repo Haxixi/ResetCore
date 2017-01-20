@@ -43,7 +43,9 @@ namespace ResetCore.NetPost
             do
             {
                 int packSize = GetDataLength(packetBuffer);
-                if(packSize == 0)
+                //Debug.Log("packSize " + packSize);
+                //Debug.Log("packetBuffer.Length " + packetBuffer.Length);
+                if (packSize == 0)
                 {
                     break;
                 }

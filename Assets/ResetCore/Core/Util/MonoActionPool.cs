@@ -42,7 +42,8 @@ namespace ResetCore.Util
             {
                 monoActionPool.ForEach((act) =>
                 {
-                    act();
+                    if(act != null)
+                        act();
                 });
             }
             monoActionPool.Clear();
