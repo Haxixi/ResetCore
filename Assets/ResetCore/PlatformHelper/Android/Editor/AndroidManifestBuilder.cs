@@ -1,309 +1,263 @@
-﻿//using System;
-//using System.IO;
-//using System.Xml;
-//using System.Collections.Generic;
-//using System.Text;
+﻿using System;
+using System.IO;
+using System.Xml;
+using System.Collections.Generic;
+using System.Text;
 
-///// <summary>
-///// 安卓Menifest文件处理器
-///// </summary>
-//public class AndroidManifestBuilder
-//{
-//    [UnityEditor.MenuItem("Project/MergeMenifest")]
-//    public static void MergeMenifest()
-//    {
-//        //Merge("common.xml", "uc.xml");
-//        MergeDir("doc");
+/// <summary>
+/// 安卓Menifest文件处理器
+/// </summary>
+public class AndroidManifestBuilder
+{
+    /// <summary>
+    /// 合并权限
+    /// </summary>
+    /// <param name="bas"></param>
+    /// <param name="add"></param>
+    public static void MergePermission(AndroidManifest bas, AndroidManifest add)
+    {
+        if (add.PermissionNodes.Count == 0)
+            return;
 
-//        //DirectoryUtility.DeepCopyDir("src", "dst", true, null, "baidu.xml|uc.xml");
-//    }
+        //XmlNode position = bas.LastPermissionNode != null ? bas.LastPermissionNode : null;
+        XmlNode pre = AddComment(bas.ManifestNode, "***********************************来自" + add.Name + "的权限开始***********************************", bas.PermissionEndNode, false);
 
-//    public static void MergePermission(AndroidManifest bas, AndroidManifest add)
-//    {
-//        if (add.PermissionNodes.Count == 0)
-//            return;
+        XmlNode last = pre;
 
-//        //XmlNode position = bas.LastPermissionNode != null ? bas.LastPermissionNode : null;
-//        XmlNode pre = AddComment(bas.ManifestNode, "***********************************来自" + add.Name + "的权限开始***********************************", bas.PermissionEndNode, false);
+        foreach (XmlNode n in add.PermissionNodes)
+        {
+            XmlNode nd = bas.XML.ImportNode(n, true);
 
-//        XmlNode last = pre;
+            if (bas.ContainsPermission(nd.OuterXml))
+            {
+                string s = "【重复】" + nd.OuterXml;
+                s = s.Replace(" xmlns:android=\"http://schemas.android.com/apk/res/android\"", "");
+                nd = AddComment(bas.ManifestNode, s, last);
+            }
 
-//        foreach(XmlNode n in add.PermissionNodes)
-//        {
-//            XmlNode nd = bas.XML.ImportNode(n, true);
+            else
+                bas.ManifestNode.InsertAfter(nd, last);
 
-//            if (bas.ContainsPermission(nd.OuterXml))
-//            {
-//                string s = "【重复】" + nd.OuterXml;
-//                s = s.Replace(" xmlns:android=\"http://schemas.android.com/apk/res/android\"", "");
-//                nd = AddComment(bas.ManifestNode, s, last);
-//            }
-                
-//            else
-//                bas.ManifestNode.InsertAfter(nd, last);
+            last = nd;
+        }
 
-//            last = nd;
-//        }
+        AddComment(bas.ManifestNode, "***********************************来自" + add.Name + "的权限结束***********************************", last);
+    }
 
-//        AddComment(bas.ManifestNode, "***********************************来自" + add.Name + "的权限结束***********************************", last);
-//    }
+    /// <summary>
+    /// 合并SDK
+    /// </summary>
+    /// <param name="bas"></param>
+    /// <param name="add"></param>
+    public static void MergeSDK(AndroidManifest bas, AndroidManifest add)
+    {
+        if (add.SDKNode == null)
+            return;
 
-//    public static void MergeSDK(AndroidManifest bas, AndroidManifest add)
-//    {
-//        if (add.SDKNode == null)
-//            return;
+        if (bas.SDKNode == null)
+        {
+            XmlNode node = bas.XML.ImportNode(add.SDKNode, true);
+            bas.ManifestNode.InsertAfter(node, null);
+        }
+        else
+        {
+            XmlNode node = bas.XML.ImportNode(add.SDKNode, true);
+            bas.ManifestNode.InsertAfter(node, bas.SDKNode.PreviousSibling);
+            bas.ManifestNode.RemoveChild(bas.SDKNode);
+        }
+    }
 
-//        if(bas.SDKNode == null)
-//        {
-//            XmlNode node = bas.XML.ImportNode(add.SDKNode, true);
-//            bas.ManifestNode.InsertAfter(node, null);
-//        }
-//        else
-//        {
-//            XmlNode node = bas.XML.ImportNode(add.SDKNode, true);
-//            bas.ManifestNode.InsertAfter(node, bas.SDKNode.PreviousSibling);
-//            bas.ManifestNode.RemoveChild(bas.SDKNode);
-//        }
-//    }
+    /// <summary>
+    /// 合并特性
+    /// </summary>
+    /// <param name="bas"></param>
+    /// <param name="add"></param>
+    public static void MergeFeature(AndroidManifest bas, AndroidManifest add)
+    {
+        if (add.FeatureNodes.Count == 0)
+            return;
 
-//    public static void MergeFeature(AndroidManifest bas, AndroidManifest add)
-//    {
-//        if (add.FeatureNodes.Count == 0)
-//            return;
+        XmlNode pre = AddComment(bas.ManifestNode, "***********************************来自" + add.Name + "的特性开始***********************************", bas.FeatureEndNode, false);
 
-//        XmlNode pre = AddComment(bas.ManifestNode, "***********************************来自" + add.Name + "的特性开始***********************************", bas.FeatureEndNode, false);
+        XmlNode last = pre;
 
-//        XmlNode last = pre;
+        foreach (XmlNode n in add.FeatureNodes)
+        {
+            XmlNode nd = bas.XML.ImportNode(n, true);
 
-//        foreach (XmlNode n in add.FeatureNodes)
-//        {
-//            XmlNode nd = bas.XML.ImportNode(n, true);
+            if (bas.ContainsFeature(nd.OuterXml))
+            {
+                string s = "【重复】" + nd.OuterXml;
+                s = s.Replace(" xmlns:android=\"http://schemas.android.com/apk/res/android\"", "");
+                nd = AddComment(bas.ManifestNode, s, last);
+            }
 
-//            if (bas.ContainsFeature(nd.OuterXml))
-//            {
-//                string s = "【重复】" + nd.OuterXml;
-//                s = s.Replace(" xmlns:android=\"http://schemas.android.com/apk/res/android\"", "");
-//                nd = AddComment(bas.ManifestNode, s, last);
-//            }
+            else
+                bas.ManifestNode.InsertAfter(nd, last);
 
-//            else
-//                bas.ManifestNode.InsertAfter(nd, last);
+            last = nd;
+        }
 
-//            last = nd;
-//        }
+        AddComment(bas.ManifestNode, "***********************************来自" + add.Name + "的特性结束***********************************", last);
+    }
 
-//        AddComment(bas.ManifestNode, "***********************************来自" + add.Name + "的特性结束***********************************", last);
-//    }
+    /// <summary>
+    /// 合并屏幕
+    /// </summary>
+    /// <param name="bas"></param>
+    /// <param name="add"></param>
+    public static void MergeScreen(AndroidManifest bas, AndroidManifest add)
+    {
+        if (add.ScreenNode == null)
+            return;
 
-//    public static void MergeScreen(AndroidManifest bas, AndroidManifest add)
-//    {
-//        if (add.ScreenNode == null)
-//            return;
+        if (bas.ScreenNode == null)
+        {
+            XmlNode node = bas.XML.ImportNode(add.ScreenNode, true);
+            bas.ManifestNode.InsertAfter(node, null);
+        }
+        else
+        {
+            XmlNode node = bas.XML.ImportNode(add.ScreenNode, true);
+            bas.ManifestNode.InsertAfter(node, bas.ScreenNode.PreviousSibling);
+            bas.ManifestNode.RemoveChild(bas.ScreenNode);
+        }
+    }
 
-//        if (bas.ScreenNode == null)
-//        {
-//            XmlNode node = bas.XML.ImportNode(add.ScreenNode, true);
-//            bas.ManifestNode.InsertAfter(node, null);
-//        }
-//        else
-//        {
-//            XmlNode node = bas.XML.ImportNode(add.ScreenNode, true);
-//            bas.ManifestNode.InsertAfter(node, bas.ScreenNode.PreviousSibling);
-//            bas.ManifestNode.RemoveChild(bas.ScreenNode);
-//        }
-//    }
+    /// <summary>
+    /// 合并Application
+    /// </summary>
+    /// <param name="bas"></param>
+    /// <param name="add"></param>
+    public static void MergeApplication(AndroidManifest bas, AndroidManifest add)
+    {
+        if (add.ApplicationNode == null)
+            return;
 
-//    public static void MergeApplication(AndroidManifest bas, AndroidManifest add)
-//    {
-//        if (add.ApplicationNode == null)
-//            return;
+        //合并Application的属性
+        foreach (XmlAttribute attr in add.ApplicationNode.Attributes)
+        {
+            bool exist = false;
+            foreach (XmlAttribute bttr in bas.ApplicationNode.Attributes)
+            {
+                if (bttr.Name.ToLower() == attr.Name.ToLower() && bttr.NamespaceURI == attr.NamespaceURI)
+                {
+                    exist = true;
+                    bttr.Value = attr.Value;
+                    break;
+                }
+            }
 
-//        //合并Application的属性
-//        foreach (XmlAttribute attr in add.ApplicationNode.Attributes)
-//        {
-//            bool exist = false;
-//            foreach (XmlAttribute bttr in bas.ApplicationNode.Attributes)
-//            {
-//                if (bttr.Name.ToLower() == attr.Name.ToLower() && bttr.NamespaceURI == attr.NamespaceURI)
-//                {
-//                    exist = true;
-//                    bttr.Value = attr.Value;
-//                    break;
-//                }
-//            }
+            if (!exist)
+            {
+                XmlAttribute at = bas.XML.CreateAttribute(attr.Name, attr.NamespaceURI);
+                at.Value = attr.Value;
+                bas.ApplicationNode.Attributes.Append(at);
+            }
 
-//            if (!exist)
-//            {
-//                XmlAttribute at = bas.XML.CreateAttribute(attr.Name, attr.NamespaceURI);
-//                at.Value = attr.Value;
-//                bas.ApplicationNode.Attributes.Append(at);
-//            }
+        }
 
-//        }
+        if (bas.ApplicationNode == null)
+        {
+            XmlNode nd = bas.XML.ImportNode(add.ApplicationNode, true);
+            bas.ManifestNode.InsertAfter(nd, null);
+        }
+        else if (add.ApplicationChildren != null && add.ApplicationChildren.Count > 0)
+        {
+            AddComment(bas.ApplicationNode, "***********************************来自" + add.Name + "的界面开始***********************************");
+            foreach (XmlNode nn in add.ApplicationChildren)
+            {
+                XmlNode nd = bas.XML.ImportNode(nn, true);
+                bas.ApplicationNode.AppendChild(nd);
+            }
+            AddComment(bas.ApplicationNode, "***********************************来自" + add.Name + "的界面结束***********************************");
+        }
+    }
 
-//        if (bas.ApplicationNode == null)
-//        {
-//            XmlNode nd = bas.XML.ImportNode(add.ApplicationNode, true);
-//            bas.ManifestNode.InsertAfter(nd, null);
-//        }
-//        else if(add.ApplicationChildren != null && add.ApplicationChildren.Count > 0)
-//        {
-//            AddComment(bas.ApplicationNode, "***********************************来自" + add.Name + "的界面开始***********************************");
-//            foreach(XmlNode nn in add.ApplicationChildren)
-//            {
-//                XmlNode nd = bas.XML.ImportNode(nn, true);
-//                bas.ApplicationNode.AppendChild(nd);
-//            }
-//            AddComment(bas.ApplicationNode, "***********************************来自" + add.Name + "的界面结束***********************************");
-//        }
-//    }
+    /// <summary>
+    /// 合并
+    /// </summary>
+    /// <param name="baseFile"></param>
+    /// <param name="addFile"></param>
+    public static void MergeAndroidMenifest(string baseFile, string addFile)
+    {
+        AndroidManifest b = new AndroidManifest(baseFile);
+        AndroidManifest a = new AndroidManifest(addFile);
 
-//    public static bool MergeDir(string dir, BuildCommand cmd = null, BuildConfig config = null, string common = "common.xml",bool mergetPlatXml=true)
-//    {
-//        //读取目录信息
-//        DirectoryInfo dinfo = new DirectoryInfo(dir);
+        IList<XmlNode> nodes = b.UnknownNodes;
+        MergePermission(b, a);
+        MergeSDK(b, a);
+        MergeFeature(b, a);
+        MergeScreen(b, a);
+        MergeApplication(b, a);
 
-//        string commonXml = common != null ? common : "common.xml";
-//        string platformXml = cmd != null ? cmd.Platform + ".xml" : null;
-//        string finalXml = dinfo.FullName + "\\AndroidManifest.xml";
+        b.XML.Save("merge.xml");
+    }
 
-//        //检测基础文件是否存在
-//        if (!File.Exists(dinfo.FullName + "\\" + commonXml))
-//        {
-//            UnityEngine.Debug.LogError("common xml : " + commonXml + " not found");
-//            return false;
-//        }
+    /// <summary>
+    /// 合并文件
+    /// </summary>
+    /// <param name="b"></param>
+    /// <param name="addFile"></param>
+    public static void MergeAndroidMenifest(AndroidManifest b, string addFile)
+    {
+        AndroidManifest a = new AndroidManifest(addFile);
 
-//        //解析基础文件
-//        AndroidManifest com = new AndroidManifest(dinfo.FullName + "\\" + commonXml);
-
-//        if(!com.IsValid)
-//        {
-//            UnityEngine.Debug.LogError("common xml : " + commonXml + " format error");
-//            return false;
-//        }
-
-//        //寻找全部xml文件
-//        FileInfo[] files = dinfo.GetFiles("*.xml", SearchOption.TopDirectoryOnly);
-
-//        //合并XML
-//        foreach(FileInfo f in files)
-//        {
-//            if (f.Name != "common.xml" &&
-//                f.Name != "AndroidManifest.xml" &&
-//                f.Name != commonXml &&
-//                f.Name != platformXml)
-//                Merge(com, f.FullName);
-//        }
-
-//        if(mergetPlatXml)
-//        {
-//            UnityEngine.Debug.LogError("my platform : " + dinfo.FullName + "\\" + platformXml);
-
-//            //合并本渠道XML
-//            if (File.Exists(dinfo.FullName + "\\" + platformXml))
-//            {
-//                UnityEngine.Debug.LogError("in my platform merge");
-//                Merge(com, dinfo.FullName + "\\" + platformXml);
-//            }
-//            else
-//                UnityEngine.Debug.LogError("out my platform merge");
-//        }
-
-
-//        //生成最终文件
-//        com.XML.Save(finalXml);
-
-//        //宏替换
-//        string content = File.ReadAllText(finalXml);
-
-//        //替换Bundle
-//        string bundle = config != null ? config.Bundle : null;
-//        if (bundle != null)
-//            content = content.Replace("{bundle}", bundle);
-
-//        foreach (string param in config.ParamKeys)
-//        {
-//            string pv = config.GetParam(param);
-//            content = content.Replace("{" + param + "}", pv);
-//        }
-//        File.WriteAllText(finalXml, content);
+        if (!a.IsValid)
+        {
+            UnityEngine.Debug.LogError("file " + addFile + " format error ");
+            return;
+        }
 
 
-//        return true;
-//    }
+        MergePermission(b, a);
+        MergeSDK(b, a);
+        MergeFeature(b, a);
+        MergeScreen(b, a);
+        MergeApplication(b, a);
+    }
 
-//    /// <summary>
-//    /// 合并
-//    /// </summary>
-//    /// <param name="baseFile"></param>
-//    /// <param name="addFile"></param>
-//    public static void Merge(string baseFile, string addFile)
-//    {
-//        AndroidManifest b = new AndroidManifest(baseFile);
-//        AndroidManifest a = new AndroidManifest(addFile);
+    /// <summary>
+    /// 添加注释
+    /// </summary>
+    /// <param name="parent"></param>
+    /// <param name="name"></param>
+    /// <param name="position"></param>
+    /// <param name="after"></param>
+    /// <returns></returns>
+    public static XmlNode AddComment(XmlNode parent, string name, XmlNode position = null, bool after = true)
+    {
+        XmlComment com = parent.OwnerDocument.CreateComment(name);
 
-//        IList<XmlNode> nodes = b.UnknownNodes;
-//        MergePermission(b, a);
-//        MergeSDK(b, a);
-//        MergeFeature(b, a);
-//        MergeScreen(b, a);
-//        MergeApplication(b, a);
+        if (position == null)
+            parent.AppendChild(com);
+        else
+        {
+            if (after)
+                parent.InsertAfter(com, position);
+            else
+                parent.InsertBefore(com, position);
+        }
 
-//        b.XML.Save("merge.xml");
-//    }
+        return com;
+    }
 
-//    public static void Merge(AndroidManifest b, string addFile)
-//    {
-//        AndroidManifest a = new AndroidManifest(addFile);
+    /// <summary>
+    /// 参数替换
+    /// </summary>
+    /// <param name="file">文件</param>
+    /// <param name="name">参数名</param>
+    /// <param name="val">参数值</param>
+    public static void ReplaceParam(string file, string name, string val)
+    {
+        if (!File.Exists(file))
+            return;
 
-//        if (!a.IsValid)
-//        {
-//            UnityEngine.Debug.LogError("file " + addFile + " format error ");
-//            return;
-//        }
-            
+        string content = File.ReadAllText(file);
+        content = content.Replace("{" + name + "}", val);
 
-//        MergePermission(b, a);
-//        MergeSDK(b, a);
-//        MergeFeature(b, a);
-//        MergeScreen(b, a);
-//        MergeApplication(b, a);
-//    }
-
-//    public static XmlNode AddComment(XmlNode parent, string name, XmlNode position = null, bool after = true)
-//    {
-//        XmlComment com = parent.OwnerDocument.CreateComment(name);
-
-//        if (position == null)
-//            parent.AppendChild(com);
-//        else
-//        {
-//            if (after)
-//                parent.InsertAfter(com, position);
-//            else
-//                parent.InsertBefore(com, position);
-//        }
-            
-//        return com;
-//    }
-
-//    /// <summary>
-//    /// 参数替换
-//    /// </summary>
-//    /// <param name="file">文件</param>
-//    /// <param name="name">参数名</param>
-//    /// <param name="val">参数值</param>
-//    public static void ReplaceParam(string file, string name, string val)
-//    {
-//        if (!File.Exists(file))
-//            return;
-
-//        string content = File.ReadAllText(file);
-//        content = content.Replace("{" + name + "}", val);
-
-//        File.Delete(file);
-//        File.WriteAllText(file, content, Encoding.UTF8);
-//    }
-//}
+        File.Delete(file);
+        File.WriteAllText(file, content, Encoding.UTF8);
+    }
+}
 

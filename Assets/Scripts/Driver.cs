@@ -23,11 +23,25 @@ public class Driver : MonoSingleton<Driver> {
 
     void Awake()
     {
-        
+        //EventBehavior.GenEvent(this);
+        //var types = AssemblyManager.DefaultCSharpAssembly.GetTypes();
+        //foreach(var type in types)
+        //{
+        //    foreach(var method in type.GetMethods())
+        //    {
+                
+        //    }
+        //}
     }
     // Use this for initialization
     void Start()
     {
+    }
+
+    [GenEventable("TestEvent")]
+    public void Test()
+    {
+        Debug.LogError("Heihei");
     }
 
     void OnDestroy()

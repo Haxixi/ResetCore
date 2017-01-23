@@ -16,9 +16,13 @@ namespace ResetCore.ReAssembly
             MidCodeInjectoring();
         }
 
+        [PostProcessBuild(1000)]
+        private static void OnPostProcessBuildPlayer(BuildTarget buildTarget, string buildPath)
+        {
+
+        }
 
         private static bool ifMidCodeInjector = true;
-
         [PostProcessScene]
         private static void MidCodeInjectoring()
         {
