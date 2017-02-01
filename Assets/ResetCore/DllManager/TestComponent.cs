@@ -1,6 +1,7 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using ResetCore.ReAssembly;
+using UnityEngine;
 
+[InjectAttribute("TestInject")]
 public class TestComponent : MonoBehaviour {
 
     [ResetCore.ReAssembly.Loadable]

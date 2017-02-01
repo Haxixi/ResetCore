@@ -82,7 +82,7 @@ namespace ResetCore.ReAssembly
             Type t;
 
             //安卓平台使用SSJJ.dll中的类型
-            if (Application.platform == RuntimePlatform.Android)
+            if (Application.platform == RuntimePlatform.Android || Application.isEditor)
                 t = AssemblyManager.GetAssembly(assembly).GetType(typeName);
             //其他平台使用默认程序集中的类型
             else

@@ -2,30 +2,8 @@
 <Root>
   <Common>
     <item>
-      <dll>Assembly-CSharp-Editor.dll</dll>
-      <dll>Assembly-CSharp-firstpass.dll</dll>
-      <injectAttr>Test</injectAttr>
+      <dll>Library/ScriptAssemblies/Assembly-CSharp.dll</dll>
+      <injectAttr>TestInject</injectAttr>
     </item>
   </Common>
-  <Android>
-    <item>
-      <dll>Assembly-CSharp-Editor.dll</dll>
-      <dll>Assembly-CSharp-firstpass.dll</dll>
-      <injectAttr>Test</injectAttr>
-    </item>
-  </Android>
-  <IOS>
-    <item>
-      <dll>Assembly-CSharp-Editor.dll</dll>
-      <dll>Assembly-CSharp-firstpass.dll</dll>
-      <injectAttr>Test</injectAttr>
-    </item>
-  </IOS>
-  <StandAlone>
-    <item>
-      <dll>Assembly-CSharp-Editor.dll</dll>
-      <dll>Assembly-CSharp-firstpass.dll</dll>
-      <injectAttr>Test</injectAttr>
-    </item>
-  </StandAlone>
 </Root>

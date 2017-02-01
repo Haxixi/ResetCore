@@ -1,9 +1,12 @@
 ﻿using Mono.Cecil;
+using ResetCore.Asset;
 using ResetCore.Util;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml.Linq;
+using System.Xml.XPath;
 using UnityEngine;
 
 namespace ResetCore.ReAssembly
@@ -11,20 +14,32 @@ namespace ResetCore.ReAssembly
     public class CodeInjectorSetting
     {
         private readonly List<string> assemblys = new List<string>();
-        public string buildTarget { get; set; }
-        public string outputDirectory { get; set; }
+        private readonly List<string> injectTags = new List<string>();
+        private readonly XDocument injectDllConfigXml;
+
 
         /// <summary>
         /// 用于复用注入器
         /// </summary>
         private static ObjectPool<string, BaseInjector> injectorPool = ObjectPool.CreatePool<BaseInjector>("InjectorPool");
 
-
-        public CodeInjectorSetting(string target, string outputPath)
+        public CodeInjectorSetting()
         {
-            this.buildTarget = target;
-            this.outputDirectory = outputPath;
+            var injectDllConfig = EditorResources.GetAsset<TextAsset>("InjectDll", "CodeInject");
+            injectDllConfigXml = XDocument.Parse(injectDllConfig.text);
+            //添加dll
+            var dllEles = injectDllConfigXml.Root.XPathSelectElements("Common/item/dll");
+            foreach(var dllEle in dllEles)
+            {
+                assemblys.Add(dllEle.Value);
+            }
+            var injectTagEles = injectDllConfigXml.Root.XPathSelectElements("Common/item/injectAttr");
+            foreach (var injectTagEle in injectTagEles)
+            {
+                injectTags.Add(injectTagEle.Value);
+            }
         }
+
 
         /// <summary>
         /// 进行注入
@@ -33,7 +48,10 @@ namespace ResetCore.ReAssembly
         {
             foreach(var dllPath in assemblys)
             {
-
+                string path = Path.Combine(PathConfig.projectPath, dllPath);
+                var assembly = AssemblyDefinition.ReadAssembly(path);
+                DoInjector(assembly, injectTags);
+                SaveAssembly(path, assembly);
             }
         }
 
@@ -76,11 +94,8 @@ namespace ResetCore.ReAssembly
         /// <param name="assembly"></param>
         private void SaveAssembly(string path, AssemblyDefinition assembly)
         {
-            var outPath = Path.Combine(outputDirectory, Path.GetFileName(path));
-            Debug.Log(string.Format("WriteAssembly: {0}", outPath));
-
-            var writerParameters = new WriterParameters { WriteSymbols = true };
-            assembly.Write(outPath, writerParameters);
+            Debug.Log(string.Format("WriteAssembly: {0}", path));
+            assembly.Write(path, new WriterParameters());
         }
 
         /// <summary>
@@ -105,7 +120,6 @@ namespace ResetCore.ReAssembly
                             GetInject(injectKey).DoInjectMethod(assembly, method, type);
                         }
 
-                        //DoInjectMethod(assembly, method, type);
                         modified = true;
                     }
                 }
@@ -136,8 +150,14 @@ namespace ResetCore.ReAssembly
         {
             if (!injectorPool.ContainsKey(injectKey))
             {
+                //foreach(var assmbly in AppDomain.CurrentDomain.GetAssemblies())
+                //{
+                //    string name = "ResetCore.ReAssembly." + injectKey;
+                //    Debug.Log(AssemblyManager.GetAssembly("Assembly-CSharp-Editor").GetType(name));
+                //}
+                Type injectorType = AssemblyManager.GetAssemblyType("Assembly-CSharp-Editor", "ResetCore.ReAssembly." + injectKey);
                 injectorPool.Put(injectKey,
-                    Activator.CreateInstance(AssemblyManager.GetDefaultAssemblyType("ResetCore.ReAssembly." + injectKey)) as BaseInjector);
+                    injectorType.GetConstructor(new Type[0]).Invoke(new object[0]) as BaseInjector);
             }
             return injectorPool.Get(injectKey);
         }

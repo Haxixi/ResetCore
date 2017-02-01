@@ -45,19 +45,21 @@ namespace ResetCore.NetPost
             postJsonData["TaskId"] = taskId;
 
             JsonData subData = new JsonData();
-            foreach (KeyValuePair<string, object> param in taskParams)
+            if(taskParams != null)
             {
-                subData[param.Key] = new JsonData(param.Value);
+                foreach (KeyValuePair<string, object> param in taskParams)
+                {
+                    subData[param.Key] = new JsonData(param.Value);
+                }
             }
-
             postJsonData["Param"] = subData;
         }
 
-        public void Start(Action afterAct = null)
+        public void Start(Action afterAct = null, string url = ServerConst.HttpNetPostURL)
         {
             OnStart();
             this.afterAct = afterAct;
-            HttpProxy.Instance.AsynDownloadJsonData(ServerConst.HttpNetPostURL, postJsonData, finishCall, progressCall);
+            HttpProxy.Instance.AsynDownloadJsonData(url, postJsonData, finishCall, progressCall);
         }
 
         protected virtual void OnStart()

@@ -7,30 +7,34 @@ using UnityEditor.Callbacks;
 
 namespace ResetCore.ReAssembly
 {
-    [InitializeOnLoad]
     public class CodeInjector
     {
-        [MenuItem("DllInjector/Run")]
-        private static void TestMidCodeInjectoring()
-        {
-            MidCodeInjectoring();
-        }
-
+        #region 打包注入
+        //是否已经生成
+        private static bool hasGen = false;
         [PostProcessBuild(1000)]
-        private static void OnPostProcessBuildPlayer(BuildTarget buildTarget, string buildPath)
+        private static void OnPostprocessBuildPlayer(BuildTarget buildTarget, string buildPath)
         {
-
+            hasGen = false;
         }
 
-        private static bool ifMidCodeInjector = true;
         [PostProcessScene]
-        private static void MidCodeInjectoring()
+        public static void TestInjectMothodOnPost()
         {
-            if (ifMidCodeInjector) return;
-            // Don't CodeInjector when in Editor and pressing Play
-            if (Application.isPlaying || EditorApplication.isPlaying) return;
+            if (hasGen == true) return;
+            hasGen = true;
 
+            TestInjectMothod();
         }
+        #endregion
 
+        #region 编辑器下注入
+        [InitializeOnLoadMethod]
+        public static void TestInjectMothod()
+        {
+            CodeInjectorSetting setting = new CodeInjectorSetting();
+            setting.RunInject();
+        }
+        #endregion
     }
 }

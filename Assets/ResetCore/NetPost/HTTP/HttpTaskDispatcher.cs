@@ -21,11 +21,11 @@ namespace ResetCore.NetPost
         /// </summary>
         /// <param name="task"></param>
         /// <param name="queueName"></param>
-        public static void AddNetPostTask(HttpPostTask task, string queueName = "Defualt")
+        public static void AddNetPostTask(HttpPostTask task, string queueName = "Defualt", string url = ServerConst.HttpNetPostURL)
         {
             Action<Action> postAct = (act) =>
             {
-                task.Start(act);
+                task.Start(act, url);
             };
             GetQueue(queueName).AddAction(postAct);
         }
@@ -39,10 +39,10 @@ namespace ResetCore.NetPost
         /// <param name="progressCall"></param>
         /// <param name="queueName"></param>
         public static void AddNetPostTask(int taskId, Dictionary<string, object> taskParams
-            , Action<JsonData> finishCall = null, Action<float> progressCall = null, string queueName = "Defualt")
+            , Action<JsonData> finishCall = null, Action<float> progressCall = null, string queueName = "Defualt", string url = ServerConst.HttpNetPostURL)
         {
             CommonNetTask task = new CommonNetTask(taskId, taskParams, finishCall, progressCall);
-            AddNetPostTask(task, queueName);
+            AddNetPostTask(task, queueName, url);
         }
 
         private static ActionQueue GetQueue(string queueName)
