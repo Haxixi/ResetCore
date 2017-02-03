@@ -90,6 +90,7 @@ namespace ResetCore.UGUI
 
         private void Fix()
         {
+#if DATA_GENER
             UILocalization local = target as UILocalization;
             Text txt = local.gameObject.GetComponent<Text>();
             Image img = local.gameObject.GetComponent<Image>();
@@ -129,6 +130,7 @@ namespace ResetCore.UGUI
             {
                 Debug.logger.LogError("DataGener", "不存在Text");
             }
+#endif
         }
 
     }
