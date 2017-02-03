@@ -32,6 +32,8 @@ namespace ResetCore.ReAssembly
         [InitializeOnLoadMethod]
         public static void TestInjectMothod()
         {
+            if (Application.isPlaying)
+                return;
             CodeInjectorSetting setting = new CodeInjectorSetting();
             setting.RunInject();
         }

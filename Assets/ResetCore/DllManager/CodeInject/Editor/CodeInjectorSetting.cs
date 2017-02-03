@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using UnityEngine;
@@ -14,7 +15,6 @@ namespace ResetCore.ReAssembly
     public class CodeInjectorSetting
     {
         private readonly List<string> assemblys = new List<string>();
-        private readonly List<string> injectTags = new List<string>();
         private readonly XDocument injectDllConfigXml;
 
 
@@ -31,13 +31,19 @@ namespace ResetCore.ReAssembly
             var dllEles = injectDllConfigXml.Root.XPathSelectElements("Common/item/dll");
             foreach(var dllEle in dllEles)
             {
-                assemblys.Add(dllEle.Value);
+                if (!assemblys.Contains(dllEle.Value))
+                {
+                    assemblys.Add(dllEle.Value);
+                }
             }
-            var injectTagEles = injectDllConfigXml.Root.XPathSelectElements("Common/item/injectAttr");
-            foreach (var injectTagEle in injectTagEles)
-            {
-                injectTags.Add(injectTagEle.Value);
-            }
+            //var injectTagEles = injectDllConfigXml.Root.XPathSelectElements("Common/item/injectAttr");
+            //foreach (var injectTagEle in injectTagEles)
+            //{
+            //    if (!injectTags.Contains(injectTagEle.Value))
+            //    {
+            //        injectTags.Add(injectTagEle.Value);
+            //    }
+            //}
         }
 
 
@@ -50,7 +56,7 @@ namespace ResetCore.ReAssembly
             {
                 string path = Path.Combine(PathConfig.projectPath, dllPath);
                 var assembly = AssemblyDefinition.ReadAssembly(path);
-                DoInjector(assembly, injectTags);
+                DoInjector(assembly);
                 SaveAssembly(path, assembly);
             }
         }
@@ -104,20 +110,44 @@ namespace ResetCore.ReAssembly
         /// <param name="assembly"></param>
         /// <param name="injectList"></param>
         /// <returns></returns>
-        private bool DoInjector(AssemblyDefinition assembly, List<string> injectList)
+        private bool DoInjector(AssemblyDefinition assembly)
         {
             var modified = false;
             foreach (var type in assembly.MainModule.Types)
             {
                 if (type.HasCustomAttribute<InjectAttribute>())
                 {
+                    Debug.Log(type.Name);
+                    //得到注入的属性
+                    var injectAttribute = type.GetCustomAttribute<InjectAttribute>();
+                    List<string> injectList = new List<string>();
+                    foreach(var arg in (CustomAttributeArgument[])(injectAttribute.ConstructorArguments[0].Value))
+                    {
+                        injectList.Add(arg.Value as string);
+                    }
+                    if (injectList == null) continue;
+
+
+                    //得到忽略的属性
+                    var ignoreInjectAttribute = type.GetCustomAttribute<IgnoreInjectAttribute>();
+                    List<string> ignoreInjectList = new List<string>();
+                    if (ignoreInjectAttribute != null)
+                    {
+                        foreach (var arg in (CustomAttributeArgument[])(ignoreInjectAttribute.ConstructorArguments[0].Value))
+                        {
+                            ignoreInjectList.Add(arg.Value as string);
+                        }
+                    }
+
                     foreach (var method in type.Methods)
                     {
-                        if (method.HasCustomAttribute<IgnoreInjectAttribute>()) continue;
-
                         foreach (string injectKey in injectList)
                         {
+                            if (ignoreInjectList.Count > 0 && ignoreInjectList.Contains(injectKey))
+                                continue;
+
                             GetInject(injectKey).DoInjectMethod(assembly, method, type);
+
                         }
 
                         modified = true;
@@ -129,9 +159,18 @@ namespace ResetCore.ReAssembly
                     {
                         if (!method.HasCustomAttribute<InjectAttribute>()) continue;
 
+                        var injectAttribute = method.GetCustomAttribute<InjectAttribute>();
+                        List<string> injectList = new List<string>();
+                        foreach (var arg in (CustomAttributeArgument[])(injectAttribute.ConstructorArguments[0].Value))
+                        {
+                            injectList.Add(arg.Value as string);
+                        }
+                        if (injectList.Count == 0) continue;
+
                         foreach (string injectKey in injectList)
                         {
                             GetInject(injectKey).DoInjectMethod(assembly, method, type);
+                            Debug.Log("注入！");
                         }
 
                         modified = true;
@@ -150,11 +189,6 @@ namespace ResetCore.ReAssembly
         {
             if (!injectorPool.ContainsKey(injectKey))
             {
-                //foreach(var assmbly in AppDomain.CurrentDomain.GetAssemblies())
-                //{
-                //    string name = "ResetCore.ReAssembly." + injectKey;
-                //    Debug.Log(AssemblyManager.GetAssembly("Assembly-CSharp-Editor").GetType(name));
-                //}
                 Type injectorType = AssemblyManager.GetAssemblyType("Assembly-CSharp-Editor", "ResetCore.ReAssembly." + injectKey);
                 injectorPool.Put(injectKey,
                     injectorType.GetConstructor(new Type[0]).Invoke(new object[0]) as BaseInjector);

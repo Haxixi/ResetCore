@@ -1,24 +1,20 @@
 ﻿using ResetCore.ReAssembly;
 using UnityEngine;
+using ResetCore.Event;
 
 [InjectAttribute("TestInject")]
 public class TestComponent : MonoBehaviour {
 
-    [ResetCore.ReAssembly.Loadable]
-    public int testInt;
+    private int testProp { get; set; }
 
-    [ResetCore.ReAssembly.Loadable]
-    public GameObject go;
+    private void Awake()
+    {
+        testProp = 10;
+    }
 
-    [ResetCore.ReAssembly.Loadable]
-    public GameObject go1;
     // Use this for initialization
     void Start () {
-	
+        Debug.Log(testProp);
 	}
 	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }

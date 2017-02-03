@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Mono.Cecil;
+using System;
 
 namespace ResetCore.ReAssembly
 {
@@ -79,6 +80,46 @@ namespace ResetCore.ReAssembly
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// 获得特定的特性
+        /// </summary>
+        /// <param name="method"></param>
+        /// <returns></returns>
+        public static CustomAttribute GetCustomAttribute<T>(this MethodDefinition method)
+        {
+            if (method.HasCustomAttributes)
+            {
+                foreach (var customAttribute in method.CustomAttributes)
+                {
+                    if (customAttribute.AttributeType.FullName.Equals(typeof(T).FullName))
+                    {
+                        return customAttribute;
+                    }
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 获得特定的特性
+        /// </summary>
+        /// <param name="method"></param>
+        /// <returns></returns>
+        public static CustomAttribute GetCustomAttribute<T>(this TypeDefinition method)
+        {
+            if (method.HasCustomAttributes)
+            {
+                foreach (var customAttribute in method.CustomAttributes)
+                {
+                    if (customAttribute.AttributeType.FullName.Equals(typeof(T).FullName))
+                    {
+                        return customAttribute;
+                    }
+                }
+            }
+            return null;
         }
 
         /// <summary>

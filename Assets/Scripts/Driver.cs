@@ -16,32 +16,22 @@ using ResetCore.NetPost;
 using ResetCore.Protobuf;
 using Protobuf.Data;
 using ResetCore.ReAssembly;
+using System;
 
 //using ResetCore.Data.GameDatas;
 
 public class Driver : MonoSingleton<Driver> {
 
+    public TestComponent comp;
+
     void Awake()
     {
-        //EventBehavior.GenEvent(this);
-        //var types = AssemblyManager.DefaultCSharpAssembly.GetTypes();
-        //foreach(var type in types)
-        //{
-        //    foreach(var method in type.GetMethods())
-        //    {
-                
-        //    }
-        //}
+        
     }
     // Use this for initialization
     void Start()
     {
-    }
-
-    [GenEventable("TestEvent")]
-    public void Test()
-    {
-        Debug.LogError("Heihei");
+        
     }
 
     void OnDestroy()

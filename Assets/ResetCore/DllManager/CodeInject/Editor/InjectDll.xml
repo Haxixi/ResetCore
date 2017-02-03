@@ -4,6 +4,7 @@
     <item>
       <dll>Library/ScriptAssemblies/Assembly-CSharp.dll</dll>
       <injectAttr>TestInject</injectAttr>
+      <injectAttr>KVOInjector</injectAttr>
     </item>
   </Common>
 </Root>
