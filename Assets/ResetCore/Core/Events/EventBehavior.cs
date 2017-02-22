@@ -20,7 +20,7 @@ namespace ResetCore.Event
         }
     }
 
-    public sealed static class EventBehavior
+    public static class EventBehavior
     {
 
         /// <summary>
