@@ -32,7 +32,7 @@ namespace ResetCore.ReAssembly
         [InitializeOnLoadMethod]
         public static void TestInjectMothod()
         {
-            if (Application.isPlaying)
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
                 return;
             CodeInjectorSetting setting = new CodeInjectorSetting();
             setting.RunInject();

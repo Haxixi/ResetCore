@@ -29,7 +29,6 @@ namespace ResetCore.ReAssembly
 
             var triggerRef = assembly.MainModule.Import(triggerMethod);
             triggerRef = triggerRef.MakeGeneric(property.PropertyType);
-            var logRef = assembly.MainModule.Import(typeof(Debug).GetMethod("Log", new Type[] { typeof(string) }));
             var typeRef = assembly.MainModule.Import(typeof(int));
             var fieldRef = type.Fields.Single(field => field.Name == GetHiddenFieldName(property));
 
@@ -37,12 +36,9 @@ namespace ResetCore.ReAssembly
                 new Dictionary<OpCode, object>()
                 {
                     { OpCodes.Ldstr, type.Name + "." + property.Name},
-                    //{ OpCodes.Ldarg_0, null},
                     { OpCodes.Ldarg_1, null},
-                    //{ OpCodes.Ldfld, fieldRef},
                     { OpCodes.Ldnull, null},
                     { OpCodes.Call, triggerRef},
-                    //{ OpCodes.Call, logRef},
                 });
 
 

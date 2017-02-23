@@ -81,7 +81,6 @@ namespace ResetCore.ReAssembly
             EditorGUILayout.LabelField("Tool Bag");
             if (GUILayout.Button("Test Inject", GUILayout.Width(150)))
             {
-
             }
         }
 
