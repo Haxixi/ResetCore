@@ -82,12 +82,42 @@ namespace ResetCore.ReAssembly
             return false;
         }
 
+        public static bool HasCustomAttribute<T>(this PropertyDefinition property)
+        {
+            if (property.HasCustomAttributes)
+            {
+                foreach (var customAttribute in property.CustomAttributes)
+                {
+                    if (customAttribute.AttributeType.FullName.Equals(typeof(T).FullName))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         /// <summary>
         /// 获得特定的特性
         /// </summary>
         /// <param name="method"></param>
         /// <returns></returns>
         public static CustomAttribute GetCustomAttribute<T>(this MethodDefinition method)
+        {
+            if (method.HasCustomAttributes)
+            {
+                foreach (var customAttribute in method.CustomAttributes)
+                {
+                    if (customAttribute.AttributeType.FullName.Equals(typeof(T).FullName))
+                    {
+                        return customAttribute;
+                    }
+                }
+            }
+            return null;
+        }
+
+        public static CustomAttribute GetCustomAttribute<T>(this PropertyDefinition method)
         {
             if (method.HasCustomAttributes)
             {
@@ -141,6 +171,25 @@ namespace ResetCore.ReAssembly
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// 获取函数
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="type"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static MethodDefinition GetMethod<T>(this TypeDefinition type, string name)
+        {
+            foreach(var method in type.Methods)
+            {
+                if(method.Name == name)
+                {
+                    return method;
+                }
+            }
+            return null;
         }
 
     }

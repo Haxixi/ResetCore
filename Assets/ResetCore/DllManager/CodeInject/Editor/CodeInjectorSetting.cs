@@ -36,14 +36,7 @@ namespace ResetCore.ReAssembly
                     assemblys.Add(dllEle.Value);
                 }
             }
-            //var injectTagEles = injectDllConfigXml.Root.XPathSelectElements("Common/item/injectAttr");
-            //foreach (var injectTagEle in injectTagEles)
-            //{
-            //    if (!injectTags.Contains(injectTagEle.Value))
-            //    {
-            //        injectTags.Add(injectTagEle.Value);
-            //    }
-            //}
+
         }
 
 
@@ -110,74 +103,121 @@ namespace ResetCore.ReAssembly
         /// <param name="assembly"></param>
         /// <param name="injectList"></param>
         /// <returns></returns>
-        private bool DoInjector(AssemblyDefinition assembly)
+        private void DoInjector(AssemblyDefinition assembly)
         {
-            var modified = false;
+            //注入Class
             foreach (var type in assembly.MainModule.Types)
             {
-                if (type.HasCustomAttribute<InjectAttribute>())
+
+                DoInjectClass(assembly, type);
+
+                DoInjectMethod(assembly, type);
+
+                DoInjectProperty(assembly, type);
+            }
+        }
+
+        private void DoInjectClass(AssemblyDefinition assembly, TypeDefinition type)
+        {
+            if (type.HasCustomAttribute<InjectClass>())
+            {
+                var injectAttribute = type.GetCustomAttribute<InjectClass>();
+                List<string> injectList = new List<string>();
+                foreach (var arg in (CustomAttributeArgument[])(injectAttribute.ConstructorArguments[0].Value))
                 {
-                    Debug.Log(type.Name);
-                    //得到注入的属性
-                    var injectAttribute = type.GetCustomAttribute<InjectAttribute>();
+                    injectList.Add(arg.Value as string);
+                }
+                if (injectList == null) return;
+
+                foreach (string injectKey in injectList)
+                {
+                    GetMethodInject<BaseClassInjector>(injectKey).DoInjectClass(assembly, type);
+                }
+            }
+        }
+
+        private void DoInjectMethod(AssemblyDefinition assembly, TypeDefinition type)
+        {
+            if (type.HasCustomAttribute<InjectMethod>())
+            {
+                //得到注入的属性
+                var injectAttribute = type.GetCustomAttribute<InjectMethod>();
+                List<string> injectList = new List<string>();
+                foreach (var arg in (CustomAttributeArgument[])(injectAttribute.ConstructorArguments[0].Value))
+                {
+                    injectList.Add(arg.Value as string);
+                }
+                if (injectList == null) return;
+
+
+                //得到忽略的属性
+                var ignoreInjectAttribute = type.GetCustomAttribute<IgnoreInjectMethod>();
+                List<string> ignoreInjectList = new List<string>();
+                if (ignoreInjectAttribute != null)
+                {
+                    foreach (var arg in (CustomAttributeArgument[])(ignoreInjectAttribute.ConstructorArguments[0].Value))
+                    {
+                        ignoreInjectList.Add(arg.Value as string);
+                    }
+                }
+
+                //注入Method
+                foreach (var method in type.Methods)
+                {
+                    foreach (string injectKey in injectList)
+                    {
+                        if (ignoreInjectList.Count > 0 && ignoreInjectList.Contains(injectKey))
+                            continue;
+
+                        GetMethodInject<BaseMethodInjector>(injectKey).DoInjectMethod(assembly, method, type);
+
+                    }
+
+                }
+            }
+            else
+            {
+                //注入Method
+                foreach (var method in type.Methods)
+                {
+                    if (!method.HasCustomAttribute<InjectMethod>()) continue;
+
+                    var injectAttribute = method.GetCustomAttribute<InjectMethod>();
                     List<string> injectList = new List<string>();
-                    foreach(var arg in (CustomAttributeArgument[])(injectAttribute.ConstructorArguments[0].Value))
+                    foreach (var arg in (CustomAttributeArgument[])(injectAttribute.ConstructorArguments[0].Value))
                     {
                         injectList.Add(arg.Value as string);
                     }
-                    if (injectList == null) continue;
+                    if (injectList.Count == 0) continue;
 
-
-                    //得到忽略的属性
-                    var ignoreInjectAttribute = type.GetCustomAttribute<IgnoreInjectAttribute>();
-                    List<string> ignoreInjectList = new List<string>();
-                    if (ignoreInjectAttribute != null)
+                    foreach (string injectKey in injectList)
                     {
-                        foreach (var arg in (CustomAttributeArgument[])(ignoreInjectAttribute.ConstructorArguments[0].Value))
-                        {
-                            ignoreInjectList.Add(arg.Value as string);
-                        }
-                    }
-
-                    foreach (var method in type.Methods)
-                    {
-                        foreach (string injectKey in injectList)
-                        {
-                            if (ignoreInjectList.Count > 0 && ignoreInjectList.Contains(injectKey))
-                                continue;
-
-                            GetInject(injectKey).DoInjectMethod(assembly, method, type);
-
-                        }
-
-                        modified = true;
-                    }
-                }
-                else
-                {
-                    foreach (var method in type.Methods)
-                    {
-                        if (!method.HasCustomAttribute<InjectAttribute>()) continue;
-
-                        var injectAttribute = method.GetCustomAttribute<InjectAttribute>();
-                        List<string> injectList = new List<string>();
-                        foreach (var arg in (CustomAttributeArgument[])(injectAttribute.ConstructorArguments[0].Value))
-                        {
-                            injectList.Add(arg.Value as string);
-                        }
-                        if (injectList.Count == 0) continue;
-
-                        foreach (string injectKey in injectList)
-                        {
-                            GetInject(injectKey).DoInjectMethod(assembly, method, type);
-                            Debug.Log("注入！");
-                        }
-
-                        modified = true;
+                        GetMethodInject<BaseMethodInjector>(injectKey).DoInjectMethod(assembly, method, type);
                     }
                 }
             }
-            return modified;
+        }
+
+        private void DoInjectProperty(AssemblyDefinition assembly, TypeDefinition type)
+        {
+            //注入Property
+            foreach (var property in type.Properties)
+            {
+                if (!property.HasCustomAttribute<InjectProperty>()) continue;
+
+                var injectAttribute = property.GetCustomAttribute<InjectProperty>();
+                List<string> injectList = new List<string>();
+                foreach (var arg in (CustomAttributeArgument[])(injectAttribute.ConstructorArguments[0].Value))
+                {
+                    injectList.Add(arg.Value as string);
+                }
+                if (injectList.Count == 0) continue;
+
+                foreach (string injectKey in injectList)
+                {
+                    GetMethodInject<BasePropertyInjector>(injectKey).DoInjectProperty(assembly, property, type);
+                }
+            }
         }
 
         /// <summary>
@@ -185,16 +225,17 @@ namespace ResetCore.ReAssembly
         /// </summary>
         /// <param name="injectKey"></param>
         /// <returns></returns>
-        private BaseInjector GetInject(string injectKey)
+        private T GetMethodInject<T>(string injectKey) where T : BaseInjector
         {
             if (!injectorPool.ContainsKey(injectKey))
             {
                 Type injectorType = AssemblyManager.GetAssemblyType("Assembly-CSharp-Editor", "ResetCore.ReAssembly." + injectKey);
                 injectorPool.Put(injectKey,
-                    injectorType.GetConstructor(new Type[0]).Invoke(new object[0]) as BaseInjector);
+                    injectorType.GetConstructor(new Type[0]).Invoke(new object[0]) as T);
             }
-            return injectorPool.Get(injectKey);
+            return injectorPool.Get(injectKey) as T;
         }
+
     }
 
 }

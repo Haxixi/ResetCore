@@ -3,28 +3,16 @@ using Mono.Cecil.Cil;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
-using UnityEditor.Callbacks;
+using System.Linq;
 using UnityEngine;
 
 namespace ResetCore.ReAssembly
 {
-    /// <summary>
-    /// 基于属性的注入器
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public abstract class BaseInjector
+    public class BaseInjector
     {
-        /// <summary>
-        /// 执行注入操作
-        /// </summary>
-        /// <param name="assembly"></param>
-        /// <param name="method"></param>
-        /// <param name="type"></param>
-        public abstract void DoInjectMethod(AssemblyDefinition assembly, MethodDefinition method, TypeDefinition type);
+
 
     }
-
     /// <summary>
     /// 用于编写Emit
     /// </summary>
@@ -44,10 +32,11 @@ namespace ResetCore.ReAssembly
             Instruction current = null;
             foreach (var injectKvp in injectDictionary)
             {
-                if(injectKvp.Value == null){
+                if (injectKvp.Value == null)
+                {
                     current = InsertBefore(worker, target, worker.Create(injectKvp.Key));
                 }
-                else if(injectKvp.Value is MethodReference)
+                else if (injectKvp.Value is MethodReference)
                 {
                     current = InsertBefore(worker, target, worker.Create(injectKvp.Key, (MethodReference)injectKvp.Value));
                 }
@@ -120,6 +109,79 @@ namespace ResetCore.ReAssembly
             return instruction;
         }
 
+        public static Instruction InsertAfter(ILProcessor worker, Instruction target, Dictionary<OpCode, object> injectDictionary)
+        {
+            Instruction current = null;
+            foreach (var injectKvp in injectDictionary)
+            {
+                if (injectKvp.Value == null)
+                {
+                    current = InsertAfter(worker, target, worker.Create(injectKvp.Key));
+                }
+                else if (injectKvp.Value is MethodReference)
+                {
+                    current = InsertAfter(worker, target, worker.Create(injectKvp.Key, (MethodReference)injectKvp.Value));
+                }
+                else if (injectKvp.Value is CallSite)
+                {
+                    current = InsertAfter(worker, target, worker.Create(injectKvp.Key, (CallSite)injectKvp.Value));
+                }
+                else if (injectKvp.Value is TypeReference)
+                {
+                    current = InsertAfter(worker, target, worker.Create(injectKvp.Key, (TypeReference)injectKvp.Value));
+                }
+                else if (injectKvp.Value is ParameterDefinition)
+                {
+                    current = InsertAfter(worker, target, worker.Create(injectKvp.Key, (ParameterDefinition)injectKvp.Value));
+                }
+                else if (injectKvp.Value is VariableDefinition)
+                {
+                    current = InsertAfter(worker, target, worker.Create(injectKvp.Key, (VariableDefinition)injectKvp.Value));
+                }
+                else if (injectKvp.Value is Instruction)
+                {
+                    current = InsertAfter(worker, target, worker.Create(injectKvp.Key, (Instruction)injectKvp.Value));
+                }
+                else if (injectKvp.Value is long)
+                {
+                    current = InsertAfter(worker, target, worker.Create(injectKvp.Key, (long)injectKvp.Value));
+                }
+                else if (injectKvp.Value is int)
+                {
+                    current = InsertAfter(worker, target, worker.Create(injectKvp.Key, (int)injectKvp.Value));
+                }
+                else if (injectKvp.Value is byte)
+                {
+                    current = InsertAfter(worker, target, worker.Create(injectKvp.Key, (byte)injectKvp.Value));
+                }
+                else if (injectKvp.Value is sbyte)
+                {
+                    current = InsertAfter(worker, target, worker.Create(injectKvp.Key, (sbyte)injectKvp.Value));
+                }
+                else if (injectKvp.Value is string)
+                {
+                    current = InsertAfter(worker, target, worker.Create(injectKvp.Key, (string)injectKvp.Value));
+                }
+                else if (injectKvp.Value is FieldReference)
+                {
+                    current = InsertAfter(worker, target, worker.Create(injectKvp.Key, (FieldReference)injectKvp.Value));
+                }
+                else if (injectKvp.Value is byte)
+                {
+                    current = InsertAfter(worker, target, worker.Create(injectKvp.Key, (byte)injectKvp.Value));
+                }
+                else if (injectKvp.Value is float)
+                {
+                    current = InsertAfter(worker, target, worker.Create(injectKvp.Key, (float)injectKvp.Value));
+                }
+                else
+                {
+                    Debug.logger.LogError("OpCode", "参数错误");
+                }
+            }
+            return current;
+        }
+
         /// <summary>
         /// 输出语句方法
         /// </summary>
@@ -134,7 +196,7 @@ namespace ResetCore.ReAssembly
         /// <returns></returns>
         public static Instruction InsertLogBefore(AssemblyDefinition assembly, ILProcessor worker, Instruction target, string text)
         {
-            if(logMethod == null)
+            if (logMethod == null)
                 logMethod = assembly.MainModule.Import(typeof(Debug).GetMethod("Log", new Type[] { typeof(string) }));
             var current = InjectEmitHelper.InsertBefore(worker, target, worker.Create(OpCodes.Ldstr, "Inject"));
             current = InjectEmitHelper.InsertBefore(worker, target, worker.Create(OpCodes.Call, logMethod));
@@ -160,7 +222,7 @@ namespace ResetCore.ReAssembly
         /// </summary>
         /// <param name="method"></param>
         /// <returns></returns>
-        public static bool HasBodyAndIsNotContructor(MethodDefinition method)
+        public static bool HasBodyAndIsNotContructor(this MethodDefinition method)
         {
             return !method.Name.Equals(".ctor") && method.HasBody;
         }
@@ -170,9 +232,51 @@ namespace ResetCore.ReAssembly
         /// </summary>
         /// <param name="method"></param>
         /// <returns></returns>
-        public static bool IsGetterOrSetter(MethodDefinition method)
+        public static bool IsGetterOrSetter(this MethodDefinition method)
         {
             return method.IsGetter || method.IsSetter;
+        }
+
+        /// <summary>
+        /// 获取函数头
+        /// </summary>
+        /// <param name="method"></param>
+        /// <returns></returns>
+        public static Instruction GetFirstInstriction(this MethodDefinition method)
+        {
+            return method.Body.Instructions.First();
+        }
+
+        /// <summary>
+        /// 获取IL处理器
+        /// </summary>
+        /// <param name="method"></param>
+        /// <returns></returns>
+        public static ILProcessor GetILProcessor(this MethodDefinition method)
+        {
+            return method.Body.GetILProcessor();
+        }
+
+        /// <summary>
+        /// 为函数添加泛型
+        /// </summary>
+        /// <param name="method"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static MethodReference MakeGeneric(this MethodReference method, params TypeReference[] args)
+        {
+            if (args.Length == 0)
+                return method;
+
+            if (method.GenericParameters.Count != args.Length)
+                throw new ArgumentException("Invalid number of generic type arguments supplied");
+
+
+            var genericTypeRef = new GenericInstanceMethod(method);
+            foreach (var arg in args)
+                genericTypeRef.GenericArguments.Add(arg);
+
+            return genericTypeRef;
         }
     }
 }

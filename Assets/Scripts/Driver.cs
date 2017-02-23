@@ -29,28 +29,12 @@ public class Driver : MonoSingleton<Driver> {
 
     void Awake()
     {
-        
+        comp.testProp = 10;
     }
     int i = 0;
     // Use this for initialization
     void Start()
     {
-        ActionQueue queue = new ActionQueue();
-        Action<Action> testAct = (act) => {
-            UnityEngine.Debug.Log("haha" + i);
-            i++;
-            CoroutineTaskManager.Instance.WaitSecondTodo(() => {  act(); }, 0.1f);
-        };
-        for(int i = 0; i < 1000; i++)
-        {
-            queue.AddAction(testAct);
-        }
-
-        CoroutineTaskManager.Instance.WaitSecondTodo(() =>
-        {
-            queue.Clean();
-            UnityEngine.Debug.Log("停止");
-        }, 3);
 
     }
 

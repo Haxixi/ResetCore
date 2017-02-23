@@ -61,9 +61,20 @@ namespace ResetCore.Event
         /// <param name="mono"></param>
         /// <param name="eventName"></param>
         /// <param name="setter"></param>
-        public static void BindData<T>(this MonoBehaviour mono, string eventName, Action<T> setter)
+        public static void BindData<T>(MonoBehaviour mono, string eventName, Action<T> setter)
         {
             EventDispatcher.AddEventListener<T>(eventName, setter, mono);
+        }
+
+        /// <summary>
+        /// 设定数值
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="eventName"></param>
+        /// <param name="value"></param>
+        public static void SetData<T>(string eventName, T value)
+        {
+            EventDispatcher.TriggerEvent<T>(eventName, value);
         }
 
         #region 私有函数

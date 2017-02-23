@@ -2,10 +2,10 @@
 using UnityEngine;
 using ResetCore.Event;
 
-[InjectAttribute("TestInject")]
 public class TestComponent : MonoBehaviour {
 
-    private int testProp { get; set; }
+    [InjectProperty("KVOInjector")]
+    public int testProp { get; set; }
 
     private void Awake()
     {
@@ -14,7 +14,7 @@ public class TestComponent : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        Debug.Log(testProp);
+        
 	}
 	
 }

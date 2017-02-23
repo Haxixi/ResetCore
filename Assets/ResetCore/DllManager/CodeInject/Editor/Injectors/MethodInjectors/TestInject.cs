@@ -8,12 +8,11 @@ using Mono.Cecil.Cil;
 
 namespace ResetCore.ReAssembly
 {
-    public class TestInject : BaseInjector
+    public class TestInject : BaseMethodInjector
     {
         public override void DoInjectMethod(AssemblyDefinition assembly, MethodDefinition method, TypeDefinition type)
         {
             if (!InjectEmitHelper.HasBodyAndIsNotContructor(method) || method.IsGetter || method.IsSetter) return;
-
 
             var firstIns = method.Body.Instructions.First();
             var worker = method.Body.GetILProcessor();
