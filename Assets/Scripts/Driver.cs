@@ -29,17 +29,19 @@ public class Driver : MonoSingleton<Driver> {
 
     void Awake()
     {
-        comp.testProp = 10;
+        EventBehavior.GenEvent(this);
+        EventDispatcher.AddEventListener<int>("TestComponent.testProp", (x => { UnityEngine.Debug.Log("asd"); }));
     }
-    int i = 0;
+
     // Use this for initialization
     void Start()
     {
-
+        comp.testProp = 10;
     }
 
     void OnDestroy()
     {
+        EventBehavior.ClearEvent(this);
         //server.Disconnect();
     }
 

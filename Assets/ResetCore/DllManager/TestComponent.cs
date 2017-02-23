@@ -10,11 +10,6 @@ public class TestComponent : MonoBehaviour {
     [InjectProperty("KVOInjector")]
     public float testFloat { get; set;}
 
-    private void Awake()
-    {
-        testProp = 10;
-    }
-
     // Use this for initialization
     void Start () {
         

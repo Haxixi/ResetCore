@@ -28,6 +28,7 @@ namespace ResetCore.ReAssembly
             }
 
             var triggerRef = assembly.MainModule.Import(triggerMethod);
+            //var objectRef = assembly.MainModule.Import(typeof(object));
             triggerRef = triggerRef.MakeGeneric(property.PropertyType);
             var typeRef = assembly.MainModule.Import(typeof(int));
             var fieldRef = type.Fields.Single(field => field.Name == GetHiddenFieldName(property));

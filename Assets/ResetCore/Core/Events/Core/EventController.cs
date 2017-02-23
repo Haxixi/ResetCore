@@ -252,6 +252,7 @@ namespace ResetCore.Event
                 Delegate[] invocationList = delegate2.GetInvocationList();
                 for (int i = 0; i < invocationList.Length; i++)
                 {
+                    Debug.Log(invocationList[i].GetType().GetGenericArguments()[0].Name);
                     Action<T> action = invocationList[i] as Action<T>;
                     if (action == null)
                     {
@@ -327,6 +328,7 @@ namespace ResetCore.Event
                     Action<T, U, V, W> action = invocationList[i] as Action<T, U, V, W>;
                     if (action == null)
                     {
+                        Debug.LogError("Action is " + invocationList[i].GetType().Name);
                         throw new EventException(string.Format("TriggerEvent {0} error: types of parameters are not match.", eventType));
                     }
                     try

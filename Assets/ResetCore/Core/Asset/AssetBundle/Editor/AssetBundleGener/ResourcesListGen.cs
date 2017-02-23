@@ -13,7 +13,7 @@ namespace ResetCore.Asset
     {
         static ResourcesListGenWhenLoad()
         {
-            if (Application.isPlaying) return;
+            if (EditorApplication.isPlayingOrWillChangePlaymode) return;
             EditorApplication.update += Update;
         }
 
