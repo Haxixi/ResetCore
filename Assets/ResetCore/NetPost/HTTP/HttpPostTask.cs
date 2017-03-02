@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using LitJson;
 using System;
+using ResetCore.UGUI;
 
 namespace ResetCore.NetPost
 {
@@ -27,9 +28,12 @@ namespace ResetCore.NetPost
 
             this.finishCall = (backJsonData) =>
             {
-                OnFinish(backJsonData);
-                if (finishCall != null)
-                    finishCall(backJsonData);
+                if (HandleError(backJsonData))
+                {
+                    OnFinish(backJsonData);
+                    if (finishCall != null)
+                        finishCall(backJsonData);
+                }
                 if (afterAct != null)
                     afterAct();
             };
@@ -42,21 +46,21 @@ namespace ResetCore.NetPost
 
             postJsonData = new JsonData();
 
-            postJsonData["TaskId"] = taskId;
 
-            JsonData subData = new JsonData();
-            if(taskParams != null)
-            {
-                foreach (KeyValuePair<string, object> param in taskParams)
-                {
-                    subData[param.Key] = new JsonData(param.Value);
-                }
-            }
-            postJsonData["Param"] = subData;
         }
 
         public void Start(Action afterAct = null, string url = ServerConst.HttpNetPostURL)
         {
+            postJsonData["TaskId"] = taskId;
+
+            JsonData subData = new JsonData();
+            foreach (KeyValuePair<string, object> param in taskParams)
+            {
+                subData[param.Key] = new JsonData(param.Value);
+            }
+
+            postJsonData["Param"] = subData;
+
             OnStart();
             this.afterAct = afterAct;
             HttpProxy.Instance.AsynDownloadJsonData(url, postJsonData, finishCall, progressCall);
@@ -74,22 +78,25 @@ namespace ResetCore.NetPost
 
         protected virtual void OnFinish(JsonData backJsonData)
         {
-            HandleError(backJsonData);
+
         }
 
-        private static void HandleError(JsonData backJsonData)
+        private static bool HandleError(JsonData backJsonData)
         {
-            
+
             if (backJsonData.ToJson() == "time")
             {
-                Debug.LogError("超时");
-                return;
+                Debug.LogError("请求超时");
+                UIUtil.ShowTipUI("请求超时");
+                return false;
             }
             if (backJsonData.ToJson() == "erro")
             {
-                Debug.LogError("错误");
-                return;
+                Debug.LogError("请求错误");
+                UIUtil.ShowTipUI("请求错误");
+                return false;
             }
+            return true;
         }
 
     }

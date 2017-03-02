@@ -13,7 +13,7 @@ namespace ResetCore.NetPost
     {
         protected override void Handle(Package package, Action act = null)
         {
-            EventDispatcher.TriggerEvent<string>(ServerEvent.GetChannelId, package.GetValue<StringData>().Value, ownerServer);
+            EventDispatcher.TriggerEventWithTag<string>(ServerEvent.GetChannelId, package.GetValue<StringData>().Value, ownerServer);
         }
     }
 }

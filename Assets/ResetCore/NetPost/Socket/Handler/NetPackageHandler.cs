@@ -38,7 +38,7 @@ namespace ResetCore.NetPost
             {
                 Debug.logger.Log("不存在id：" + id.ToString());
             }
-            EventDispatcher.TriggerEvent<Package>(ServerEvent.GetResponseEvent(package.requestId), package, server);
+            EventDispatcher.TriggerEventWithTag<Package>(ServerEvent.GetResponseEvent(package.requestId), package, server);
             if (act != null) {
 				act ();
 			}

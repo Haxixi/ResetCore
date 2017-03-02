@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ResetCore.NetPost;
 using UnityEngine;
+using ResetCore.Event;
 
 //using ResetCore.Data.GameDatas;
 
@@ -13,7 +14,8 @@ public class Driver : MonoSingleton<Driver> {
 
     void Awake()
     {
-        
+        EventDispatcher.TriggerEvent("asd", this.gameObject);
+        EventDispatcher.TriggerEvent<GameObject>("asd", this.gameObject);
     }
 
     // Use this for initialization
