@@ -134,13 +134,8 @@ namespace ResetCore.Util
                             callBack(true);
                         }
                     }
-
-                   
-
                 }
             }
-
-
         }
 
         public override void Init()

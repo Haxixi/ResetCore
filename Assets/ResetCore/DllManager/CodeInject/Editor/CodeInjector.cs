@@ -9,6 +9,12 @@ namespace ResetCore.ReAssembly
 {
     public class CodeInjector
     {
+
+        static CodeInjector()
+        {
+            UnityScripsCompiling.onScriptCompiled += InjectMothod;
+        }
+
         #region 打包注入
         //是否已经生成
         private static bool hasGen = false;
@@ -19,24 +25,26 @@ namespace ResetCore.ReAssembly
         }
 
         [PostProcessScene]
-        public static void TestInjectMothodOnPost()
+        public static void InjectMothodOnPost()
         {
             if (hasGen == true) return;
             hasGen = true;
 
-            TestInjectMothod();
+            InjectMothod();
         }
         #endregion
 
         #region 编辑器下注入
-        [InitializeOnLoadMethod]
-        public static void TestInjectMothod()
+        
+        public static void InjectMothod()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
                 return;
             CodeInjectorSetting setting = new CodeInjectorSetting();
             setting.RunInject();
+
         }
+
         #endregion
     }
 }

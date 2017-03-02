@@ -118,9 +118,9 @@ namespace ResetCore.Util
 
         #region 一些工具
 
-        public void Wait(float second)
+        public ActionQueue Wait(float second)
         {
-            AddAction((act) =>
+            return AddAction((act) =>
             {
                 CoroutineTaskManager.Instance.WaitSecondTodo(act, second);
             });

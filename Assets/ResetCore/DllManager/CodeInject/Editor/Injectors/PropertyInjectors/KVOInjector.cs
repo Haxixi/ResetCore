@@ -38,6 +38,7 @@ namespace ResetCore.ReAssembly
                 {
                     { OpCodes.Ldstr, type.Name + "." + property.Name},
                     { OpCodes.Ldarg_1, null},
+                    //{ OpCodes.Castclass, objectRef},
                     { OpCodes.Ldnull, null},
                     { OpCodes.Call, triggerRef},
                 });
