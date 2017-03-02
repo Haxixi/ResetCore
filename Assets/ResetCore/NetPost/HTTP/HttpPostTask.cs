@@ -87,13 +87,11 @@ namespace ResetCore.NetPost
             if (backJsonData.ToJson() == "time")
             {
                 Debug.LogError("请求超时");
-                UIUtil.ShowTipUI("请求超时");
                 return false;
             }
             if (backJsonData.ToJson() == "erro")
             {
                 Debug.LogError("请求错误");
-                UIUtil.ShowTipUI("请求错误");
                 return false;
             }
             return true;
