@@ -62,146 +62,154 @@ namespace ResetCore.Util
         /// <returns></returns>
         public static object GetValue(this string value, System.Type type)
         {
-            if (type == null) return "";
-            if (string.IsNullOrEmpty(value))
+            try
             {
-                return type.IsValueType ? Activator.CreateInstance(type) : null;
-            }
-
-            if (type == typeof(string))
-            {
-                return value;
-            }
-            if (type == typeof(int))
-            {
-                return Convert.ToInt32(Convert.ToDouble(value));
-            }
-            if (type == typeof(float))
-            {
-                return float.Parse(value);
-            }
-            if (type == typeof(byte))
-            {
-                return Convert.ToByte(Convert.ToDouble(value));
-            }
-            if (type == typeof(sbyte))
-            {
-                return Convert.ToSByte(Convert.ToDouble(value));
-            }
-            if (type == typeof(uint))
-            {
-                return Convert.ToUInt32(Convert.ToDouble(value));
-            }
-            if (type == typeof(short))
-            {
-                return Convert.ToInt16(Convert.ToDouble(value));
-            }
-            if (type == typeof(long))
-            {
-                return Convert.ToInt64(Convert.ToDouble(value));
-            }
-            if (type == typeof(ushort))
-            {
-                return Convert.ToUInt16(Convert.ToDouble(value));
-            }
-            if (type == typeof(ulong))
-            {
-                return Convert.ToUInt64(Convert.ToDouble(value));
-            }
-            if (type == typeof(double))
-            {
-                return double.Parse(value);
-            }
-            if (type == typeof(bool))
-            {
-                return bool.Parse(value);
-            }
-            if (type.BaseType == typeof(Enum))
-            {
-                return GetValue(value, Enum.GetUnderlyingType(type));
-            }
-            if (type == typeof(Vector2))
-            {
-                Vector2 vector;
-                ParseVector2(value, out vector);
-                return vector;
-            }
-            if (type == typeof(Vector3))
-            {
-                Vector3 vector;
-                ParseVector3(value, out vector);
-                //Debug.LogError(vector.ToString());
-                return vector;
-            }
-            if (type == typeof(Vector4))
-            {
-                Vector4 vector;
-                ParseVector4(value, out vector);
-                return vector;
-            }
-            if (type == typeof(Quaternion))
-            {
-                Quaternion quaternion;
-                ParseQuaternion(value, out quaternion);
-                return quaternion;
-            }
-            if (type == typeof(Color))
-            {
-                Color color;
-                ParseColor(value, out color);
-                return color;
-            }
-
-            object constructor;
-            object genericArgument;
-            //词典
-            if (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(Dictionary<,>)))
-            {
-                System.Type[] genericArguments = type.GetGenericArguments();
-                Dictionary<string, string> dictionary = ParseMap(value, Spriter2, Spriter1);
-                constructor = type.GetConstructor(System.Type.EmptyTypes).Invoke(null);
-                foreach (KeyValuePair<string, string> pair in dictionary)
+                if (type == null) return "";
+                if (string.IsNullOrEmpty(value))
                 {
-                    object genericArgument1 = GetValue(pair.Key, genericArguments[0]);
-                    genericArgument = GetValue(pair.Value, genericArguments[1]);
-                    type.GetMethod("Add").Invoke(constructor, new object[] { genericArgument1, genericArgument });
+                    return type.IsValueType ? Activator.CreateInstance(type) : null;
                 }
-                return constructor;
-            }
-            //列表
-            if (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(List<>)))
-            {
-                System.Type type2 = type.GetGenericArguments()[0];
-                List<string> list = ParseList(value, Spriter1);
-                constructor = type.GetConstructor(System.Type.EmptyTypes).Invoke(null);
-                foreach (string str in list)
-                {
-                    genericArgument = GetValue(str, type2);
-                    type.GetMethod("Add").Invoke(constructor, new object[] { genericArgument });
-                }
-                return constructor;
-            }
-            //数组
-            if (type.IsArray)
-            {
-                Type elementType = Type.GetType(
-                 type.FullName.Replace("[]", string.Empty));
-                string[] elStr = value.Split(Spriter1);
-                Array array = Array.CreateInstance(elementType, elStr.Length);
 
-                for (int i = 0; i < elStr.Length; i++)
+                if (type == typeof(string))
                 {
-                    array.SetValue(elStr[i].GetValue(elementType), i);
+                    return value;
                 }
-                return array;
-            }
-            if (CanConvertFromString(type))
-            {
-                return ParseFromStringableObject(value, type);
-            }
+                if (type == typeof(int))
+                {
+                    return Convert.ToInt32(Convert.ToDouble(value));
+                }
+                if (type == typeof(float))
+                {
+                    return float.Parse(value);
+                }
+                if (type == typeof(byte))
+                {
+                    return Convert.ToByte(Convert.ToDouble(value));
+                }
+                if (type == typeof(sbyte))
+                {
+                    return Convert.ToSByte(Convert.ToDouble(value));
+                }
+                if (type == typeof(uint))
+                {
+                    return Convert.ToUInt32(Convert.ToDouble(value));
+                }
+                if (type == typeof(short))
+                {
+                    return Convert.ToInt16(Convert.ToDouble(value));
+                }
+                if (type == typeof(long))
+                {
+                    return Convert.ToInt64(Convert.ToDouble(value));
+                }
+                if (type == typeof(ushort))
+                {
+                    return Convert.ToUInt16(Convert.ToDouble(value));
+                }
+                if (type == typeof(ulong))
+                {
+                    return Convert.ToUInt64(Convert.ToDouble(value));
+                }
+                if (type == typeof(double))
+                {
+                    return double.Parse(value);
+                }
+                if (type == typeof(bool))
+                {
+                    return bool.Parse(value);
+                }
+                if (type.BaseType == typeof(Enum))
+                {
+                    return GetValue(value, Enum.GetUnderlyingType(type));
+                }
+                if (type == typeof(Vector2))
+                {
+                    Vector2 vector;
+                    ParseVector2(value, out vector);
+                    return vector;
+                }
+                if (type == typeof(Vector3))
+                {
+                    Vector3 vector;
+                    ParseVector3(value, out vector);
+                    //Debug.LogError(vector.ToString());
+                    return vector;
+                }
+                if (type == typeof(Vector4))
+                {
+                    Vector4 vector;
+                    ParseVector4(value, out vector);
+                    return vector;
+                }
+                if (type == typeof(Quaternion))
+                {
+                    Quaternion quaternion;
+                    ParseQuaternion(value, out quaternion);
+                    return quaternion;
+                }
+                if (type == typeof(Color))
+                {
+                    Color color;
+                    ParseColor(value, out color);
+                    return color;
+                }
 
-            Debug.logger.LogWarning("字符转换", "没有适合的转换类型，返回默认值");
-            return null;
+                object constructor;
+                object genericArgument;
+                //词典
+                if (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(Dictionary<,>)))
+                {
+                    System.Type[] genericArguments = type.GetGenericArguments();
+                    Dictionary<string, string> dictionary = ParseMap(value, Spriter2, Spriter1);
+                    constructor = type.GetConstructor(System.Type.EmptyTypes).Invoke(null);
+                    foreach (KeyValuePair<string, string> pair in dictionary)
+                    {
+                        object genericArgument1 = GetValue(pair.Key, genericArguments[0]);
+                        genericArgument = GetValue(pair.Value, genericArguments[1]);
+                        type.GetMethod("Add").Invoke(constructor, new object[] { genericArgument1, genericArgument });
+                    }
+                    return constructor;
+                }
+                //列表
+                if (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(List<>)))
+                {
+                    System.Type type2 = type.GetGenericArguments()[0];
+                    List<string> list = ParseList(value, Spriter1);
+                    constructor = type.GetConstructor(System.Type.EmptyTypes).Invoke(null);
+                    foreach (string str in list)
+                    {
+                        genericArgument = GetValue(str, type2);
+                        type.GetMethod("Add").Invoke(constructor, new object[] { genericArgument });
+                    }
+                    return constructor;
+                }
+                //数组
+                if (type.IsArray)
+                {
+                    Type elementType = Type.GetType(
+                     type.FullName.Replace("[]", string.Empty));
+                    string[] elStr = value.Split(Spriter1);
+                    Array array = Array.CreateInstance(elementType, elStr.Length);
+
+                    for (int i = 0; i < elStr.Length; i++)
+                    {
+                        array.SetValue(elStr[i].GetValue(elementType), i);
+                    }
+                    return array;
+                }
+                if (CanConvertFromString(type))
+                {
+                    return ParseFromStringableObject(value, type);
+                }
+
+                Debug.logger.LogWarning("字符转换", "没有适合的转换类型，返回默认值");
+                return type.DefaultForType();
+            }
+            catch(Exception e)
+            {
+                Debug.logger.LogWarning("字符转换", "解析失败，返回默认值");
+                return type.DefaultForType();
+            }
         }
 
         #region FromString

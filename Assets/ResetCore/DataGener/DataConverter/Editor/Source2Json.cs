@@ -25,6 +25,17 @@ namespace ResetCore.Data
 
             List<Dictionary<string, string>> rows = exReader.GetRows();
 
+            foreach (var dict in rows)
+            {
+                var keyList = new List<string>(dict.Keys);
+                foreach (var key in keyList)
+                {
+                    dict[key] = DataUtil.HandleExportXmlValue(dict[key], reader.attributeDict[key]);
+                }
+
+            }
+
+
             JsonData data = new JsonData();
             string arrayString = JsonMapper.ToJson(rows);
             Debug.Log(arrayString);
@@ -51,7 +62,7 @@ namespace ResetCore.Data
         public void GenCS(IDataReadable reader)
         {
             string className = reader.currentDataTypeName;
-            DataClassesGener.CreateNewClass(className, typeof(Data.GameDatas.Json.JsonData), reader.fieldDict);
+            DataClassesGener.CreateNewClass(className, typeof(Data.GameDatas.Json.JsonData), reader.fieldDict, reader.attributeDict);
         }
     }
 

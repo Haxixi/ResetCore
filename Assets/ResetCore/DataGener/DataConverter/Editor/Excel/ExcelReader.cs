@@ -24,6 +24,8 @@ namespace ResetCore.Excel
 
         public Dictionary<string, Type> fieldDict { get; private set; }
 
+        public Dictionary<string, List<string>> attributeDict { get; private set; }
+
         public ExcelReader(string path, string sheetName = "", DataType type = DataType.Normal)
         {
             try
@@ -66,16 +68,23 @@ namespace ResetCore.Excel
                         {
                             Debug.logger.LogError("获取Sheet", "该Excel不存在Sheet");
                         }
-                        
+
                     }
 
                     fieldDict = new Dictionary<string, Type>();
                     List<string> members = GetMemberNames();
                     List<Type> types = GetMemberTypes();
 
-                    for (int i = 0; i < members.Count; i++ )
+                    for (int i = 0; i < members.Count; i++)
                     {
                         fieldDict.Add(members[i], types[i]);
+                    }
+
+                    attributeDict = new Dictionary<string, List<string>>();
+                    var attibutes = GetAttributes();
+                    for (int i = 0; i < members.Count; i++)
+                    {
+                        attributeDict.Add(members[i], attibutes[i]);
                     }
                 }
             }
@@ -96,7 +105,7 @@ namespace ResetCore.Excel
             return false;
         }
 
-        
+
         /// <summary>
         /// 获得完整的表头
         /// </summary>
@@ -112,7 +121,7 @@ namespace ResetCore.Excel
                 return GetRow(0);
                 #endregion
             }
-            else if(dataType == DataType.Pref)
+            else if (dataType == DataType.Pref)
             {
                 #region Pref
                 return GetColume(0);
@@ -122,7 +131,7 @@ namespace ResetCore.Excel
             {
                 return result;
             }
-            
+
         }
 
         /// <summary>
@@ -168,6 +177,33 @@ namespace ResetCore.Excel
             return result;
         }
 
+        public List<List<string>> GetAttributes()
+        {
+            List<string> title = GetTitle();
+            List<List<string>> result = new List<List<string>>();
+
+            title.ForEach((tit) =>
+            {
+                if (tit.Contains("|"))
+                {
+                    var strs = tit.Split('|');
+                    if (strs.Length > 2)
+                    {
+                        result.Add(strs[2].GetValue<List<string>>());
+                    }
+                    else
+                    {
+                        result.Add(new List<string>());
+                    }
+                }
+                else
+                {
+                    result.Add(new List<string>());
+                }
+            });
+            return result;
+        }
+
         /// <summary>
         /// 获取注释
         /// </summary>
@@ -176,7 +212,7 @@ namespace ResetCore.Excel
         public List<string> GetComment()
         {
             List<string> result = new List<string>();
-            if(dataType == DataType.Normal)
+            if (dataType == DataType.Normal)
             {
                 #region Normal
                 return GetRow(1);
@@ -334,14 +370,14 @@ namespace ResetCore.Excel
                             Debug.logger.LogError("ReadExcelError", string.Format("Value in Posistion row[{0}] line[{1}] is Error", current, i));
                             return rows;
                         }
-                        
+
                     }
                     catch (System.Exception ex)
                     {
                         Debug.logger.LogException(ex);
                         Debug.logger.LogError("ReadExcelError", string.Format("Value in Posistion row[{0}] line[{1}] is Error", current, i));
                     }
-                    
+
                 }
                 rows.Add(rowDict);
                 current++;
@@ -499,14 +535,14 @@ namespace ResetCore.Excel
                             Debug.logger.LogError("ReadExcelError", string.Format("Value in Posistion row[{0}] line[{1}] is Error", current, i));
                             return rows;
                         }
-                        
+
                     }
                     catch (Exception e)
                     {
                         Debug.logger.LogException(e);
                         Debug.logger.LogError("ReadExcelError", string.Format("Value in Posistion row[{0}] line[{1}] is Error", current, i));
                     }
-                    
+
                 }
                 rows.Add(rowDict);
                 current++;

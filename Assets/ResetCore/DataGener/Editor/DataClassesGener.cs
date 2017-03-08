@@ -31,7 +31,8 @@ public class DataClassesGener {
     /// <param name="baseType">基础类型</param>
     /// <param name="fieldDict">属性表</param>
     /// <param name="path">自定义路径</param>
-    public static void CreateNewClass(string className, Type baseType, Dictionary<string, Type> fieldDict, string path = null)
+    public static void CreateNewClass(string className, Type baseType, Dictionary<string, Type> fieldDict
+        , Dictionary<string, List<string>> attributeDict, string path = null)
     {
         GetPropString(className, baseType, path);
 
@@ -39,7 +40,7 @@ public class DataClassesGener {
         CodeTypeDeclaration NewClass;
         CreateNewClass(out unit, out NewClass);
 
-        AddProp(fieldDict, NewClass);
+        AddProp(fieldDict, attributeDict, NewClass);
 
         GenCSharp(outputFile, unit);
 
@@ -131,7 +132,8 @@ public class DataClassesGener {
         NewClass.Members.Add(fileNameField);
     }
 
-    private static void AddProp(Dictionary<string, Type> fieldDic, CodeTypeDeclaration NewClass)
+    private static void AddProp(Dictionary<string, Type> fieldDic
+        , Dictionary<string, List<string>> attributeDict, CodeTypeDeclaration NewClass)
     {
         foreach (KeyValuePair<string, Type> pair in fieldDic)
         {
@@ -154,6 +156,15 @@ public class DataClassesGener {
             property.Type = new CodeTypeReference(propType);
             property.GetStatements.Add(new CodeMethodReturnStatement(new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), "_" + propName)));
             property.SetStatements.Add(new CodeAssignStatement(new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), "_" + propName), new CodePropertySetValueReferenceExpression()));
+
+            foreach (var attr in attributeDict[propName])
+            {
+                Type attrType;
+                if (DataAttributes.attributes.TryGetValue(attr, out attrType))
+                {
+                    property.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(attrType)));
+                }
+            }
 
             NewClass.Members.Add(property);
         }

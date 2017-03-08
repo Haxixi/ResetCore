@@ -1,7 +1,6 @@
 ﻿#if MYSQL
 using UnityEngine;
 using System.Collections;
-using ResetCore.Data;
 using System;
 using System.Collections.Generic;
 using ResetCore.MySQL;
@@ -41,11 +40,15 @@ namespace ResetCore.Data
         /// </summary>
         public string currentDataTypeName { get; set; }
 
-        private Dictionary<string, Type> _fieldDict = new Dictionary<string, Type>();
         /// <summary>
         /// 返回值域表
         /// </summary>
         public Dictionary<string, Type> fieldDict { get; private set; }
+
+        /// <summary>
+        /// 返回特性表
+        /// </summary>
+        public Dictionary<string, List<string>> attributeDict { get; private set; }
 
         /// <summary>
         /// 是否有效
@@ -85,6 +88,13 @@ namespace ResetCore.Data
             for (int i = 0; i < members.Count; i++)
             {
                 fieldDict.Add(members[i], types[i]);
+            }
+
+            attributeDict = new Dictionary<string, List<string>>();
+            var attibutes = GetAttributes();
+            for (int i = 0; i < members.Count; i++)
+            {
+                attributeDict.Add(members[i], attibutes[i]);
             }
         }
 
@@ -191,6 +201,32 @@ namespace ResetCore.Data
             return result;
         }
 
+        public List<List<string>> GetAttributes()
+        {
+            List<string> title = GetTitle();
+            List<List<string>> result = new List<List<string>>();
+
+            title.ForEach((tit) =>
+            {
+                if (tit.Contains("|"))
+                {
+                    var strs = tit.Split('|');
+                    if (strs.Length > 2)
+                    {
+                        result.Add(strs[2].GetValue<List<string>>());
+                    }
+                    else
+                    {
+                        result.Add(new List<string>());
+                    }
+                }
+                else
+                {
+                    result.Add(new List<string>());
+                }
+            });
+            return result;
+        }
 
         /// <summary>
         /// 获得所有行对象

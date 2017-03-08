@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using ResetCore.Asset;
 using ResetCore.Util;
 using System.IO;
+using ResetCore.Data;
 
 namespace ResetCore.Xml
 {
@@ -14,24 +15,8 @@ namespace ResetCore.Xml
         //创建表
         public static bool LoadIntMap(string fileName, out Dictionary<int, Dictionary<string, string>> dicFromXml, string rootPath = null)
         {
-            TextAsset textAsset = null;
 
-            if(rootPath == null)
-            {
-                textAsset =
-                    Resources.Load<TextAsset>(PathConfig.GetLocalGameDataResourcesPath(PathConfig.DataType.Xml) + fileName);
-            }
-            else
-            {
-                textAsset =
-                    Resources.Load<TextAsset>(Path.Combine(rootPath,fileName).Replace("\\", "/"));
-            }
-
-            if (textAsset == null)
-            {
-                Debug.logger.LogError("XMLParser", fileName + " 文本加载失败");
-            }
-            XDocument xDoc = XDocument.Parse(textAsset.text);
+            XDocument xDoc = XDocument.Parse(DataUtil.LoadFile(fileName, rootPath));
             XElement root = xDoc.Root;
             dicFromXml = new Dictionary<int, Dictionary<string, string>>();
             if (xDoc == null) return false;
@@ -62,23 +47,7 @@ namespace ResetCore.Xml
         //创建Instance
         public static bool LoadInstance(string fileName, out Dictionary<string, string> dicFromXml, string rootPath = null)
         {
-            TextAsset textAsset = null;
-            Debug.Log(PathConfig.GetLocalGameDataResourcesPath(PathConfig.DataType.Pref) + fileName);
-            if (rootPath == null)
-            {
-                textAsset =
-                    Resources.Load<TextAsset>(PathConfig.GetLocalGameDataResourcesPath(PathConfig.DataType.Pref) + fileName);
-            }
-            else
-            {
-                textAsset =
-                    Resources.Load<TextAsset>(Path.Combine(rootPath, fileName).Replace("\\", "/"));
-            }
-            if (textAsset == null)
-            {
-                Debug.logger.LogError("XMLParser", fileName + " 文本加载失败");
-            }
-            XDocument xDoc = XDocument.Parse(textAsset.text);
+            XDocument xDoc = XDocument.Parse(DataUtil.LoadFile(fileName, rootPath));
             XElement root = xDoc.Root;
             dicFromXml = new Dictionary<string, string>();
 

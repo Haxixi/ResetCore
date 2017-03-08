@@ -31,7 +31,8 @@ namespace ResetCore.Data
                 root.Add(item);
                 foreach (KeyValuePair<string, string> pair in rows[i])
                 {
-                    item.Add(new XElement(pair.Key, pair.Value));
+                    var finalStr = DataUtil.HandleExportXmlValue(pair.Value, reader.attributeDict[pair.Key]);
+                    item.Add(new XElement(pair.Key, finalStr));
                 }
 
             }
@@ -53,7 +54,7 @@ namespace ResetCore.Data
         public void GenCS(IDataReadable reader)
         {
             string className = reader.currentDataTypeName;
-            DataClassesGener.CreateNewClass(className, typeof(XmlData), reader.fieldDict);
+            DataClassesGener.CreateNewClass(className, typeof(XmlData), reader.fieldDict, reader.attributeDict);
         }
        
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ResetCore.NetPost;
 using UnityEngine;
 using ResetCore.Event;
+using ResetCore.Data.GameDatas.Xml;
 
 //using ResetCore.Data.GameDatas;
 

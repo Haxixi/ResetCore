@@ -26,6 +26,10 @@ namespace ResetCore.Data
         /// </summary>
         Dictionary<string, Type> fieldDict { get; }
         /// <summary>
+        /// 数据的属性信息
+        /// </summary>
+        Dictionary<string, List<string>> attributeDict { get; }
+        /// <summary>
         /// 文件路径或者数据库url
         /// </summary>
         string filepath { get; }
@@ -52,6 +56,11 @@ namespace ResetCore.Data
         /// <param name="start"></param>
         /// <returns></returns>
         List<Type> GetMemberTypes();
+        /// <summary>
+        /// 获取该域的特性
+        /// </summary>
+        /// <returns></returns>
+        List<List<string>> GetAttributes();
         /// <summary>
         /// 获取注释
         /// </summary>
