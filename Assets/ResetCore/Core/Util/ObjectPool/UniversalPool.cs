@@ -25,7 +25,7 @@ namespace ResetCore.Util
         /// <param name="onReturn"></param>
         /// <param name="startSize"></param>
         /// <returns></returns>
-        public UniversalPool<T> Create(Func<T> factory, Action<T> destroyAct
+        public static UniversalPool<T> Create(Func<T> factory, Action<T> destroyAct
             , Action<T> onGet = null, Action<T> onReturn = null, int startSize = 0)
         {
             var uniPool = new UniversalPool<T>();
@@ -33,7 +33,7 @@ namespace ResetCore.Util
             uniPool.destroyAct = destroyAct;
             uniPool.onGet = onGet;
             uniPool.onReturn = onReturn;
-            Init(startSize);
+            uniPool.Init(startSize);
             return uniPool;
         }
 
@@ -41,7 +41,10 @@ namespace ResetCore.Util
         {
             for(int i = 0; i < startSize; i++)
             {
-                pool.Add(factory());
+                var obj = factory();
+                pool.Add(obj);
+                if (onReturn != null)
+                    onReturn(obj);
             }
         }
 
