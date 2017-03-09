@@ -17,12 +17,12 @@ namespace ResetCore.ReAssembly
 
         public override void OnInspectorGUI()
         {
-            //base.OnInspectorGUI();
+            base.OnInspectorGUI();
             ScriptComponentLoader scrLoader = target as ScriptComponentLoader;
             Component[] componentArray = scrLoader.GetComponents<Component>();
 
-            GUILayout.Label("Assembly Name : " + scrLoader.assemblyName);
-            GUILayout.Label("Component Name : " + scrLoader.componentName);
+            //GUILayout.Label("Assembly Name : " + scrLoader.assemblyName);
+            //GUILayout.Label("Component Name : " + scrLoader.componentName);
             
             ///初始化类文件
             if (scrLoader.inited == false)
