@@ -58,6 +58,7 @@ namespace ResetCore.Util
             if (pool.Count > 0)
             {
                 res = pool[pool.Count - 1];
+                pool.Remove(res);
             }
             else
             {
