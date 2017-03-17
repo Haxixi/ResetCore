@@ -50,7 +50,7 @@ namespace ResetCore.Data
         public void GenCS(IDataReadable reader)
         {
             string className = reader.currentDataTypeName;
-            DataClassesGener.CreateNewClass(className, typeof(PrefData), reader.fieldDict, reader.attributeDict);
+            PrefDataClassGener.CreateNewClass(className, reader.fieldDict, reader.attributeDict);
         }
 
     }

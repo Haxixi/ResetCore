@@ -55,7 +55,7 @@ namespace ResetCore.Data
         public void GenCS(IDataReadable reader)
         {
             string className = reader.currentDataTypeName;
-            DataClassesGener.CreateNewClass(className, typeof(XmlData), reader.fieldDict, reader.attributeDict);
+            XmlDataClassGener.CreateNewClass(className, reader.fieldDict, reader.attributeDict);
         }
        
     }

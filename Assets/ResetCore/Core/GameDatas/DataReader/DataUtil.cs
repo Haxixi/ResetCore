@@ -111,6 +111,16 @@ namespace ResetCore.Data
             }
             return textAsset.text;
         }
+
+        /// <summary>
+        /// 加载ScriptableObject
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public static object LoadScriptableObject(string fileName)
+        {
+            return Resources.Load("GameData/Obj/" + fileName);
+        }
     }
 
 }

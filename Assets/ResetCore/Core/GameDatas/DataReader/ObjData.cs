@@ -9,11 +9,8 @@ using System.Linq;
 
 namespace ResetCore.Data.GameDatas.Obj
 {
-    public class ObjDataBundle:ScriptableObject
-    {
-        public ArrayList dataArray = new ArrayList();
-    }
-    
+
+    [Serializable]
     public class ObjData
     {
         public int id
@@ -42,7 +39,7 @@ namespace ResetCore.Data.GameDatas.Obj
             return dictionary;
         }
     }
-
+    [Serializable]
     public abstract class ObjData<T> : ObjData where T : ObjData<T>
     {
         private static Dictionary<int, T> m_dataMap;
@@ -80,14 +77,16 @@ namespace ResetCore.Data.GameDatas.Obj
 
         public Dictionary<int, T> FormatObjData<T>(string fileName) where T : ObjData<T>
         {
-            T obj = Resources.Load(fileName) as T;
+
+            var obj = DataUtil.LoadScriptableObject(fileName);// Resources.Load("GameData/Obj/" + fileName);
+            Type bundleType = Type.GetType(ObjData.nameSpace + "." + typeof(T).Name + "Bundle" + ",Assembly-CSharp");
 
             Dictionary<int, T> dict = new Dictionary<int, T>();
-            List<ObjData> dataArray = typeof(T).GetField("dataArray").GetValue(obj) as List<ObjData>;
-            dataArray.ForEach((i, data) =>
+            List<T> dataArray = bundleType.GetField("dataArray").GetValue(obj) as List<T>;
+            for(int i = 0; i < dataArray.Count; i++)
             {
-                dict.Add(i + 1, data as T);
-            });
+                dict.Add(i + 1, dataArray[i]);
+            }
 
             return dict;
         }

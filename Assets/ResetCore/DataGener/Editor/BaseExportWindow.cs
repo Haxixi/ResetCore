@@ -28,8 +28,8 @@ namespace ResetCore.Data
                         EditorGUILayout.Space();
                         //ShowExportProtobuf();
                         //EditorGUILayout.Space();
-                        //ShowExportObj();
-                        //EditorGUILayout.Space();
+                        ShowExportObj();
+                        EditorGUILayout.Space();
                         ShowExportJson();
                     }
                     break;
@@ -62,10 +62,12 @@ namespace ResetCore.Data
             if (GUILayout.Button("导出Xml", GUILayout.Width(100)))
             {
                 new Source2Xml().GenData(reader);
+                AssetDatabase.Refresh();
             }
             if (GUILayout.Button("导出XmlData.cs", GUILayout.Width(100)))
             {
                 new Source2Xml().GenCS(reader);
+                AssetDatabase.Refresh();
             }
             GUILayout.EndHorizontal();
 
@@ -88,10 +90,12 @@ namespace ResetCore.Data
             if (GUILayout.Button("导出Objdat", GUILayout.Width(100)))
             {
                 new Source2ScrObj().GenData(reader);
+                AssetDatabase.Refresh();
             }
             if (GUILayout.Button("导出ObjData.cs", GUILayout.Width(100)))
             {
                 new Source2ScrObj().GenCS(reader);
+                AssetDatabase.Refresh();
             }
             GUILayout.EndHorizontal();
 
@@ -114,10 +118,12 @@ namespace ResetCore.Data
             if (GUILayout.Button("导出Json", GUILayout.Width(100)))
             {
                 new Source2Json().GenData(reader);
+                AssetDatabase.Refresh();
             }
             if (GUILayout.Button("导出JsonData.cs", GUILayout.Width(100)))
             {
                 new Source2Json().GenCS(reader);
+                AssetDatabase.Refresh();
             }
             GUILayout.EndHorizontal();
 
@@ -140,10 +146,12 @@ namespace ResetCore.Data
             if (GUILayout.Button("导出Protobuf", GUILayout.Width(100)))
             {
                 new Source2Protobuf().GenData(reader);
+                AssetDatabase.Refresh();
             }
             if (GUILayout.Button("导出ProtoData.cs", GUILayout.Width(100)))
             {
                 new Source2Protobuf().GenCS(reader);
+                AssetDatabase.Refresh();
             }
             GUILayout.EndHorizontal();
 
@@ -166,10 +174,12 @@ namespace ResetCore.Data
             if (GUILayout.Button("Export PrefData", GUILayout.Width(100)))
             {
                 new Source2PrefData().GenData(reader);
+                AssetDatabase.Refresh();
             }
             if (GUILayout.Button("Export PrefData.cs", GUILayout.Width(100)))
             {
                 new Source2PrefData().GenCS(reader);
+                AssetDatabase.Refresh();
             }
             GUILayout.EndHorizontal();
 

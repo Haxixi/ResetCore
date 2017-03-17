@@ -4,10 +4,10 @@ using ResetCore.Event;
 
 public class TestComponent : MonoBehaviour {
 
-    [InjectProperty("KVOInjector")]
+    //[InjectProperty("KVOInjector")]
     public Vector3 testProp { get; set; }
 
-    [InjectProperty("KVOInjector")]
+    //[InjectProperty("KVOInjector")]
     public int testInt { get; set; }
     // Use this for initialization
     void Start () {

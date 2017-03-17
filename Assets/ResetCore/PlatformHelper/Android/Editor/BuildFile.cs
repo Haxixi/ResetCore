@@ -9,29 +9,6 @@ namespace ResetCore.PlatformHelper
 {
     public sealed class BuildFile
     {
-        private BuildFile() { }
-
-        /// <summary>
-        /// 加载
-        /// </summary>
-        /// <param name="buildFilePath"></param>
-        /// <returns></returns>
-        public static BuildFile Load(string buildFilePath)
-        {
-            BuildFile res = new BuildFile();
-            Type fileType = typeof(BuildFile);
-            XDocument buildFile = XDocument.Load(buildFilePath);
-            foreach (var property in fileType.GetProperties())
-            {
-                XElement ele = buildFile.Root.Element(property.Name);
-                if (ele == null)
-                    continue;
-
-                object value = ele.ReadValueFromElement(property.PropertyType);
-                property.SetValue(res, value, new object[0]);
-            }
-            return res;
-        }
 
         /// <summary>
         ///  包名

@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Linq;
 using ResetCore.Util;
 using UnityEditor;
+using ResetCore.ReAssembly;
 
 namespace ResetCore.Data
 {
@@ -25,7 +26,9 @@ namespace ResetCore.Data
             string className = reader.currentDataTypeName;
 
             Type objDataType = Type.GetType(ObjData.nameSpace + "." + className + ",Assembly-CSharp");
-            ObjDataBundle data = ScriptableObject.CreateInstance<ObjDataBundle>();
+            Type bundleType = Type.GetType(ObjData.nameSpace + "." + className + "Bundle" + ",Assembly-CSharp");
+            //var bundleType = typeof(ObjDataBundle<>).MakeGenericType(objDataType);
+            var data = ScriptableObject.CreateInstance(bundleType);
 
             List<Dictionary<string, object>> rowObjs = reader.GetRowObjs();
 
@@ -41,7 +44,15 @@ namespace ResetCore.Data
                     prop.SetValue(item, pair.Value, null);
                 }
 
-                data.dataArray.Add(item);
+                var field = bundleType.GetField("dataArray");
+                var list = field.GetValue(data);
+                var fieldType = field.FieldType;
+                var fieldMethods = fieldType.GetMethods();
+                var method = fieldType.GetMethod("Add");
+                method.Invoke(list, new object[] { item } );
+                field.SetValue(data, list);
+                //field.InvokeByReflect("Add", item);
+                //data.dataArray.Add(item);
             }
 
             string dataPath = PathConfig.GetLocalGameDataPath(PathConfig.DataType.Obj);
@@ -71,7 +82,7 @@ namespace ResetCore.Data
         public void GenCS(IDataReadable reader)
         {
             string className = reader.currentDataTypeName;
-            DataClassesGener.CreateNewClass(className, typeof(ObjData), reader.fieldDict, reader.attributeDict);
+            ObjDataClassGener.CreateNewClass(className, reader.fieldDict, reader.attributeDict);
         }
     }
 
