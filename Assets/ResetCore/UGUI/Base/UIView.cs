@@ -78,7 +78,7 @@ namespace ResetCore.UGUI
         /// <returns></returns>
         public T GetUIByName<T>(string name) where T : Component
         {
-            string finalName = name + "_" + typeof(T).Name;
+            string finalName = comNameDict[typeof(T)] + name;
             if (comDict.ContainsKey(finalName))
             {
                 return (comDict[finalName]) as T;

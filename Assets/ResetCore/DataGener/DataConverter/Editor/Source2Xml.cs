@@ -47,7 +47,8 @@ namespace ResetCore.Data
                 Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
             }
 
-            xDoc.Save(outputPath);
+            //xDoc.Save(outputPath);
+            File.WriteAllText(outputPath, xDoc.ToString());
             AssetDatabase.Refresh();
         }
 
