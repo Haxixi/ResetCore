@@ -160,15 +160,7 @@ namespace ResetCore.Xml
             return xDoc;
         }
 
-        /// <summary>
-        /// 合并Xml
-        /// </summary>
-        /// <param name="baseDoc"></param>
-        /// <param name="add"></param>
-        public static void Merge(this XDocument baseDoc, XDocument add)
-        {
-
-        }
+       
     }
 
 }
