@@ -57,7 +57,7 @@ namespace ResetCore.Xml
             {
                 return _defValue;
             }
-            return (T)StringEx.GetValue(_Root.Value, typeof(T));
+            return StringEx.GetValue<T>(_Root.Value);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace ResetCore.Xml
             {
                 if (_dictionary.ContainsKey(el.Name.ToString()))
                     Debug.Log("同一元素在XML中重复定义");
-                _dictionary.Add(el.Name.ToString(), (T)StringEx.GetValue(el.Value, typeof(T)));
+                _dictionary.Add(el.Name.ToString(), StringEx.GetValue<T>(el.Value));
             }
             return _dictionary;
         }

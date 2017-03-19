@@ -4,46 +4,55 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using ResetCore.Xml;
 using System;
+using System.Xml.Serialization;
 
 namespace ResetCore.PlatformHelper
 {
+    [XmlRoot("BuildFile")]
     public sealed class BuildFile
     {
 
         /// <summary>
         ///  包名
         /// </summary>
-        public string packageName { get; private set; }
+        [XmlElement("packageName")]
+        public string packageName { get; set; }
 
         /// <summary>
         /// 最小SDK版本号
         /// </summary>
-        public int minSdkVersion { get; private set; }
+        [XmlElement("minSdkVersion")]
+        public int minSdkVersion { get; set; }
 
         /// <summary>
         /// 目标SDK版本号
         /// </summary>
-        public int targetSdkVersion { get; private set; }
+        [XmlElement("targetSdkVersion")]
+        public int targetSdkVersion { get; set; }
 
         /// <summary>
         /// App名称
         /// </summary>
-        public string appName { get; private set; }
+        [XmlElement("appName")]
+        public string appName { get; set; }
 
         /// <summary>
         /// 版本号
         /// </summary>
-        public string versionCode { get; private set; }
+        [XmlElement("versionCode")]
+        public string versionCode { get; set; }
 
         /// <summary>
         /// 版本名
         /// </summary>
-        public string versionName { get; private set; }
+        [XmlElement("versionName")]
+        public string versionName { get; set; }
 
         /// <summary>
         /// 配置数据
         /// </summary>
-        public Dictionary<string, string> metaDatas { get; private set; }
+        //[XmlElement("metaDatas")]
+        //public Dictionary<string, string> metaDatas { get; set; }
     }
 
 }

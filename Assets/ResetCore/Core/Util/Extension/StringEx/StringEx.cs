@@ -39,19 +39,33 @@ namespace ResetCore.Util
         public static char FBracket1 = '(';
         public static char BBracket1 = ')';
 
-        /// <summary>
-        /// 从字符串中获取值
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <returns></returns>
         public static T GetValue<T>(this string value)
         {
             if (string.IsNullOrEmpty(value))
             {
                 return default(T);
             }
-            return (T)GetValue(value, typeof(T));
+            return value.TryGetValue<T>((T)typeof(T).DefaultForType());
+        }
+
+        /// <summary>
+        /// 从字符串中获取值
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static T TryGetValue<T>(this string value, T defultValue)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return default(T);
+            }
+            return (T)TryGetValue(value, typeof(T), defultValue);
+        }
+
+        public static object GetValue(this string value, System.Type type)
+        {
+            return value.TryGetValue(type, type.DefaultForType());
         }
 
         /// <summary>
@@ -60,7 +74,7 @@ namespace ResetCore.Util
         /// <param name="value"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static object GetValue(this string value, System.Type type)
+        public static object TryGetValue(this string value, System.Type type, object defultValue)
         {
             try
             {
@@ -175,10 +189,12 @@ namespace ResetCore.Util
                 {
                     System.Type type2 = type.GetGenericArguments()[0];
                     List<string> list = ParseList(value, Spriter1);
-                    constructor = type.GetConstructor(System.Type.EmptyTypes).Invoke(null);
+                    
+                    constructor = Activator.CreateInstance(type);
                     foreach (string str in list)
                     {
                         genericArgument = GetValue(str, type2);
+                        Debug.Log(str + "  " + type2.Name);
                         type.GetMethod("Add").Invoke(constructor, new object[] { genericArgument });
                     }
                     return constructor;
@@ -203,10 +219,15 @@ namespace ResetCore.Util
                 }
 
                 Debug.logger.LogWarning("字符转换", "没有适合的转换类型，返回默认值");
+                if(defultValue != type.DefaultForType())
+                {
+                    return defultValue;
+                }
                 return type.DefaultForType();
             }
             catch(Exception e)
             {
+                Debug.logger.LogException(e);
                 Debug.logger.LogWarning("字符转换", "解析失败，返回默认值");
                 return type.DefaultForType();
             }

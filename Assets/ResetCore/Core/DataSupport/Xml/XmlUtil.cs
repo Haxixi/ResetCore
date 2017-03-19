@@ -6,6 +6,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.Linq;
+using UnityEngine;
 
 namespace ResetCore.Xml
 {
@@ -33,7 +34,7 @@ namespace ResetCore.Xml
             }
             catch (Exception e)
             {
-
+                Debug.logger.LogException(e);
                 return null;
             }
         }
