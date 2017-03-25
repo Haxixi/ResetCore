@@ -844,7 +844,7 @@ namespace ResetCore.Util
         /// <returns></returns>
         public static bool IsConvertableType(this Type type)
         {
-            return CanConvertFromString(type) && CanConvertToString(type) || IsConvertableType(type);
+            return CanConvertFromString(type) && CanConvertToString(type) || convertableTypes.Contains(type);
         }
 
         /// <summary>
