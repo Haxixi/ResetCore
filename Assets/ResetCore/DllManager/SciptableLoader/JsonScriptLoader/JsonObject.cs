@@ -29,8 +29,8 @@ namespace ResetCore.Json
             {
                 object value = field.GetValue(comp);
 
-                if (field.GetCustomAttributes(typeof(JsonLoadable), true).Length == 0)
-                    continue;
+                //if (field.GetCustomAttributes(typeof(JsonLoadable), true).Length == 0)
+                //    continue;
 
                 data[field.Name + "#Assembly"] = field.FieldType.Assembly.GetName().Name;
                 data[field.Name + "#Type"] = field.FieldType.FullName;
@@ -64,8 +64,8 @@ namespace ResetCore.Json
             var fields = comp.GetType().GetFields();
             foreach (var field in fields)
             {
-                if (field.GetCustomAttributes(typeof(JsonLoadable), true).Length == 0)
-                    continue;
+                //if (field.GetCustomAttributes(typeof(JsonLoadable), true).Length == 0)
+                //    continue;
 
                 if (!data.Keys.Contains(field.Name) || !data.Keys.Contains(field.Name + "#Type")
                     || !data.Keys.Contains(field.Name + "#Assembly"))

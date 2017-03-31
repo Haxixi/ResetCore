@@ -87,6 +87,11 @@ namespace ResetCore.UGUI
             }
         }
 
+        public void UpdateUI(UIConst.UIName name, string funcName, Hashtable args)
+        {
+            GetUI(name).UpdateUI(funcName, args);
+        }
+
         public BaseUI GetUI(UIConst.UIName name)
         {
             if (uiDic.ContainsKey(name))

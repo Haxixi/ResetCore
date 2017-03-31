@@ -28,6 +28,9 @@ namespace ResetCore.UGUI
         {
             if (arg == null) return;
         }
+
+        public virtual void UpdateUI(string funcName, Hashtable arg) { }
+
         protected virtual void Update() { }
 
         protected virtual void OnDisable() { }
