@@ -1,0 +1,3 @@
+[submodule "Assets/ResetCore"]
+	path = Assets/ResetCore
+	url = git@github.com:vgvgvvv/ResetCore.Package.git
