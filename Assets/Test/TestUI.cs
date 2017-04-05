@@ -3,7 +3,8 @@ using System.Collections;
 using ResetCore.UGUI;
 using UnityEngine.UI;
 using ResetCore.Event;
-using ResetCore.UGUI.Class;
+using ResetCore.UGUI.View;
+using ResetCore.Rx;
 
 public class TestUI : BaseNormalUI {
 
@@ -13,11 +14,24 @@ public class TestUI : BaseNormalUI {
     {
         base.Awake();
         v.Init(this);
+        v.inputInputField.BindOnValueChange().Subscribe(
+            Observer.CreateSubscribeObserver<string>(
+            (x) =>
+            {
+                Debug.Log(x);
+            }, (e) =>
+            {
+
+            }, () =>
+            {
+
+            }));
     }
 
    public void OnTestButton()
     {
         v.txtText.text = v.goTestButton.name;
+        
     }
 
 }
