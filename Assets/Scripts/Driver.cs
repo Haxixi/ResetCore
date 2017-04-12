@@ -14,14 +14,18 @@ public class Driver : MonoSingleton<Driver> {
 
     void Awake()
     {
-        EventDispatcher.AddEventListener<int, int, int, int>("Test", Test);
-        EventDispatcher.TriggerEvent("Test", 1, 2, 3, 4);
+        EventDispatcher.AddEventListener<int, int, int, int>("Test", Test)
+            .SetTimeOutOnce(1, () =>
+            {
+                Debug.Log("Timeout");
+            });
+
         CoroutineTaskManager.Instance.WaitSecondTodo(() =>
         {
-            EventDispatcher.RemoveEventListener<int, int, int, int>("Test", Test);
+            Debug.Log("Trigger");
             EventDispatcher.TriggerEvent("Test", 1, 2, 3, 4);
-            Debug.Log("1111111111111111111");
-        }, 2);
+            EventDispatcher.TriggerEvent("Test", 1, 2, 3, 4);
+        }, 3);
     }
 
     public void Test(int i1, int i2, int i3, int i4)

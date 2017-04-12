@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 22240442}
   - component: {fileID: 11464454}
   - component: {fileID: 11428296}
-  - component: {fileID: 11428910}
   m_Layer: 5
   m_Name: g-TestButton
   m_TagString: Untagged
@@ -29,7 +28,6 @@ GameObject:
   - component: {fileID: 22444592}
   - component: {fileID: 22244278}
   - component: {fileID: 11448814}
-  - component: {fileID: 11407332}
   m_Layer: 5
   m_Name: g-Text
   m_TagString: Untagged
@@ -55,18 +53,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &11407332
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 123850}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d725836a1cd002148bfeaae3e8d927c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  key: _BTN
 --- !u!114 &11410570
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -135,18 +121,6 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
---- !u!114 &11428910
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100258}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d725836a1cd002148bfeaae3e8d927c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  key: IMG
 --- !u!114 &11448814
 MonoBehaviour:
   m_ObjectHideFlags: 1
