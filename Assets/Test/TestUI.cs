@@ -14,18 +14,11 @@ public class TestUI : BaseNormalUI {
     {
         base.Awake();
         v.Init(this);
-        v.inputInputField.BindOnValueChange().Subscribe(
-            Observer.CreateSubscribeObserver<string>(
-            (x) =>
-            {
-                Debug.Log(x);
-            }, (e) =>
-            {
 
-            }, () =>
-            {
-
-            }));
+        v.btnTestButton.onClick.GetListenable().Listen(() =>
+        {
+            Debug.Log("DoubleClick");
+        }).PoolByNum(2).ResetPoolByTime(1);
     }
 
    public void OnTestButton()

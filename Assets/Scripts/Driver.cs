@@ -14,12 +14,12 @@ public class Driver : MonoSingleton<Driver> {
 
     void Awake()
     {
-        EventDispatcher.AddEventListener<Vector2>("Test", Test).PoolInTime(1);
+        //EventDispatcher.AddEventListener<Vector2>("Test", Test).PoolInTime(1);
     }
 
     public void Test(Vector2 vec)
     {
-        Debug.Log("DoubleClick " + vec.ToString());
+        //Debug.Log("DoubleClick " + vec.ToString());
     }
 
     // Use this for initialization
@@ -41,7 +41,7 @@ public class Driver : MonoSingleton<Driver> {
 
     void Update()
     {
-        EventDispatcher.TriggerEvent("Test", (Vector2)Input.mousePosition);
+        //EventDispatcher.TriggerEvent("Test", (Vector2)Input.mousePosition);
     }
     
 }
