@@ -15,10 +15,10 @@ public class TestUI : BaseNormalUI {
         base.Awake();
         v.Init(this);
 
-        v.btnTestButton.onClick.GetListenable().Listen(() =>
+        v.inputInputField.onValueChanged.GetListenable().Listen((str) =>
         {
-            Debug.Log("DoubleClick");
-        }).PoolByNum(2).ResetPoolByTime(1);
+            v.txtText.text = str;
+        }).TakeUntil(1);
     }
 
    public void OnTestButton()

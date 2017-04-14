@@ -14,12 +14,12 @@ public class Driver : MonoSingleton<Driver> {
 
     void Awake()
     {
-        //EventDispatcher.AddEventListener<Vector2>("Test", Test).PoolInTime(1);
+        //EventDispatcher.AddEventListener<Vector2>("Test", Test).TakeUntil(1);
     }
 
     public void Test(Vector2 vec)
     {
-        //Debug.Log("DoubleClick " + vec.ToString());
+        //Debug.LogError("Position " + vec.ToString());
     }
 
     // Use this for initialization
