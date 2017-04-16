@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,40 +15,61 @@ namespace ResetCore.Util
             base.Init();
         }
 
-        List<ReCoroutine> updateIEnumeratorList = new List<ReCoroutine>();
-        List<ReCoroutine> lateUpdateIEnumeratorList = new List<ReCoroutine>();
-        List<ReCoroutine> fixedUpdateIEnumeratorList = new List<ReCoroutine>();
+        private List<ReCoroutine> updateIEnumeratorList = new List<ReCoroutine>();
+        private List<ReCoroutine> lateUpdateIEnumeratorList = new List<ReCoroutine>();
+        private List<ReCoroutine> fixedUpdateIEnumeratorList = new List<ReCoroutine>();
 
-        public void AddCoroutine(IEnumerator e, CoroutineType type = CoroutineType.Update)
+        private List<ReCoroutine> removeIEnumerator = new List<ReCoroutine>();
+
+        private static float updateDeltaTime = Time.deltaTime;
+        private static float lateUpdateDeltaTime = Time.deltaTime;
+        private static float fixedUpdateDeltaTime = Time.fixedDeltaTime;
+
+        /// <summary>
+        /// 替代用的Coroutine
+        /// </summary>
+        public static ReCoroutine replaceCoroutine { get; set; }
+
+
+        /// <summary>
+        /// 添加新协程
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static ReCoroutine AddCoroutine(IEnumerator<float> e, CoroutineType type = CoroutineType.Update)
         {
-            updateIEnumeratorList.Add(new ReCoroutine(e, type));
+            return Instance._AddCoroutine(e, type);
         }
 
-        List<ReCoroutine> removeIEnumerator = new List<ReCoroutine>();
-        List<float> currentUpdateEnumeratorTime = new List<float>();
+        private ReCoroutine _AddCoroutine(IEnumerator<float> e, CoroutineType type = CoroutineType.Update)
+        {
+            var cor = new ReCoroutine(e, type);
+
+            if (type == CoroutineType.Update)
+                updateIEnumeratorList.Add(cor);
+            else if (type == CoroutineType.LateUpdate)
+                lateUpdateIEnumeratorList.Add(cor);
+            else if (type == CoroutineType.FixedUpdate)
+                fixedUpdateIEnumeratorList.Add(cor);
+
+            return cor;
+        }
+
+        
 
         // Update is called once per frame
         void Update()
         {
             removeIEnumerator.Clear();
-            foreach (var cor in updateIEnumeratorList)
+            
+            for (int i = 0; i < updateIEnumeratorList.Count; i ++)
             {
+                var cor = updateIEnumeratorList[i];
+
                 cor.Update();
 
-                if (cor.IsWaiting())
-                    continue;
-
-                if (cor.e.Current is float || cor.e.Current is int)
-                {
-                    cor.Wait((float)cor.e.Current);
-                }
-
-                if (cor.e.Current is ReCoroutine)
-                {
-                    cor.WaitOtherCoroutine((ReCoroutine)cor.e.Current);
-                }
-
-                if (!cor.e.MoveNext())
+                if (cor.isDone)
                 {
                     removeIEnumerator.Add(cor);
                     continue;
@@ -55,7 +77,7 @@ namespace ResetCore.Util
 
             }
 
-            for(int i = 0; i<removeIEnumerator.Count; i++)
+            for (int i = 0; i < removeIEnumerator.Count; i++)
             {
                 updateIEnumeratorList.Remove(removeIEnumerator[i]);
             }
@@ -64,58 +86,34 @@ namespace ResetCore.Util
         private void LateUpdate()
         {
             removeIEnumerator.Clear();
-            foreach (var cor in lateUpdateIEnumeratorList)
+            for (int i = 0; i < lateUpdateIEnumeratorList.Count; i++)
             {
+                var cor = lateUpdateIEnumeratorList[i];
                 cor.LateUpdate();
 
-                if (cor.IsWaiting())
-                    continue;
-
-                if (cor.e.Current is float)
-                {
-                    cor.Wait(3);
-                }
-
-                if(cor.e.Current is ReCoroutine)
-                {
-                    cor.WaitOtherCoroutine((ReCoroutine)cor.e.Current);
-                }
-
-                if (!cor.e.MoveNext())
+                if (cor.isDone)
                 {
                     removeIEnumerator.Add(cor);
                     continue;
                 }
-
             }
 
             for (int i = 0; i < removeIEnumerator.Count; i++)
             {
-                updateIEnumeratorList.Remove(removeIEnumerator[i]);
+                lateUpdateIEnumeratorList.Remove(removeIEnumerator[i]);
             }
         }
 
         private void FixedUpdate()
         {
             removeIEnumerator.Clear();
-            foreach (var cor in fixedUpdateIEnumeratorList)
+            for (int i = 0; i < fixedUpdateIEnumeratorList.Count; i++)
             {
+                var cor = fixedUpdateIEnumeratorList[i];
+
                 cor.FixedUpdate();
 
-                if (cor.IsWaiting())
-                    continue;
-
-                if (cor.e.Current is float)
-                {
-                    cor.Wait(3);
-                }
-
-                if (cor.e.Current is ReCoroutine)
-                {
-                    cor.WaitOtherCoroutine((ReCoroutine)cor.e.Current);
-                }
-
-                if (!cor.e.MoveNext())
+                if (cor.isDone)
                 {
                     removeIEnumerator.Add(cor);
                     continue;
@@ -125,34 +123,44 @@ namespace ResetCore.Util
 
             for (int i = 0; i < removeIEnumerator.Count; i++)
             {
-                updateIEnumeratorList.Remove(removeIEnumerator[i]);
+                fixedUpdateIEnumeratorList.Remove(removeIEnumerator[i]);
             }
         }
-
-        //public static IEnumerator TestWaitTime(float seconds)
-        //{
-        //    float start = 0;
-        //    while (start < seconds)
-        //    {
-        //        start += Time.deltaTime;
-        //        yield return null;
-        //    }
-        //}
 
         public static float GetDeltaTime(ReCoroutine coroutine)
         {
             switch (coroutine.coroutineType)
             {
                 case CoroutineType.Update:
-                    return Time.deltaTime;
+                    return updateDeltaTime;
                 case CoroutineType.LateUpdate:
-                    return Time.deltaTime;
+                    return lateUpdateDeltaTime;
                 case CoroutineType.FixedUpdate:
-                    return Time.fixedDeltaTime;
+                    return fixedUpdateDeltaTime;
                 default:
                     return 0;
             }
         }
+
+        /// <summary>
+        /// 等待www返回
+        /// </summary>
+        /// <param name="www"></param>
+        /// <returns></returns>
+        public static float WaitWWW(WWW www)
+        {
+            replaceCoroutine = AddCoroutine(GetReplaceCoroutine(() => www.isDone), CoroutineType.Update);
+            return float.NaN;
+        }
+
+        public static IEnumerator<float> GetReplaceCoroutine(Func<bool> func)
+        {
+            while (!func())
+            {
+                yield return 0;
+            }
+        }
+
     }
 
 }

@@ -4,7 +4,6 @@ using ResetCore.UGUI;
 using UnityEngine.UI;
 using ResetCore.Event;
 using ResetCore.UGUI.View;
-using ResetCore.Rx;
 
 public class TestUI : BaseNormalUI {
 

@@ -2,13 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using ResetCore.Util;
+using MovementEffects;
 
 public class TestCoroutineDriver : MonoBehaviour {
 
     private void Awake()
     {
-        ReCoroutinesManager.Instance.AddCoroutine(TestCoroutine());
-        StartCoroutine(TestCoroutine2());
+        for (int i = 0; i < 100000; i++)
+        {
+            //ReCoroutinesManager.AddCoroutine(TestCoroutine());
+            StartCoroutine(TestCoroutine2());
+            //Timing.RunCoroutine(TestCoroutine3());
+        }
+
     }
 
     // Use this for initialization
@@ -21,17 +27,44 @@ public class TestCoroutineDriver : MonoBehaviour {
 		
 	}
 
-    IEnumerator TestCoroutine()
+    
+
+    IEnumerator<float> TestCoroutine()
     {
-        Debug.Log("haha");
-        yield return 3;
-        Debug.Log("asdasdasd");
+        int sum = 0;
+        for (int i = 0; i < int.MaxValue; i++)
+        {
+            sum++;
+            yield return 0;
+        }
+    }
+
+    IEnumerator<float> TestWaitCor()
+    {
+        Debug.Log("BeginWait");
+        WWW www = new WWW("http://121.196.216.106:4040/Escape/ServerAddress.txt");
+        yield return ReCoroutinesManager.WaitWWW(www);
+        Debug.Log(www.text);
+        Debug.Log("EndWait");
     }
 
     IEnumerator TestCoroutine2()
     {
-        Debug.Log("haha");
-        yield return new WaitForSeconds(3);
-        Debug.Log("asdasdasd");
+        int sum = 0;
+        for (int i = 0; i < int.MaxValue; i++)
+        {
+            sum++;
+            yield return null;
+        }
+    }
+
+    IEnumerator<float> TestCoroutine3()
+    {
+        int sum = 0;
+        for (int i = 0; i < int.MaxValue; i++)
+        {
+            sum++;
+            yield return 0;
+        }
     }
 }

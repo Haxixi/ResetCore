@@ -15,6 +15,11 @@ namespace ResetCore.Util
     public class ReCoroutine
     {
         /// <summary>
+        /// 协程标识符Id
+        /// </summary>
+        public long id { get; private set; }
+
+        /// <summary>
         /// 迭代类型
         /// </summary>
         public CoroutineType coroutineType { get; private set; }
@@ -22,19 +27,27 @@ namespace ResetCore.Util
         /// <summary>
         /// 迭代器
         /// </summary>
-        public IEnumerator e { get; private set; }
+        public IEnumerator<float> e { get; private set; }
 
         /// <summary>
         /// 距离协程开始的当前时间
         /// </summary>
         public float currentTime { get; private set; }
-        
+
         /// <summary>
         /// 等待到该时间并继续执行
         /// </summary>
         public float untilTime { get; private set; }
 
-        public ReCoroutine waitCoroutine { get; private set; }
+        /// <summary>
+        /// 是否已经完成
+        /// </summary>
+        public bool isDone { get; private set; }
+
+        /// <summary>
+        /// 正在等待的别的迭代器
+        /// </summary>
+        private ReCoroutine waitingCoroutine { get; set; }
 
         /// <summary>
         /// 是否正在等待
@@ -45,16 +58,21 @@ namespace ResetCore.Util
             if (untilTime > currentTime)
                 return true;
 
-            if (waitCoroutine != null && waitCoroutine.e.MoveNext())
+            if (waitingCoroutine != null)
                 return true;
 
             return false;
         }
 
-        public ReCoroutine(IEnumerator e, CoroutineType type)
+        private static long currentId = 0;
+        public ReCoroutine(IEnumerator<float> e, CoroutineType type)
         {
             this.e = e;
-            this.coroutineType = coroutineType;
+            this.coroutineType = type;
+            this.currentTime = 0;
+            this.untilTime = 0;
+            this.isDone = false;
+            this.id = currentId++;
         }
 
         /// <summary>
@@ -63,30 +81,62 @@ namespace ResetCore.Util
         /// <param name="waitTime"></param>
         public void Wait(float waitTime)
         {
-            untilTime += waitTime;
-        }
-
-        public void WaitOtherCoroutine(ReCoroutine cor)
-        {
-
+            if (waitTime == float.NaN) waitTime = 0;
+            untilTime = currentTime + waitTime;
         }
 
         public void Update()
         {
             if (coroutineType == CoroutineType.Update)
-                currentTime += ReCoroutinesManager.GetDeltaTime(this);
+            {
+                CommonUpdate();
+            }
         }
 
         public void LateUpdate()
         {
             if (coroutineType == CoroutineType.LateUpdate)
-                currentTime += ReCoroutinesManager.GetDeltaTime(this);
+            {
+                CommonUpdate();
+            }
+                
         }
 
         public void FixedUpdate()
         {
             if (coroutineType == CoroutineType.FixedUpdate)
-                currentTime += ReCoroutinesManager.GetDeltaTime(this);
+            {
+                CommonUpdate();
+            }
+                
+        }
+
+        private void CommonUpdate()
+        {
+            currentTime += ReCoroutinesManager.GetDeltaTime(this);
+            
+            if (!IsWaiting())
+            {
+                if (!e.MoveNext())
+                {
+                    isDone = true;
+                }
+                Wait(e.Current);
+
+                if(e.Current.Equals(float.NaN))
+                {
+                    waitingCoroutine = ReCoroutinesManager.replaceCoroutine;
+                }
+            }
+            else
+            {
+                if (waitingCoroutine.isDone)
+                {
+                    waitingCoroutine = null;
+                }
+            }
+
+
         }
 
     }
