@@ -8,26 +8,15 @@ public class TestCoroutineDriver : MonoBehaviour {
 
     private void Awake()
     {
-        for (int i = 0; i < 100000; i++)
+        //ReCoroutineManager.AddCoroutine(TestCoroutine());
+
+        ReCoroutineTaskManager.Instance.AddTask("TestTask", TestWaitCor(), (bo) =>
         {
-            //ReCoroutinesManager.AddCoroutine(TestCoroutine());
-            StartCoroutine(TestCoroutine2());
-            //Timing.RunCoroutine(TestCoroutine3());
-        }
+            //回调
+        }, this);
+
 
     }
-
-    // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
-    
 
     IEnumerator<float> TestCoroutine()
     {
@@ -54,7 +43,9 @@ public class TestCoroutineDriver : MonoBehaviour {
         for (int i = 0; i < int.MaxValue; i++)
         {
             sum++;
-            yield return null;
+            yield return CoroutineConst.GetWaitForSeconds(1);
+            yield return CoroutineConst.waitForEndOfFrame;
+            yield return CoroutineConst.waitForFixedUpdate;
         }
     }
 

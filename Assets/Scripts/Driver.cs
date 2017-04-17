@@ -8,40 +8,19 @@ using ResetCore.Event;
 
 public class Driver : MonoSingleton<Driver> {
 
-    public TestComponent comp;
-    
-
-
     void Awake()
     {
-        //EventDispatcher.AddEventListener<Vector2>("Test", Test).TakeUntil(1);
+        EventDispatcher.AddEventListener<Vector2>("DoubleClick", vec =>
+        {
+            //处理双击事件
+        }).PoolByNum(2).ResetPoolByTime(1);
     }
-
-    public void Test(Vector2 vec)
-    {
-        //Debug.LogError("Position " + vec.ToString());
-    }
-
-    // Use this for initialization
-    void Start()
-    {
-        
-    }
-
-    void OnDestroy()
-    {
-       
-    }
-
-    public override void Init()
-    {
-        base.Init();
-    }
-
-
     void Update()
     {
-        //EventDispatcher.TriggerEvent("Test", (Vector2)Input.mousePosition);
+        if (Input.GetMouseButtonDown(0))
+        {
+            EventDispatcher.TriggerEvent("DoubleClick", (Vector2)Input.mousePosition);
+        }
     }
     
 }
