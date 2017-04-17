@@ -43,7 +43,7 @@ public class TestCoroutineDriver : MonoBehaviour {
     {
         Debug.Log("BeginWait");
         WWW www = new WWW("http://121.196.216.106:4040/Escape/ServerAddress.txt");
-        yield return ReCoroutinesManager.WaitWWW(www);
+        yield return ReCoroutine.WaitWWW(www);
         Debug.Log(www.text);
         Debug.Log("EndWait");
     }
