@@ -32,6 +32,10 @@ namespace ResetCore.UGUI.View
         
         private UnityEngine.UI.InputField _inputInputField;
         
+        private UnityEngine.GameObject _goResult;
+        
+        private UnityEngine.UI.Text _txtResult;
+        
         public virtual UnityEngine.GameObject goTestButton
         {
             get
@@ -125,6 +129,30 @@ namespace ResetCore.UGUI.View
             set
             {
                 this._inputInputField = value;
+            }
+        }
+        
+        public virtual UnityEngine.GameObject goResult
+        {
+            get
+            {
+                return this._goResult;
+            }
+            set
+            {
+                this._goResult = value;
+            }
+        }
+        
+        public virtual UnityEngine.UI.Text txtResult
+        {
+            get
+            {
+                return this._txtResult;
+            }
+            set
+            {
+                this._txtResult = value;
             }
         }
     }
