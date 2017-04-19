@@ -5,7 +5,8 @@ using UnityEngine.UI;
 using ResetCore.Event;
 using ResetCore.UGUI.View;
 using ResetCore.IOC;
-using System;
+using ResetCore.UGUI.Model;
+using System.Xml.Linq;
 
 public class TestUI : BaseNormalUI {
 
@@ -13,7 +14,7 @@ public class TestUI : BaseNormalUI {
     TestUIView v;
 
     [Inject]
-    TestProxy p;
+    TestUIModel m;
 
     public override Context context
     {
@@ -28,8 +29,8 @@ public class TestUI : BaseNormalUI {
         base.Awake();
         v.Init(this);
 
-        v.txtResult.Bind(p.money);
-        v.inputInputField.Bind(p.money, (input, str)=> input.text = str.propValue.ToString("F0"));
+        v.txtResult.Bind(m.money);
+        v.inputInputField.Bind(m.money)[0].PoolInOneFrame();
 
     }
 

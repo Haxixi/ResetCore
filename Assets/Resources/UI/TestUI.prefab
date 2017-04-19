@@ -326,7 +326,7 @@ GameObject:
   - component: {fileID: 114450936175738214}
   - component: {fileID: 114548384591887076}
   m_Layer: 5
-  m_Name: g-InputField
+  m_Name: g-InputField@money:string
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

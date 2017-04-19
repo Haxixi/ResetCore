@@ -1,4 +1,5 @@
 ﻿using ResetCore.IOC;
+using ResetCore.UGUI.Model;
 using ResetCore.UGUI.View;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,10 +15,10 @@ public class TestContext : Context<TestContext> {
     }
 
     [Bean]
-    public TestProxy GetProxy()
+    public TestUIModel GetProxy()
     {
-        var p = new TestProxy();
-        p.money.propValue = 10;
+        var p = new TestUIModel();
+        p.money.propValue = "asd";
         return p;
     }
 
