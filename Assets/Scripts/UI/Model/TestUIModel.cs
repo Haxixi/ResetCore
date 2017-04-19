@@ -17,24 +17,15 @@ namespace ResetCore.UGUI.Model
     public class TestUIModel : UIModel
     {
         
-        private EventProperty<string> _money;
-        
+        private string testValue;
+
+        public EventProperty<string> money;
+
         public TestUIModel()
         {
             // From g-InputField@input->money:string
-money = new EventProperty<string>();
+            money = new EventProperty<string>(() => { return testValue; }, (x) => { testValue = x; });
         }
-        
-        public virtual EventProperty<string> money
-        {
-            get
-            {
-                return this._money;
-            }
-            set
-            {
-                this._money = value;
-            }
-        }
+
     }
 }
