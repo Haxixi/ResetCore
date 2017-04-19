@@ -527,6 +527,14 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 1803223268029970, guid: 5a3c2b906342a8e45bea052ff69c9b94, type: 2}
+      propertyPath: m_Name
+      value: g-InputField@input->money:string
+      objectReference: {fileID: 0}
+    - target: {fileID: 1088947988954328, guid: 5a3c2b906342a8e45bea052ff69c9b94, type: 2}
+      propertyPath: m_Name
+      value: g-Result@txt->money:string
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5a3c2b906342a8e45bea052ff69c9b94, type: 2}
   m_IsPrefabParent: 0
