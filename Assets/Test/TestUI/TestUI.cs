@@ -7,6 +7,7 @@ using ResetCore.UGUI.View;
 using ResetCore.IOC;
 using ResetCore.UGUI.Model;
 using System.Xml.Linq;
+using ResetCore.UGUI.Binder;
 
 public class TestUI : BaseNormalUI {
 
@@ -15,6 +16,9 @@ public class TestUI : BaseNormalUI {
 
     [Inject]
     TestUIModel m;
+
+    [Inject]
+    TestUIBinder b;
 
     public override Context context
     {
@@ -28,10 +32,7 @@ public class TestUI : BaseNormalUI {
     {
         base.Awake();
         v.Init(this);
-
-        v.txtResult.Bind(m.money);
-        v.inputInputField.Bind(m.money)[0].PoolInOneFrame();
-
+        b.Bind(v, m);
     }
 
     public void OnTestButton()

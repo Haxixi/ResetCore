@@ -1,4 +1,5 @@
 ﻿using ResetCore.IOC;
+using ResetCore.UGUI.Binder;
 using ResetCore.UGUI.Model;
 using ResetCore.UGUI.View;
 using System.Collections;
@@ -20,6 +21,12 @@ public class TestContext : Context<TestContext> {
         var p = new TestUIModel();
         p.money.propValue = "asd";
         return p;
+    }
+
+    [Bean]
+    public TestUIBinder GetBinder()
+    {
+        return new TestUIBinder();
     }
 
 }

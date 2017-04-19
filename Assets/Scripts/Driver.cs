@@ -8,6 +8,7 @@ using ResetCore.Event;
 
 public class Driver : MonoSingleton<Driver> {
 
+
     void Awake()
     {
         //EventDispatcher.AddEventListener<Vector2>("DoubleClick", vec =>
