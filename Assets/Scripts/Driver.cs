@@ -11,18 +11,18 @@ public class Driver : MonoSingleton<Driver> {
 
     void Awake()
     {
-        //EventDispatcher.AddEventListener<Vector2>("DoubleClick", vec =>
-        //{
-        //    Debug.Log(vec.ToString());
-        //}).PoolInTime(1);
+        EventDispatcher.AddEventListener<Vector2>("PoolInTime", vec =>
+        {
+            Debug.Log(vec.ToString());
+        }).PoolInTime(1);
     }
     void Update()
     {
-        //EventDispatcher.TriggerEvent("DoubleClick", (Vector2)Input.mousePosition);
-        //EventDispatcher.TriggerEvent("DoubleClick", (Vector2)Input.mousePosition);
-        //EventDispatcher.TriggerEvent("DoubleClick", (Vector2)Input.mousePosition);
-        //EventDispatcher.TriggerEvent("DoubleClick", (Vector2)Input.mousePosition);
-        //EventDispatcher.TriggerEvent("DoubleClick", (Vector2)Input.mousePosition);
+        EventDispatcher.TriggerEvent("PoolInTime", (Vector2)Input.mousePosition);
+        EventDispatcher.TriggerEvent("PoolInTime", (Vector2)Input.mousePosition);
+        EventDispatcher.TriggerEvent("PoolInTime", (Vector2)Input.mousePosition);
+        EventDispatcher.TriggerEvent("PoolInTime", (Vector2)Input.mousePosition);
+        EventDispatcher.TriggerEvent("PoolInTime", (Vector2)Input.mousePosition);
     }
     
 }

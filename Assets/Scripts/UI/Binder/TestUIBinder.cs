@@ -25,7 +25,7 @@ namespace ResetCore.UGUI.Binder
             // From g-InputField@input->money:string
 ((TestUIView)view).inputInputField.Bind(((TestUIModel)model).money);
             // From g-Result@txt->money:string
-((TestUIView)view).txtResult.Bind(((TestUIModel)model).money);
+((TestUIView)view).txtResult.Bind(((TestUIModel)model).money).PoolByNum(2).ResetPoolByTime(2);
         }
     }
 }
