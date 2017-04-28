@@ -9,6 +9,7 @@ using ResetCore.UGUI.Model;
 using System.Xml.Linq;
 using ResetCore.UGUI.Binder;
 
+[InContext(typeof(DemoContext))]
 public class TestUI : BaseNormalUI {
 
     [Inject]
@@ -19,14 +20,6 @@ public class TestUI : BaseNormalUI {
 
     [Inject]
     TestUIBinder b;
-
-    public override Context context
-    {
-        get
-        {
-            return Contexts.testContext;
-        }
-    }
 
     protected override void Awake()
     {
