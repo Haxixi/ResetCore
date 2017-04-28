@@ -11,18 +11,23 @@ public class Driver : MonoSingleton<Driver> {
 
     void Awake()
     {
-        EventDispatcher.AddEventListener<Vector2>("PoolInTime", vec =>
-        {
-            Debug.Log(vec.ToString());
-        }).PoolInTime(1);
+        ReCoroutineManager.AddCoroutine(TestCount());
     }
+
+    IEnumerator<float> TestCount()
+    {
+        int sum = 0;
+        yield return ReCoroutine.WaitThreadOperation(() =>
+        {
+            for (int i = 0; i < 100000; i++)
+                sum++;
+        });
+        Debug.Log(sum);
+    }
+
     void Update()
     {
-        EventDispatcher.TriggerEvent("PoolInTime", (Vector2)Input.mousePosition);
-        EventDispatcher.TriggerEvent("PoolInTime", (Vector2)Input.mousePosition);
-        EventDispatcher.TriggerEvent("PoolInTime", (Vector2)Input.mousePosition);
-        EventDispatcher.TriggerEvent("PoolInTime", (Vector2)Input.mousePosition);
-        EventDispatcher.TriggerEvent("PoolInTime", (Vector2)Input.mousePosition);
+        
     }
     
 }
