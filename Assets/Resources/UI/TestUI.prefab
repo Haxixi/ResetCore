@@ -291,7 +291,7 @@ GameObject:
   - component: {fileID: 222708010546674464}
   - component: {fileID: 114764893786615802}
   m_Layer: 5
-  m_Name: g-Result
+  m_Name: g-Result@txt->money:string
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -326,7 +326,7 @@ GameObject:
   - component: {fileID: 114450936175738214}
   - component: {fileID: 114548384591887076}
   m_Layer: 5
-  m_Name: g-InputField@money:string
+  m_Name: g-InputField@input->money:string
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -447,13 +447,13 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 114450936175738214}
   m_TextComponent: {fileID: 114075742827330462}
   m_Placeholder: {fileID: 114554383976246566}
-  m_ContentType: 2
+  m_ContentType: 0
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 4
+  m_KeyboardType: 0
   m_LineType: 0
   m_HideMobileInput: 0
-  m_CharacterValidation: 1
+  m_CharacterValidation: 0
   m_CharacterLimit: 0
   m_OnEndEdit:
     m_PersistentCalls:
