@@ -8,20 +8,38 @@ using ResetCore.Event;
 
 public class Driver : MonoSingleton<Driver> {
 
-    TestUserData data;
-    TestUserData data2;
+    Pipeline<List<string>, int> pipeLine = new Pipeline<List<string>, int>();
+
+    ActionQueueWithArg queue = new ActionQueueWithArg();
 
     void Awake()
     {
-        data = new TestUserData();
-        data.Load();
-        Debug.Log(data.testInt);
-        data.testInt = 111;
-        data.Save();
+        pipeLine.AddPass(new TestPass())
+            .AddPass(new TestIntPass())
+            .AsynProcess(new List<string> { "1", "222" }, (res)=> {
+            Debug.LogError(res);
+        });
+        
 
-        data2 = new TestUserData();
-        data2.Load();
-        Debug.Log(data2.testInt);
+        //queue.AddAction((obj, act) =>
+        //{
+        //    string arg1 = obj as string;
+        //    CoroutineTaskManager.Instance.WaitSecondTodo(() =>
+        //    {
+        //        act(arg1 + "2222");
+        //    }, 1);
+        //}).AddAction((obj, act)=> {
+        //    string arg1 = obj as string;
+        //    CoroutineTaskManager.Instance.WaitSecondTodo(() =>
+        //    {
+        //        act(arg1 + "3333");
+        //    }, 1);
+        //}).AddAction((obj, act)=> {
+        //    string arg1 = obj as string;
+        //    Debug.Log(arg1);
+        //});
+
+        //queue.Start("1111");
     }
 
     void Update()
