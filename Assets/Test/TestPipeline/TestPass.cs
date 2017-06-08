@@ -4,30 +4,25 @@ using UnityEngine;
 using ResetCore.Util;
 using System;
 
-public class TestPass : BaseAysnPass<List<string>, string>
+public class TestPass : BasePass<List<string>, string>
 {
-
-    public override void HandlePass(List<string> input, Action<object> outputHandler)
+    public override string HandlePass(List<string> input)
     {
-        CoroutineTaskManager.Instance.WaitSecondTodo(() =>
+        string temp = "";
+        foreach (var i in input)
         {
-            string temp = "";
-            foreach (var i in input)
-            {
-                temp += i;
-            }
-            outputHandler(temp);
-        }, 1);
+            temp += i;
+        }
+        return temp;
     }
+
 }
 
-public class TestIntPass : BaseAysnPass<string, int>
+public class TestIntPass : BasePass<string, int>
 {
-    public override void HandlePass(string input, Action<object> outputHandler)
+    public override int HandlePass(string input)
     {
-        CoroutineTaskManager.Instance.WaitSecondTodo(() =>
-        {
-            outputHandler(int.Parse(input));
-        }, 1);
+        return int.Parse(input);
     }
+
 }
