@@ -25,10 +25,14 @@ public class TestUI : BaseNormalUI {
     {
         base.Awake();
         v.Init(this);
-        b.Bind(v, m);
-        v.inputInputField.Bind(m.money);
-        v.txtResult.Bind(m.money);
-        m.money.Init();
+        //b.Bind(v, m);
+        //v.inputInputField.Bind(m.money);
+        //v.txtResult.Bind(m.money);
+        //m.money.Init();
+        var inputEventProperty = v.inputInputField.GetEventText<string>();
+        var textEventProperty = v.txtText.GetEventText<string>();
+        inputEventProperty.Bind(textEventProperty);
+
     }
 
     public void OnTestButton()

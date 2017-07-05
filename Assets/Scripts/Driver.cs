@@ -11,10 +11,10 @@ public class Driver : MonoSingleton<Driver> {
     Pipeline<List<string>, int> pipeLine = new Pipeline<List<string>, int>();
     void Awake()
     {
-        int res = pipeLine.AddPass(new TestPass())
-            .AddPass(new TestIntPass())
-            .SyncProcess(new List<string> { "1", "222" });
-        Debug.LogError(res);
+        //int res = pipeLine.AddPass(new TestPass())
+        //    .AddPass(new TestIntPass())
+        //    .SyncProcess(new List<string> { "1", "222" });
+        //Debug.LogError(res);
     }
 
     void Update()
