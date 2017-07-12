@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using ResetCore.Util;
-using MovementEffects;
 
 public class TestCoroutineDriver : MonoBehaviour {
 

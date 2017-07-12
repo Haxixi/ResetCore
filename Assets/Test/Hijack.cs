@@ -33,7 +33,7 @@ public class Hijack : MonoBehaviour
     void Update()
     {
         //Show the current value on the screen
-        Debug.logger.Log(value.ToString());
+        Debug.unityLogger.Log(value.ToString());
     }
 
     void OnGUI()

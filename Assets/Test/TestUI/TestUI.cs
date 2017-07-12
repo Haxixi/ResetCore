@@ -29,8 +29,8 @@ public class TestUI : BaseNormalUI {
         //v.inputInputField.Bind(m.money);
         //v.txtResult.Bind(m.money);
         //m.money.Init();
-        var inputEventProperty = v.inputInputField.GetEventText<string>();
-        var textEventProperty = v.txtText.GetEventText<string>();
+        var inputEventProperty = v.inputInputField.GetEventText();
+        var textEventProperty = v.txtText.GetEventText();
         inputEventProperty.Bind(textEventProperty);
 
     }
